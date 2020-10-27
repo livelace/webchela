@@ -115,8 +115,8 @@ CONFIG_SAMPLE = """
 
 #browser_type            = "chrome"
 #browser_argument        = ["disable-infobars", "disable-notifications"]
-#browser_extension       = ["bypass-paywalls-1.7.6.crx", "singlefile-1.18.18.crx", "ublock-origin-1.30.6.crx"]
-#browser_extension       = ["bypass-paywalls-1.7.6.xpi", "singlefile-1.18.18.xpi", "ublock-origin-1.30.6.xpi"]
+#browser_extension       = ["bypass-paywalls-1.7.6.crx", "ublock-origin-1.30.6.crx"]
+#browser_extension       = ["bypass-paywalls-1.7.6.xpi", "ublock-origin-1.30.6.xpi"]
 #browser_geometry        = "1024x768"
 #browser_instance        = 1
 #browser_instance_tab    = 5
@@ -150,7 +150,7 @@ CONFIG_SAMPLE = """
 #batch_size              = 100
 #output_dir              = "/tmp/webchela"
 #server                  = "127.0.0.1:50051"
-#scripts                 = ["window.setTimeout(arguments[arguments.length - 1], 100)"]
+#scripts                 = ["return 42;"]
 
 [server]
 
@@ -160,8 +160,8 @@ CONFIG_SAMPLE = """
 # ----------------------------------------------------------------------------------------------------------------------
 
 HELP_CLIENT_URL = "Single URL address."
-HELP_CLIENT_URL_FILE = "Multiple URL addresses from file, one per line."
+HELP_CLIENT_URL_FILE = "Load URL addresses from file."
 HELP_CLIENT_SCRIPT = "Single line Javascript code."
-HELP_CLIENT_SCRIPT_FILE = "Javascript code from file."
+HELP_CLIENT_SCRIPT_FILE = "Load Javascript code from file."
 
 # ----------------------------------------------------------------------------------------------------------------------
