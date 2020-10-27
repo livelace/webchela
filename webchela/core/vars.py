@@ -1,0 +1,160 @@
+import os
+from importlib.util import find_spec
+from os.path import dirname, join, isdir
+
+# ----------------------------------------------------------------------------------------------------------------------
+
+APP_NAME = "webchela"
+APP_VERSION = "v1.0.0"
+
+BASE_DIR = dirname(find_spec("webchela").loader.path)
+
+DEFAULT_LOG_FORMAT = "%(asctime)s %(name)s %(levelname)s %(message)s"
+DEFAULT_LOG_LEVEL = "INFO"
+
+DEFAULT_SHM_SIZE = 1 * 1024 * 1024 * 1024  # 1GB
+
+# ----------------------------------------------------------------------------------------------------------------------
+# Chrome settings.
+CHROME_DRIVER_PATH = "/usr/bin/chromedriver"
+CHROME_EXTENSIONS_DIR = "/tmp"
+CHROME_PATH = "/usr/bin/google-chrome-stable"
+CHROME_PROFILES_DIR = "/tmp"
+
+# Firefox settings.
+FIREFOX_DRIVER_PATH = "/usr/bin/geckodriver"
+FIREFOX_EXTENSIONS_DIR = "/tmp"
+FIREFOX_LOG_FILE = "/tmp/geckodriver.log"
+FIREFOX_PATH = "/usr/lib64/firefox/firefox"
+FIREFOX_PROFILES_DIR = "/tmp"
+FIREFOX_GECKODRIVER_WRAPPER = os.path.join(BASE_DIR, "core", "script", "geckodriver.sh")
+
+webchela_extensions = find_spec("webchela-extensions")
+if webchela_extensions:
+    cd = join(dirname(webchela_extensions.loader.path), "chrome")
+    fd = join(dirname(webchela_extensions.loader.path), "firefox")
+
+    if isdir(cd):
+        CHROME_EXTENSIONS_DIR = cd
+
+    if isdir(fd):
+        FIREFOX_EXTENSIONS_DIR = fd
+
+# ----------------------------------------------------------------------------------------------------------------------
+
+# Server.
+DEFAULT_SERVER_LISTEN = "0.0.0.0:50051"
+
+# Client.
+DEFAULT_CLIENT_BATCH_SIZE = 100
+DEFAULT_BROWSER_ARGUMENT = []
+DEFAULT_BROWSER_EXTENSION = []
+DEFAULT_BROWSER_GEOMETRY = "1024x768"
+DEFAULT_BROWSER_INSTANCE = 1
+DEFAULT_BROWSER_INSTANCE_TAB = 5
+DEFAULT_BROWSER_PAGE_SIZE = 10 * 1024 * 1024    # 10MB.
+DEFAULT_BROWSER_PAGE_TIMEOUT = 20               # seconds.
+DEFAULT_BROWSER_SCRIPT_TIMEOUT = 20             # seconds.
+DEFAULT_BROWSER_TYPE = "chrome"
+
+DEFAULT_CHUNK_SIZE = 3 * 1024 * 1024            # 3MB.
+DEFAULT_CPU_LOAD = 50                           # percents.
+DEFAULT_GEOMETRY_HEIGHT = 768
+DEFAULT_GEOMETRY_WIDTH = 1024
+DEFAULT_MEM_FREE = 1 * 1024 * 1024 * 1024       # 1GB.
+DEFAULT_TASK_TIMEOUT = 300                      # 5 minutes.
+
+DEFAULT_CLIENT_ID = "webchela-cli"
+DEFAULT_CLIENT_OUTPUT_DIR = "/tmp/webchela"
+DEFAULT_CLIENT_SCRIPTS = []
+DEFAULT_CLIENT_SERVER = "127.0.0.1:50051"
+
+# ----------------------------------------------------------------------------------------------------------------------
+
+DEFAULT_PARAMS = {
+    "default": {
+        "browser_type": DEFAULT_BROWSER_TYPE,
+        "browser_argument": DEFAULT_BROWSER_ARGUMENT,
+        "browser_extension": DEFAULT_BROWSER_EXTENSION,
+        "browser_geometry": DEFAULT_BROWSER_GEOMETRY,
+        "browser_instance": DEFAULT_BROWSER_INSTANCE,
+        "browser_instance_tab": DEFAULT_BROWSER_INSTANCE_TAB,
+        "browser_page_size": DEFAULT_BROWSER_PAGE_SIZE,
+        "browser_page_timeout": DEFAULT_BROWSER_PAGE_TIMEOUT,
+        "browser_script_timeout": DEFAULT_BROWSER_SCRIPT_TIMEOUT,
+        "chrome_driver_path": CHROME_DRIVER_PATH,
+        "chrome_extensions_dir": CHROME_EXTENSIONS_DIR,
+        "chrome_path": CHROME_PATH,
+        "chrome_profiles_dir": CHROME_PROFILES_DIR,
+        "chunk_size": DEFAULT_CHUNK_SIZE,
+        "cpu_load": DEFAULT_CPU_LOAD,
+        "firefox_driver_path": FIREFOX_DRIVER_PATH,
+        "firefox_extensions_dir": FIREFOX_EXTENSIONS_DIR,
+        "firefox_path": FIREFOX_PATH,
+        "firefox_profiles_dir": FIREFOX_PROFILES_DIR,
+        "log_level": DEFAULT_LOG_LEVEL,
+        "mem_free": DEFAULT_MEM_FREE,
+        "task_timeout": DEFAULT_TASK_TIMEOUT
+    },
+    "client": {
+        "batch_size": DEFAULT_CLIENT_BATCH_SIZE,
+        "client_id": DEFAULT_CLIENT_ID,
+        "output_dir": DEFAULT_CLIENT_OUTPUT_DIR,
+        "server": DEFAULT_CLIENT_SERVER,
+        "scripts": DEFAULT_CLIENT_SCRIPTS,
+    },
+    "server": {
+        "listen": DEFAULT_SERVER_LISTEN
+    }
+}
+
+# ----------------------------------------------------------------------------------------------------------------------
+
+CONFIG_SAMPLE = """
+[default]
+
+#browser_type            = "chrome"
+#browser_argument        = ["disable-infobars", "disable-notifications"]
+#browser_extension       = ["bypass-paywalls-1.7.6.crx", "singlefile-1.18.18.crx", "ublock-origin-1.30.6.crx"]
+#browser_extension       = ["bypass-paywalls-1.7.6.xpi", "singlefile-1.18.18.xpi", "ublock-origin-1.30.6.xpi"]
+#browser_geometry        = "1024x768"
+#browser_instance        = 1
+#browser_instance_tab    = 5
+#browser_page_size       = "5M"
+#browser_page_timeout    = 20
+#browser_script_timeout  = 20
+
+#chrome_driver_path      = "/usr/bin/chromedriver"
+#chrome_extensions_dir   = "/home/webchela/.local/lib/python3.7/site-packages/extensions/chrome"
+#chrome_path             = "/usr/bin/google-chrome-stable"
+#chrome_profiles_dir     = "/tmp"
+
+#chunk_size              = "3M"
+
+#cpu_load                = 50
+
+#firefox_driver_path     = "/usr/bin/geckodriver"
+#firefox_extensions_dir  = "/tmp"
+#firefox_path            = "/usr/bin/firefox"
+#firefox_profiles_dir    = "/tmp"
+
+#log_level               = "DEBUG"
+
+#mem_free                = "1G"
+
+#task_timeout            = 300
+
+[client]
+
+#client_id               = "webchela-cli"
+#batch_size              = 100
+#output_dir              = "/tmp/webchela"
+#server                  = "127.0.0.1:50051"
+#scripts                 = ["window.setTimeout(arguments[arguments.length - 1], 100)"]
+
+[server]
+
+#listen                  = "0.0.0.0:50051"
+"""
+
+# ----------------------------------------------------------------------------------------------------------------------
