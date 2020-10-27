@@ -114,31 +114,33 @@ CONFIG_SAMPLE = """
 [default]
 
 #browser_type            = "chrome"
-#browser_argument        = ["disable-infobars", "disable-notifications"]
 #browser_extension       = ["bypass-paywalls-1.7.6.crx", "ublock-origin-1.30.6.crx"]
+
+#browser_type            = "firefox"
 #browser_extension       = ["bypass-paywalls-1.7.6.xpi", "ublock-origin-1.30.6.xpi"]
+
 #browser_geometry        = "1024x768"
 #browser_instance        = 1
 #browser_instance_tab    = 5
-#browser_page_size       = "5M"
+#browser_page_size       = "10M"
 #browser_page_timeout    = 20
 #browser_script_timeout  = 20
 
 #chrome_driver_path      = "/usr/bin/chromedriver"
-#chrome_extensions_dir   = "/home/webchela/.local/lib/python3.7/site-packages/extensions/chrome"
+#chrome_extensions_dir   = "/tmp"
 #chrome_path             = "/usr/bin/google-chrome-stable"
 #chrome_profiles_dir     = "/tmp"
 
 #chunk_size              = "3M"
 
-#cpu_load                = 50
+#cpu_load                = 25
 
 #firefox_driver_path     = "/usr/bin/geckodriver"
 #firefox_extensions_dir  = "/tmp"
 #firefox_path            = "/usr/bin/firefox"
 #firefox_profiles_dir    = "/tmp"
 
-#log_level               = "DEBUG"
+#log_level               = "INFO"
 
 #mem_free                = "1G"
 
