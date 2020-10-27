@@ -12,6 +12,13 @@
 * Works in headless mode ([Xvnc](https://wiki.archlinux.org/index.php/TigerVNC)).
 * Contains simple client.
 
+### Dependencies:
+
+* Python 3.7+
+* Chrome, chromedriver.
+* Firefox, geckodriver.
+* TigerVNC.
+
 ### Config sample:
 
 ```toml
