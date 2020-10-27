@@ -5,10 +5,11 @@
 
 ### Features:
 
-* Accepts commands from clients over GRPC. 
+* Accepts commands from clients over [GRPC](https://grpc.io/). 
 * Split fetched data into chunks.
-* Fully controlled on client side. 
+* Fully controlled on client side (browser type, browser extensions, loads etc.). 
 * Expose server loads to clients, control loads itself.
+* Works in headless mode ([Xvnc](https://wiki.archlinux.org/index.php/TigerVNC)).
 * Contains simple client.
 
 ### Config sample:
