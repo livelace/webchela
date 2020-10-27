@@ -17,9 +17,11 @@
 [default]
 
 #browser_type            = "chrome"
-#browser_argument        = ["disable-infobars", "disable-notifications"]
 #browser_extension       = ["bypass-paywalls-1.7.6.crx", "ublock-origin-1.30.6.crx"]
+
+#browser_type            = "firefox"
 #browser_extension       = ["bypass-paywalls-1.7.6.xpi", "ublock-origin-1.30.6.xpi"]
+
 #browser_geometry        = "1024x768"
 #browser_instance        = 1
 #browser_instance_tab    = 5
