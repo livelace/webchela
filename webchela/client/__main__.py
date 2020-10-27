@@ -99,12 +99,12 @@ def main():
     parser = argparse.ArgumentParser(prog=APP_NAME)
 
     url_group = parser.add_mutually_exclusive_group(required=True)
-    url_group.add_argument("--url")
-    url_group.add_argument("--url-file", type=argparse.FileType("r"))
+    url_group.add_argument("--url", help=HELP_CLIENT_URL)
+    url_group.add_argument("--url-file", type=argparse.FileType("r"), help=HELP_CLIENT_URL_FILE)
 
     script_group = parser.add_mutually_exclusive_group()
-    script_group.add_argument("--script")
-    script_group.add_argument("--script-file", type=argparse.FileType("r"))
+    script_group.add_argument("--script", help=HELP_CLIENT_SCRIPT)
+    script_group.add_argument("--script-file", type=argparse.FileType("r"), help=HELP_CLIENT_SCRIPT_FILE)
 
     args = parser.parse_args()
 

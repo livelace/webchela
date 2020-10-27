@@ -158,3 +158,10 @@ CONFIG_SAMPLE = """
 """
 
 # ----------------------------------------------------------------------------------------------------------------------
+
+HELP_CLIENT_URL = "Single URL address."
+HELP_CLIENT_URL_FILE = "Multiple URL addresses from file, one per line."
+HELP_CLIENT_SCRIPT = "Single line Javascript code."
+HELP_CLIENT_SCRIPT_FILE = "Javascript code from file."
+
+# ----------------------------------------------------------------------------------------------------------------------
