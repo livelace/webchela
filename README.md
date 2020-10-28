@@ -73,7 +73,7 @@ user@localhost / $ docker exec webchela tree /tmp/webchela
 
 #firefox_driver_path     = "/usr/bin/geckodriver"
 #firefox_extensions_dir  = "/tmp"
-#firefox_path            = "/usr/bin/firefox"
+#firefox_path            = "/usr/lib64/firefox/firefox"
 #firefox_profiles_dir    = "/tmp"
 
 #log_level               = "INFO"
