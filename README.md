@@ -19,6 +19,31 @@
 * Firefox, geckodriver.
 * TigerVNC.
 
+### Quick start:
+
+```shell script
+# start daemon
+user@localhost / $ docker run --name webchela -ti --rm -v /dev/shm:/dev/shm docker.io/livelace/webchela:v1.0.0
+2020-10-28 00:22:49 webchela.config INFO Config sample was written successfully: /home/webchela/.webchela.toml
+2020-10-28 00:22:49 webchela.server INFO webchela v1.0.0
+
+# fetch page
+user@localhost / $ docker exec webchela webchela-cli --url https://google.com
+2020-10-28 00:22:57 webchela.client INFO webchela v1.0.0
+2020-10-28 00:22:57 webchela.client INFO Send task. Total urls: 1. Total batches: 1.
+2020-10-28 00:22:57 webchela.client INFO Send batch: 0. Batch size: 1
+2020-10-28 00:23:02 webchela.client INFO Task completed.
+
+# show data
+user@localhost / $ docker exec webchela tree /tmp/webchela
+/tmp/webchela
+└── 00:22:57_28.10.2020
+    └── B0
+        └── U0_PAGE_BODY_google.html
+
+2 directories, 1 file
+```
+
 ### Config sample:
 
 ```toml
