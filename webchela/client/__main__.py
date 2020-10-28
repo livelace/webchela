@@ -32,7 +32,7 @@ def _save_to_file(path, file, data, message):
 
 
 def save_data(date, batch, data):
-    batch_dir = "B{}".format(batch)
+    batch_dir = "BATCH{}".format(batch)
     data_dir = date.strftime("%H:%M:%S_%d.%m.%Y")
     target_path = os.path.join(config.params.client.output_dir, data_dir, batch_dir)
 
@@ -46,14 +46,14 @@ def save_data(date, batch, data):
         result = data[index]
 
         # Save page body.
-        page_body_filename = "U{}_PAGE_BODY_{}.html".format(
+        page_body_filename = "URL{}_PAGE_BODY_{}.html".format(
             index, slugify(result.page_title, max_length=200))
 
         _save_to_file(target_path, page_body_filename, result.page_body, "Cannot save page body into file")
 
         # Save script output.
         if result.script_output:
-            script_output_filename = "U{}_SCRIPT_OUTPUT_{}.txt".format(
+            script_output_filename = "URL{}_SCRIPT_OUTPUT_{}.txt".format(
                 index, slugify(result.page_title, max_length=200))
 
             _save_to_file(
