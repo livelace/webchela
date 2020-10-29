@@ -1,7 +1,11 @@
 # webchela
 
 
-***webchela*** ("web" + "chela") is a daemon for interacting with web pages through automated browsers (Chrome or Firefox).
+***webchela*** ("web" + "chela") is a daemon for interacting with web pages through automated browsers (Chrome or Firefox). 
+
+### Main goal:
+
+Provide a plugin endpoint to other tool - [gosquito](https://github.com/livelace/gosquito). 
 
 ### Features:
 
@@ -9,14 +13,14 @@
 * Split fetched data into chunks.
 * Fully controlled on client side (browser type, browser extensions, loads etc.). 
 * Expose server loads to clients, control loads itself.
-* Works in headless mode ([Xvnc](https://wiki.archlinux.org/index.php/TigerVNC)).
-* Contains simple client.
+* Works in headless mode ([TigerVNC](https://wiki.archlinux.org/index.php/TigerVNC)).
+* Dumb command line client.
 
 ### Dependencies:
 
 * Python 3.7+
-* Chrome, chromedriver.
-* Firefox, geckodriver.
+* Chrome, [chromedriver](https://chromedriver.chromium.org/).
+* Firefox, [geckodriver](https://github.com/mozilla/geckodriver).
 * TigerVNC.
 
 ### Quick start:
