@@ -336,6 +336,7 @@ class FirefoxBrowser(Browser):
         # add application related arguments.
         options.add_argument("--new-instance")
         options.set_preference("browser.link.open_newwindow", 3)  # open urls in tabs, not in windows.
+        options.set_preference("media.autoplay.default", 5)  # disable all media autoplaying.
 
         # add user-defined arguments.
         for argument in self.request.browser.argument:
