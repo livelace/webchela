@@ -26,7 +26,7 @@ def gen_hash():
 def get_load(cpu, mem, interval=1):
     # get base metrics.
     cpu_load = int(psutil.cpu_percent(interval=interval))
-    if cpu_load == 0:   # who might to think that CPU load could be zero >_< (sarcasm).
+    if cpu_load == 0:   # who might imagine that CPU load could be zero >_< (sarcasm).
         cpu_load = 1
 
     mem_free = int(psutil.virtual_memory().available)
