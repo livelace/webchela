@@ -205,3 +205,6 @@ class Config:
         # Server.
         self._params["server"]["listen"] = is_string(
             "server.listen", self._params["server"]["listen"], DEFAULT_SERVER_LISTEN)
+
+        self._params["server"]["workers"] = is_string(
+            "server.workers", self._params["server"]["workers"], DEFAULT_SERVER_WORKERS)

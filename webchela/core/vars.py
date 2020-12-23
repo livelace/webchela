@@ -44,6 +44,7 @@ if webchela_extensions:
 
 # Server.
 DEFAULT_SERVER_LISTEN = "0.0.0.0:50051"
+DEFAULT_SERVER_WORKERS = 1
 
 # Client.
 DEFAULT_CLIENT_BATCH_SIZE = 100
@@ -104,7 +105,8 @@ DEFAULT_PARAMS = {
         "scripts": DEFAULT_CLIENT_SCRIPTS,
     },
     "server": {
-        "listen": DEFAULT_SERVER_LISTEN
+        "listen": DEFAULT_SERVER_LISTEN,
+        "workers": DEFAULT_SERVER_WORKERS
     }
 }
 
@@ -157,6 +159,7 @@ CONFIG_SAMPLE = """
 [server]
 
 #listen                  = "0.0.0.0:50051"
+#workers                 = 1
 """
 
 # ----------------------------------------------------------------------------------------------------------------------

@@ -223,7 +223,7 @@ def main():
     signal.signal(signal.SIGINT, exit_handler)
 
     try:
-        server = grpc.server(futures.ThreadPoolExecutor(max_workers=100))
+        server = grpc.server(futures.ThreadPoolExecutor(max_workers=config.params.server.workers))
         webchela_pb2_grpc.add_ServerServicer_to_server(Server(), server)
         server.add_insecure_port(config.params.server.listen)
         server.start()
