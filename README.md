@@ -97,4 +97,5 @@ user@localhost / $ docker exec webchela tree /tmp/webchela
 [server]
 
 #listen                  = "0.0.0.0:50051"
+#workers                 = 1
 ```
