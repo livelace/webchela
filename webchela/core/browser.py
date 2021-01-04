@@ -122,6 +122,7 @@ class Browser:
 
         # process tabs.
         for index in range(len(urls)):
+            uid = str(uuid.uuid4())
             url = urls[index]
             window = window_handles[index]
 
@@ -130,7 +131,7 @@ class Browser:
 
                 # Result will contain all data.
                 result = webchela_pb2.Result(
-                    UUID=str(uuid.uuid4()),
+                    UUID=uid,
                     page_url=url,
                     page_title=self.browser.title,
                 )
@@ -166,6 +167,9 @@ class Browser:
 
                         logger.warning(msg)
                         result.script_output.append(msg)
+
+                # Show what we got.
+                logger.debug("uuid: {}, url: {}, title: {}".format(uid, url, self.browser.title))
 
                 # Serialize and split result into chunks.
                 result_binary = result.SerializeToString()
