@@ -1,5 +1,7 @@
 FROM            docker.io/livelace/gentoo-x11:latest
 
+ARG             VERSION
+
 ENV             WEBCHELA_TEMP="/tmp/webchela"
 ENV             WEBCHELA_EXTENSIONS_TEMP="/tmp/webchela_extensions"
 ENV             WEBCHELA_URL="https://github.com/livelace/webchela"
@@ -17,7 +19,7 @@ RUN             useradd -m -u 1000 -s "/bin/bash" "webchela"
 USER            "webchela"
 
 # webchela.
-RUN             git clone "$WEBCHELA_URL" "$WEBCHELA_TEMP" && \
+RUN             git clone --depth 1 --branch "$VERSION" "$WEBCHELA_URL" "$WEBCHELA_TEMP" && \
                 cd "$WEBCHELA_TEMP" && \
                 pip install --user -r "requirements.txt" && \
                 pip install --user . && \
