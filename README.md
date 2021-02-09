@@ -14,7 +14,7 @@ Provide a plugin endpoint to other tool - [gosquito](https://github.com/livelace
 * Fully controlled on client side (browser type, browser extensions, loads etc.). 
 * Expose server loads to clients, control loads itself.
 * Works in headless mode ([TigerVNC](https://wiki.archlinux.org/index.php/TigerVNC)).
-* Dumb command line client.
+* PoC command line client.
 
 ### Dependencies:
 
@@ -27,13 +27,13 @@ Provide a plugin endpoint to other tool - [gosquito](https://github.com/livelace
 
 ```shell script
 # start daemon
-user@localhost / $ docker run --name webchela -ti --rm -v /dev/shm:/dev/shm docker.io/livelace/webchela:v1.1.0
+user@localhost / $ docker run --name webchela -ti --rm -v /dev/shm:/dev/shm docker.io/livelace/webchela:v1.2.0
 2021-02-09 11:37:26 webchela.config INFO Config sample was written successfully: /home/webchela/.webchela.toml
-2021-02-09 11:37:26 webchela.server INFO webchela v1.1.0
+2021-02-09 11:37:26 webchela.server INFO webchela v1.2.0
 
 # fetch page with simple client
 user@localhost / $ docker exec webchela webchela-cli --url https://google.com
-2021-02-09 11:37:29 webchela.client INFO webchela v1.1.0
+2021-02-09 11:37:29 webchela.client INFO webchela v1.2.0
 2021-02-09 11:37:29 webchela.client INFO Send task. Total urls: 1. Total batches: 1.
 2021-02-09 11:37:29 webchela.client INFO Send batch: 0. Batch size: 1
 2021-02-09 11:37:34 webchela.client INFO Task completed.

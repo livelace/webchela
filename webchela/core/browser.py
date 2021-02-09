@@ -4,7 +4,7 @@ import shutil
 import uuid
 
 from pyvirtualdisplay import Display
-from selenium import webdriver
+from seleniumwire import webdriver
 from selenium.common.exceptions import *
 from tempfile import mkdtemp
 
@@ -129,12 +129,23 @@ class Browser:
             try:
                 self.browser.switch_to.window(window)
 
+                # Extract additional data.
+                status_code = 0
+                content_type = "unknown"
+
+                for request in self.browser.requests:
+                    if request.response and request.url == self.browser.current_url:
+                        status_code = request.response.status_code
+                        content_type = request.response.headers['Content-Type']
+
                 # Result will contain all data.
                 result = webchela_pb2.Result(
                     UUID=uid,
                     page_url=self.browser.current_url,
                     page_title=self.browser.title,
-                    url=url
+                    url=url,
+                    status_code=status_code,
+                    content_type=content_type
                 )
 
                 # Check page size.

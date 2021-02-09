@@ -18,7 +18,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='webchela',
   syntax='proto3',
   serialized_options=b'Z\n.;webchela',
-  serialized_pb=b'\n\x0ewebchela.proto\x12\x08webchela\"#\n\x05\x43hunk\x12\r\n\x05\x63hunk\x18\x01 \x01(\x0c\x12\x0b\n\x03\x65nd\x18\x02 \x01(\x08\"\x07\n\x05\x45mpty\"9\n\x04Load\x12\x10\n\x08\x63pu_load\x18\x01 \x01(\x05\x12\x10\n\x08mem_free\x18\x02 \x01(\x03\x12\r\n\x05score\x18\x03 \x01(\x05\"s\n\x06Result\x12\x0c\n\x04UUID\x18\x01 \x01(\t\x12\x10\n\x08page_url\x18\x02 \x01(\t\x12\x12\n\npage_title\x18\x03 \x01(\t\x12\x11\n\tpage_body\x18\x04 \x01(\t\x12\x15\n\rscript_output\x18\x05 \x03(\t\x12\x0b\n\x03url\x18\x06 \x01(\t\"\xe4\x02\n\x04Task\x12\x11\n\tclient_id\x18\x01 \x01(\t\x12\'\n\x07\x62rowser\x18\x02 \x01(\x0b\x32\x16.webchela.Task.Browser\x12\x0c\n\x04urls\x18\x03 \x03(\t\x12\x0f\n\x07scripts\x18\x04 \x03(\t\x12\x12\n\nchunk_size\x18\x05 \x01(\x03\x12\x10\n\x08\x63pu_load\x18\x06 \x01(\x05\x12\x10\n\x08mem_free\x18\x07 \x01(\x03\x12\x0f\n\x07timeout\x18\x08 \x01(\x05\x1a\xb7\x01\n\x07\x42rowser\x12\x0c\n\x04type\x18\x01 \x01(\t\x12\x10\n\x08\x61rgument\x18\x02 \x03(\t\x12\x11\n\textension\x18\x03 \x03(\t\x12\x10\n\x08geometry\x18\x04 \x01(\t\x12\x10\n\x08instance\x18\x05 \x01(\x05\x12\x14\n\x0cinstance_tab\x18\x06 \x01(\x05\x12\x11\n\tpage_size\x18\x07 \x01(\x03\x12\x14\n\x0cpage_timeout\x18\x08 \x01(\x05\x12\x16\n\x0escript_timeout\x18\t \x01(\x05\x32\x66\n\x06Server\x12,\n\x07GetLoad\x12\x0f.webchela.Empty\x1a\x0e.webchela.Load\"\x00\x12.\n\x07RunTask\x12\x0e.webchela.Task\x1a\x0f.webchela.Chunk\"\x00\x30\x01\x42\x0cZ\n.;webchelab\x06proto3'
+  serialized_pb=b'\n\x0ewebchela.proto\x12\x08webchela\"#\n\x05\x43hunk\x12\r\n\x05\x63hunk\x18\x01 \x01(\x0c\x12\x0b\n\x03\x65nd\x18\x02 \x01(\x08\"\x07\n\x05\x45mpty\"9\n\x04Load\x12\x10\n\x08\x63pu_load\x18\x01 \x01(\x05\x12\x10\n\x08mem_free\x18\x02 \x01(\x03\x12\r\n\x05score\x18\x03 \x01(\x05\"\x9e\x01\n\x06Result\x12\x0c\n\x04UUID\x18\x01 \x01(\t\x12\x10\n\x08page_url\x18\x02 \x01(\t\x12\x12\n\npage_title\x18\x03 \x01(\t\x12\x11\n\tpage_body\x18\x04 \x01(\t\x12\x15\n\rscript_output\x18\x05 \x03(\t\x12\x0b\n\x03url\x18\x06 \x01(\t\x12\x13\n\x0bstatus_code\x18\x07 \x01(\x05\x12\x14\n\x0c\x63ontent_type\x18\x08 \x01(\t\"\xe4\x02\n\x04Task\x12\x11\n\tclient_id\x18\x01 \x01(\t\x12\'\n\x07\x62rowser\x18\x02 \x01(\x0b\x32\x16.webchela.Task.Browser\x12\x0c\n\x04urls\x18\x03 \x03(\t\x12\x0f\n\x07scripts\x18\x04 \x03(\t\x12\x12\n\nchunk_size\x18\x05 \x01(\x03\x12\x10\n\x08\x63pu_load\x18\x06 \x01(\x05\x12\x10\n\x08mem_free\x18\x07 \x01(\x03\x12\x0f\n\x07timeout\x18\x08 \x01(\x05\x1a\xb7\x01\n\x07\x42rowser\x12\x0c\n\x04type\x18\x01 \x01(\t\x12\x10\n\x08\x61rgument\x18\x02 \x03(\t\x12\x11\n\textension\x18\x03 \x03(\t\x12\x10\n\x08geometry\x18\x04 \x01(\t\x12\x10\n\x08instance\x18\x05 \x01(\x05\x12\x14\n\x0cinstance_tab\x18\x06 \x01(\x05\x12\x11\n\tpage_size\x18\x07 \x01(\x03\x12\x14\n\x0cpage_timeout\x18\x08 \x01(\x05\x12\x16\n\x0escript_timeout\x18\t \x01(\x05\x32\x66\n\x06Server\x12,\n\x07GetLoad\x12\x0f.webchela.Empty\x1a\x0e.webchela.Load\"\x00\x12.\n\x07RunTask\x12\x0e.webchela.Task\x1a\x0f.webchela.Chunk\"\x00\x30\x01\x42\x0cZ\n.;webchelab\x06proto3'
 )
 
 
@@ -180,6 +180,20 @@ _RESULT = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='status_code', full_name='webchela.Result.status_code', index=6,
+      number=7, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='content_type', full_name='webchela.Result.content_type', index=7,
+      number=8, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -192,8 +206,8 @@ _RESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=133,
-  serialized_end=248,
+  serialized_start=134,
+  serialized_end=292,
 )
 
 
@@ -279,8 +293,8 @@ _TASK_BROWSER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=424,
-  serialized_end=607,
+  serialized_start=468,
+  serialized_end=651,
 )
 
 _TASK = _descriptor.Descriptor(
@@ -358,8 +372,8 @@ _TASK = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=251,
-  serialized_end=607,
+  serialized_start=295,
+  serialized_end=651,
 )
 
 _TASK_BROWSER.containing_type = _TASK
@@ -423,8 +437,8 @@ _SERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=609,
-  serialized_end=711,
+  serialized_start=653,
+  serialized_end=755,
   methods=[
   _descriptor.MethodDescriptor(
     name='GetLoad',
