@@ -9,8 +9,7 @@ ENV             WEBCHELA_EXTENSIONS_URL="https://github.com/livelace/webchela-ex
 
 # portage packages.
 RUN             emerge -G -q \
-                "dev-python/pip" \
-                "www-apps/chromedriver-bin" && \
+                "dev-python/pip" && \
                 rm -rf "/usr/portage/packages"
 
 # create user.
