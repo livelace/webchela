@@ -41,13 +41,15 @@ user@localhost / $ docker exec webchela webchela-cli --url https://google.com
 # show data
 user@localhost / $ docker exec webchela tree /tmp/webchela
 /tmp/webchela
-└── 11:37:29_09.02.2021
+└── 18:06:43_09.02.2021
     └── BATCH0
+        ├── URL0_CONTENT_TYPE_google.txt
         ├── URL0_PAGE_BODY_google.html
-        ├── URL0_PAGE_URL_google.html
-        └── URL0_URL_google.html
+        ├── URL0_PAGE_URL_google.txt
+        ├── URL0_STATUS_CODE_google.txt
+        └── URL0_URL_google.txt
 
-2 directories, 1 file
+2 directories, 5 files
 ```
 
 ### Config sample:
