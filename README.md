@@ -27,23 +27,25 @@ Provide a plugin endpoint to other tool - [gosquito](https://github.com/livelace
 
 ```shell script
 # start daemon
-user@localhost / $ docker run --name webchela -ti --rm -v /dev/shm:/dev/shm docker.io/livelace/webchela:v1.0.4
-2020-10-28 00:22:49 webchela.config INFO Config sample was written successfully: /home/webchela/.webchela.toml
-2020-10-28 00:22:49 webchela.server INFO webchela v1.0.4
+user@localhost / $ docker run --name webchela -ti --rm -v /dev/shm:/dev/shm docker.io/livelace/webchela:v1.1.0
+2021-02-09 11:37:26 webchela.config INFO Config sample was written successfully: /home/webchela/.webchela.toml
+2021-02-09 11:37:26 webchela.server INFO webchela v1.1.0
 
 # fetch page with simple client
 user@localhost / $ docker exec webchela webchela-cli --url https://google.com
-2020-10-28 00:22:57 webchela.client INFO webchela v1.0.4
-2020-10-28 00:22:57 webchela.client INFO Send task. Total urls: 1. Total batches: 1.
-2020-10-28 00:22:57 webchela.client INFO Send batch: 0. Batch size: 1
-2020-10-28 00:23:02 webchela.client INFO Task completed.
+2021-02-09 11:37:29 webchela.client INFO webchela v1.1.0
+2021-02-09 11:37:29 webchela.client INFO Send task. Total urls: 1. Total batches: 1.
+2021-02-09 11:37:29 webchela.client INFO Send batch: 0. Batch size: 1
+2021-02-09 11:37:34 webchela.client INFO Task completed.
 
 # show data
 user@localhost / $ docker exec webchela tree /tmp/webchela
 /tmp/webchela
-└── 00:22:57_28.10.2020
+└── 11:37:29_09.02.2021
     └── BATCH0
-        └── URL0_PAGE_BODY_google.html
+        ├── URL0_PAGE_BODY_google.html
+        ├── URL0_PAGE_URL_google.html
+        └── URL0_URL_google.html
 
 2 directories, 1 file
 ```
