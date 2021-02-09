@@ -6,6 +6,7 @@ import uuid
 from pyvirtualdisplay import Display
 from seleniumwire import webdriver
 from selenium.common.exceptions import *
+from selenium.webdriver import FirefoxOptions
 from tempfile import mkdtemp
 
 import webchela.core.protobuf.webchela_pb2 as webchela_pb2
@@ -346,7 +347,7 @@ class FirefoxBrowser(Browser):
                 self.request.client_id, self.task_hash, e))
             return False
 
-        options = webdriver.FirefoxOptions()
+        options = FirefoxOptions()
         options.binary_location = self.config.params.default.firefox_path
 
         # add application related arguments.
