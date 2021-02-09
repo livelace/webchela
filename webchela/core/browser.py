@@ -132,8 +132,9 @@ class Browser:
                 # Result will contain all data.
                 result = webchela_pb2.Result(
                     UUID=uid,
-                    page_url=url,
+                    page_url=self.browser.current_url,
                     page_title=self.browser.title,
+                    url=url
                 )
 
                 # Check page size.

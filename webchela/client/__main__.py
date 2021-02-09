@@ -45,19 +45,31 @@ def save_data(date, batch, data):
     for index in range(len(data)):
         result = data[index]
 
-        # Save page body.
+        # Save "page_body".
         page_body_filename = "URL{}_PAGE_BODY_{}.html".format(
             index, slugify(result.page_title, max_length=200))
 
         _save_to_file(target_path, page_body_filename, result.page_body, "Cannot save page body into file")
 
-        # Save script output.
+        # Save "page_url".
+        page_url_filename = "URL{}_PAGE_URL_{}.html".format(
+            index, slugify(result.page_title, max_length=200))
+
+        _save_to_file(target_path, page_url_filename, result.page_url, "Cannot save page url into file")
+
+        # Save "script_output".
         if result.script_output:
             script_output_filename = "URL{}_SCRIPT_OUTPUT_{}.txt".format(
                 index, slugify(result.page_title, max_length=200))
 
             _save_to_file(
                 target_path, script_output_filename, result.script_output[0], "Cannot save script output into file")
+
+        # Save "url".
+        url_filename = "URL{}_URL_{}.html".format(
+            index, slugify(result.page_title, max_length=200))
+
+        _save_to_file(target_path, url_filename, result.url, "Cannot save url into file")
 
 
 def send_task(task):

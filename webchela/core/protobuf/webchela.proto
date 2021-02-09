@@ -27,6 +27,7 @@ message Result {
   string page_title = 3;
   string page_body = 4;
   repeated string script_output = 5;
+  string url = 6;
 }
 
 message Task {
