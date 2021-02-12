@@ -133,7 +133,8 @@ CONFIG_SAMPLE = """
 #browser_page_timeout    = 20
 #browser_script_timeout  = 20
 
-#browser_proxy           = ""
+#browser_proxy           = "http://1.2.3.4:3128"
+#browser_proxy           = "socks5://user:pass@1.2.3.4:1080"
 
 #chrome_driver_path      = "/usr/bin/chromedriver"
 #chrome_extensions_dir   = "/tmp"
