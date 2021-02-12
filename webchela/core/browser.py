@@ -43,6 +43,17 @@ class Browser:
 
         _, self.x, self.y = is_browser_geometry("", request.browser.geometry, config.params.default.browser_geometry)
 
+        self.selenium_wire_options = {}
+
+        if self.request.browser.proxy:
+            self.selenium_wire_options = {
+                "proxy": {
+                    "http": "{}".format(self.request.browser.proxy),
+                    "https": "{}".format(self.request.browser.proxy),
+                    "no_proxy": "localhost,127.0.0.1"
+                }
+            }
+
     def fetch(self, urls) -> dict:
         chunks = []
 
@@ -302,6 +313,7 @@ class ChromeBrowser(Browser):
 
             self.browser = webdriver.Chrome(executable_path=self.config.params.default.chrome_driver_path,
                                             options=options,
+                                            seleniumwire_options=self.selenium_wire_options,
                                             service_args=["--log-level=DEBUG"],
                                             service_log_path=log)
         except WebDriverException as e:
@@ -355,6 +367,7 @@ class FirefoxBrowser(Browser):
         # add application related arguments.
         options.add_argument("--new-instance")
         options.set_preference("browser.link.open_newwindow", 3)  # open urls in tabs, not in windows.
+        options.set_preference("dom.webnotifications.enabled", False)  # disable all notifications.
         options.set_preference("media.autoplay.default", 5)  # disable all media autoplaying.
 
         # add user-defined arguments.
@@ -374,6 +387,7 @@ class FirefoxBrowser(Browser):
                                              firefox_binary=self.config.params.default.firefox_path,
                                              log_path=log,
                                              options=options,
+                                             seleniumwire_options=self.selenium_wire_options,
                                              service_args=[
                                                  "--log", "trace",
                                                  self.config.params.default.firefox_driver_path,  # must be before last

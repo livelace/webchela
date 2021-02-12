@@ -150,6 +150,9 @@ class Config:
             "default.browser_script_timeout", self._params["default"]["browser_script_timeout"],
             DEFAULT_BROWSER_SCRIPT_TIMEOUT)
 
+        self._params["default"]["browser_proxy"] = is_string(
+            "default.browser_proxy", self._params["default"]["browser_proxy"], DEFAULT_BROWSER_PROXY)
+
         self._params["default"]["chrome_driver_path"] = is_file(
             "default.chrome_driver_path", self._params["default"]["chrome_driver_path"], CHROME_DRIVER_PATH)
 

@@ -161,6 +161,7 @@ def main():
         task.browser.instance_tab = config.params.default.browser_instance_tab
         task.browser.page_size = config.params.default.browser_page_size
         task.browser.page_timeout = config.params.default.browser_page_timeout
+        task.browser.proxy = config.params.default.browser_proxy
         task.browser.script_timeout = config.params.default.browser_script_timeout
         task.browser.type = config.params.default.browser_type
 

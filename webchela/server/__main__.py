@@ -90,6 +90,9 @@ class Server(webchela_pb2_grpc.ServerServicer):
         if request.browser.script_timeout == 0:
             request.browser.script_timeout = config.params.default.browser_script_timeout
 
+        if request.browser.proxy:
+            request.browser.proxy = config.params.default.browser_proxy
+
         if request.chunk_size == 0:
             request.chunk_size = config.params.default.chunk_size
 
@@ -134,6 +137,8 @@ class Server(webchela_pb2_grpc.ServerServicer):
             request.client_id, task_hash, request.browser.page_timeout))
         logger.debug("[{}][{}] browser.script_timeout: {}".format(
             request.client_id, task_hash, request.browser.script_timeout))
+        logger.debug("[{}][{}] browser.proxy: {}".format(
+            request.client_id, task_hash, request.browser.proxy))
 
         logger.debug("[{}][{}] chunk_size: {}".format(
             request.client_id, task_hash, human_size(request.chunk_size)))

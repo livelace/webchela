@@ -5,7 +5,7 @@ from os.path import dirname, join, isdir
 # ----------------------------------------------------------------------------------------------------------------------
 
 APP_NAME = "webchela"
-APP_VERSION = "v1.2.2"
+APP_VERSION = "v1.3.0"
 
 BASE_DIR = dirname(find_spec("webchela").loader.path)
 
@@ -59,6 +59,7 @@ DEFAULT_BROWSER_PAGE_SIZE = 10 * 1024 * 1024    # 10MB.
 DEFAULT_BROWSER_PAGE_TIMEOUT = 20               # seconds.
 DEFAULT_BROWSER_SCRIPT_TIMEOUT = 20             # seconds.
 DEFAULT_BROWSER_TYPE = "firefox"
+DEFAULT_BROWSER_PROXY = ""
 
 DEFAULT_CHUNK_SIZE = 3 * 1024 * 1024            # 3MB.
 DEFAULT_CPU_LOAD = 50                           # percents.
@@ -85,6 +86,7 @@ DEFAULT_PARAMS = {
         "browser_page_size": DEFAULT_BROWSER_PAGE_SIZE,
         "browser_page_timeout": DEFAULT_BROWSER_PAGE_TIMEOUT,
         "browser_script_timeout": DEFAULT_BROWSER_SCRIPT_TIMEOUT,
+        "browser_proxy": DEFAULT_BROWSER_PROXY,
         "chrome_driver_path": CHROME_DRIVER_PATH,
         "chrome_extensions_dir": CHROME_EXTENSIONS_DIR,
         "chrome_path": CHROME_PATH,
@@ -130,6 +132,8 @@ CONFIG_SAMPLE = """
 #browser_page_size       = "10M"
 #browser_page_timeout    = 20
 #browser_script_timeout  = 20
+
+#browser_proxy           = ""
 
 #chrome_driver_path      = "/usr/bin/chromedriver"
 #chrome_extensions_dir   = "/tmp"
