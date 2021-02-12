@@ -1,3 +1,5 @@
+from time import sleep
+
 import coloredlogs
 import logging
 import shutil
@@ -118,8 +120,17 @@ class Browser:
                         self.request.client_id, self.task_hash, url, e))
                     return {self.order: chunks}
 
+                # don't waste cpu power.
+                sleep(self.config.params.default.tab_hop_delay)
+
             if ready:
                 break
+
+        # save urls data (status_code AND content_type).
+        urls_data = {}
+        for request in self.browser.requests:
+            if request.response:
+                urls_data[request.url] = (request.response.status_code, request.response.headers['Content-Type'])
 
         # process tabs.
         for index in range(len(urls)):
@@ -130,23 +141,14 @@ class Browser:
             try:
                 self.browser.switch_to.window(window)
 
-                # Extract additional data.
-                status_code = 0
-                content_type = "unknown"
-
-                for request in self.browser.requests:
-                    if request.response and request.url == self.browser.current_url:
-                        status_code = request.response.status_code
-                        content_type = request.response.headers['Content-Type']
-
                 # Result will contain all data.
                 result = webchela_pb2.Result(
                     UUID=uid,
                     page_url=self.browser.current_url,
                     page_title=self.browser.title,
                     url=url,
-                    status_code=status_code,
-                    content_type=content_type
+                    status_code=urls_data[self.browser.current_url][0],
+                    content_type=urls_data[self.browser.current_url][1]
                 )
 
                 # Check page size.

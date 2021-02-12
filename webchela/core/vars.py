@@ -5,7 +5,7 @@ from os.path import dirname, join, isdir
 # ----------------------------------------------------------------------------------------------------------------------
 
 APP_NAME = "webchela"
-APP_VERSION = "v1.2.0"
+APP_VERSION = "v1.2.2"
 
 BASE_DIR = dirname(find_spec("webchela").loader.path)
 
@@ -40,6 +40,8 @@ if webchela_extensions:
     if isdir(fd):
         FIREFOX_EXTENSIONS_DIR = fd
 
+TAB_HOP_DELAY = 0.3
+
 # ----------------------------------------------------------------------------------------------------------------------
 
 # Server.
@@ -49,14 +51,14 @@ DEFAULT_SERVER_WORKERS = 1
 # Client.
 DEFAULT_CLIENT_BATCH_SIZE = 100
 DEFAULT_BROWSER_ARGUMENT = []
-DEFAULT_BROWSER_EXTENSION = []
+DEFAULT_BROWSER_EXTENSION = ["bypass-paywalls-1.7.6.xpi", "ublock-origin-1.30.6.xpi"]
 DEFAULT_BROWSER_GEOMETRY = "1024x768"
 DEFAULT_BROWSER_INSTANCE = 1
 DEFAULT_BROWSER_INSTANCE_TAB = 5
 DEFAULT_BROWSER_PAGE_SIZE = 10 * 1024 * 1024    # 10MB.
 DEFAULT_BROWSER_PAGE_TIMEOUT = 20               # seconds.
 DEFAULT_BROWSER_SCRIPT_TIMEOUT = 20             # seconds.
-DEFAULT_BROWSER_TYPE = "chrome"
+DEFAULT_BROWSER_TYPE = "firefox"
 
 DEFAULT_CHUNK_SIZE = 3 * 1024 * 1024            # 3MB.
 DEFAULT_CPU_LOAD = 50                           # percents.
@@ -95,6 +97,7 @@ DEFAULT_PARAMS = {
         "firefox_profiles_dir": FIREFOX_PROFILES_DIR,
         "log_level": DEFAULT_LOG_LEVEL,
         "mem_free": DEFAULT_MEM_FREE,
+        "tab_hop_delay": TAB_HOP_DELAY,
         "task_timeout": DEFAULT_TASK_TIMEOUT
     },
     "client": {
