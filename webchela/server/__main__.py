@@ -27,6 +27,7 @@ coloredlogs.install(fmt=DEFAULT_LOG_FORMAT, level=config.params.default.log_leve
 
 # Disable "noise" logging.
 logging.getLogger("easyprocess").setLevel(logging.ERROR)
+logging.getLogger("hpack").setLevel(logging.ERROR)
 logging.getLogger("pyvirtualdisplay.abstractdisplay").setLevel(logging.ERROR)
 logging.getLogger("seleniumwire").setLevel(logging.ERROR)
 logging.getLogger("selenium.webdriver.remote.remote_connection").setLevel(logging.ERROR)
