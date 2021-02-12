@@ -90,7 +90,7 @@ class Server(webchela_pb2_grpc.ServerServicer):
         if request.browser.script_timeout == 0:
             request.browser.script_timeout = config.params.default.browser_script_timeout
 
-        if request.browser.proxy:
+        if not request.browser.proxy:
             request.browser.proxy = config.params.default.browser_proxy
 
         if request.chunk_size == 0:
