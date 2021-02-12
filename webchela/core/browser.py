@@ -1,5 +1,3 @@
-from time import sleep
-
 import coloredlogs
 import logging
 import shutil
@@ -10,6 +8,7 @@ from seleniumwire import webdriver
 from selenium.common.exceptions import *
 from selenium.webdriver import FirefoxOptions
 from tempfile import mkdtemp
+from time import sleep
 
 import webchela.core.protobuf.webchela_pb2 as webchela_pb2
 
