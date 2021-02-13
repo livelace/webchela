@@ -78,7 +78,9 @@ class Browser:
         for url in urls:
             try:
                 self.browser.execute_script('window.open("{0}","_blank");'.format(url))
+                # need for complete handle "registration" inside webdriver.
                 sleep(self.config.params.default.handle_populate_delay)
+
                 handles.append(self.browser.window_handles[handles_counter])
                 handles_timestamp.append(get_timestamp())
                 handles_counter += 1
@@ -113,7 +115,7 @@ class Browser:
                 if not handles_readiness[handle]:
                     try:
                         self.browser.switch_to.window(handle)
-                        # pause allows to load pages more effectively.
+                        # pause allows to load pages more effectively in case of CPU resource starving.
                         sleep(self.config.params.default.tab_hop_delay)
                         status = self.browser.execute_script('return document.readyState;')
 
