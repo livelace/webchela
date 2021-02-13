@@ -104,7 +104,7 @@ class Browser:
 
                 try:
                     self.browser.switch_to.window(handle)
-                    sleep(0.5)
+                    sleep(self.config.params.default.tab_hop_delay)
                     status = self.browser.execute_script('return document.readyState;')
 
                     if status != "complete":
@@ -124,9 +124,6 @@ class Browser:
                     logger.error("[{}][{}] Unexpected error during waiting URL: {}, {}".format(
                         self.request.client_id, self.task_hash, url, e))
                     return {self.order: chunks}
-
-                # don't waste cpu power.
-                sleep(self.config.params.default.tab_hop_delay)
 
             if ready:
                 break
