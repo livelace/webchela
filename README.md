@@ -87,7 +87,9 @@ user@localhost / $ docker exec webchela tree /tmp/webchela
 #firefox_path            = "/usr/lib64/firefox/firefox"
 #firefox_profiles_dir    = "/tmp"
 
-#log_level               = "INFO"
+#keep_temp               = false
+
+#log_level               = "DEBUG"
 
 #mem_free                = "1G"
 
