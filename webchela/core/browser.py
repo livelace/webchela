@@ -248,7 +248,7 @@ class Browser:
                 logger.error("[{}][{}] Cannot stop virtual display properly: {}".format(
                     self.request.client_id, self.task_hash, e))
 
-        if self.temp_dir:
+        if self.temp_dir and not self.config.params.default.keep_temp:
             try:
                 shutil.rmtree(self.temp_dir)
             except Exception as e:
@@ -300,7 +300,8 @@ class ChromeBrowser(Browser):
         # add extensions.
         for extension in self.request.browser.extension:
             try:
-                options.add_extension(os.path.join(self.config.params.default.chrome_extensions_dir, extension))
+                options.add_extension(
+                    os.path.join(self.config.params.default.chrome_extensions_dir.strip(), extension.strip()))
             except IOError as e:
                 logger.warning("[{}][{}] Invalid extension: {}, {}".format(
                     self.request.client_id, self.task_hash, extension, e))
@@ -399,7 +400,8 @@ class FirefoxBrowser(Browser):
         # add extensions.
         for extension in self.request.browser.extension:
             try:
-                self.browser.install_addon(os.path.join(self.config.params.default.firefox_extensions_dir, extension))
+                self.browser.install_addon(os.path.join(
+                    self.config.params.default.firefox_extensions_dir.strip(), extension.strip()))
             except Exception as e:
                 logger.warning("[{}][{}] Invalid extension: {}, {}".format(
                     self.request.client_id, self.task_hash, extension, e))

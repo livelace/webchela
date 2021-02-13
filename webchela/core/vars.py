@@ -14,19 +14,21 @@ DEFAULT_LOG_LEVEL = "INFO"
 
 DEFAULT_SHM_SIZE = 1 * 1024 * 1024 * 1024  # 1GB
 
+DEFAULT_KEEP_TEMP = False
+
 # ----------------------------------------------------------------------------------------------------------------------
 # Chrome settings.
 CHROME_DRIVER_PATH = "/usr/bin/chromedriver"
 CHROME_EXTENSIONS_DIR = "/tmp"
 CHROME_PATH = "/usr/bin/google-chrome-stable"
-CHROME_PROFILES_DIR = "/tmp"
+CHROME_PROFILES_DIR = "/tmp/webchela/profiles/chrome"
 
 # Firefox settings.
 FIREFOX_DRIVER_PATH = "/usr/bin/geckodriver"
 FIREFOX_EXTENSIONS_DIR = "/tmp"
 FIREFOX_LOG_FILE = "/tmp/geckodriver.log"
 FIREFOX_PATH = "/usr/lib64/firefox/firefox"
-FIREFOX_PROFILES_DIR = "/tmp"
+FIREFOX_PROFILES_DIR = "/tmp/webchela/profiles/firefox"
 FIREFOX_GECKODRIVER_WRAPPER = os.path.join(BASE_DIR, "core", "script", "geckodriver.sh")
 
 webchela_extensions = find_spec("webchela-extensions")
@@ -41,7 +43,7 @@ if webchela_extensions:
         FIREFOX_EXTENSIONS_DIR = fd
 
 HANDLE_POPULATE_DELAY = 0.5  # amount of time to wait "selenium.driver.windows_handles" will be updated.
-TAB_HOP_DELAY = 0.5          # delay between tab "hopping" (for page status checking).
+TAB_HOP_DELAY = 0.3          # delay between tab "hopping" (for page status checking).
 
 # ----------------------------------------------------------------------------------------------------------------------
 
@@ -99,6 +101,7 @@ DEFAULT_PARAMS = {
         "firefox_path": FIREFOX_PATH,
         "firefox_profiles_dir": FIREFOX_PROFILES_DIR,
         "handle_populate_delay": HANDLE_POPULATE_DELAY,
+        "keep_temp": DEFAULT_KEEP_TEMP,
         "log_level": DEFAULT_LOG_LEVEL,
         "mem_free": DEFAULT_MEM_FREE,
         "tab_hop_delay": TAB_HOP_DELAY,
@@ -152,7 +155,9 @@ CONFIG_SAMPLE = """
 #firefox_path            = "/usr/lib64/firefox/firefox"
 #firefox_profiles_dir    = "/tmp"
 
-#log_level               = "INFO"
+#keep_temp               = false
+
+#log_level               = "DEBUG"
 
 #mem_free                = "1G"
 

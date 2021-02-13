@@ -183,6 +183,9 @@ class Config:
         self._params["default"]["firefox_profiles_dir"] = is_dir(
             "default.firefox_profiles_dir", self._params["default"]["firefox_profiles_dir"], FIREFOX_PROFILES_DIR)
 
+        self._params["default"]["keep_temp"] = is_bool(
+            "default.keep_temp", self._params["default"]["keep_temp"], DEFAULT_KEEP_TEMP)
+
         self._params["default"]["mem_free"] = is_bytes(
             "default.mem_free", self._params["default"]["mem_free"], DEFAULT_MEM_FREE)
 

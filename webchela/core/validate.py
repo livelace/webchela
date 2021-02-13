@@ -10,8 +10,8 @@ logger = logging.getLogger("webchela.validate")
 coloredlogs.install(fmt=DEFAULT_LOG_FORMAT, level=DEFAULT_LOG_LEVEL)
 
 
-def is_int(name, value, default):
-    if isinstance(value, int):
+def is_bool(name, value, default):
+    if isinstance(value, bool):
         v = value
     else:
         v = default
@@ -92,6 +92,16 @@ def is_dir(name, value, default):
 
 def is_file(name, value, default):
     if os.path.isfile(value):
+        v = value
+    else:
+        v = default
+
+    logger.debug("{}: {}".format(name, v))
+    return v
+
+
+def is_int(name, value, default):
+    if isinstance(value, int):
         v = value
     else:
         v = default
