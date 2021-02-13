@@ -104,6 +104,7 @@ class Browser:
 
                 try:
                     self.browser.switch_to.window(handle)
+                    sleep(0.5)
                     status = self.browser.execute_script('return document.readyState;')
 
                     if status != "complete":
