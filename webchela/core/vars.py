@@ -42,8 +42,8 @@ if webchela_extensions:
     if isdir(fd):
         FIREFOX_EXTENSIONS_DIR = fd
 
-HANDLE_POPULATE_DELAY = 0.5  # amount of time to wait "selenium.driver.windows_handles" will be updated.
-TAB_HOP_DELAY = 0.3          # delay between tab "hopping" (for page status checking).
+HANDLE_POPULATE_DELAY = 3    # amount of time to wait "selenium.driver.windows_handles" will be updated.
+TAB_HOP_DELAY = 0.5          # delay between tab "hopping" (for page status checking).
 
 # ----------------------------------------------------------------------------------------------------------------------
 
