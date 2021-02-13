@@ -71,6 +71,7 @@ class Browser:
 
         handles = []  # don't use map, there are might be same urls.
         handles_counter = 1  # exclude first blank tab.
+        handles_status = {}
 
         # open urls.
         for url in urls:
@@ -94,6 +95,10 @@ class Browser:
         if len(handles) != len(urls):
             raise RuntimeError("Amount of tab handles are not equal to amount of URLs")
 
+        # put handles to status map.
+        for handle in handles:
+            handles_status[handle] = False
+
         # wait for all tabs.
         while True:
             ready = True
@@ -102,28 +107,31 @@ class Browser:
                 url = urls[index]
                 handle = handles[index]
 
-                try:
-                    self.browser.switch_to.window(handle)
-                    sleep(self.config.params.default.tab_hop_delay)
-                    status = self.browser.execute_script('return document.readyState;')
+                if not handles_status[handle]:
+                    try:
+                        self.browser.switch_to.window(handle)
+                        sleep(self.config.params.default.tab_hop_delay)  # pause allows to load pages more effectively.
+                        status = self.browser.execute_script('return document.readyState;')
 
-                    if status != "complete":
+                        if status == "complete":
+                            handles_status[handle] = True
+                        else:
+                            ready = False
+
+                    except TimeoutException:
+                        logger.warning("[{}][{}] Timeout during waiting URL: {}".format(
+                            self.request.client_id, self.task_hash, url))
                         ready = False
 
-                except TimeoutException:
-                    logger.warning("[{}][{}] Timeout during waiting URL: {}".format(
-                        self.request.client_id, self.task_hash, url))
-                    ready = False
+                    except WebDriverException as e:
+                        logger.error("[{}][{}] Browser error during waiting URL: {}, {}".format(
+                            self.request.client_id, self.task_hash, url, e))
+                        return {self.order: chunks}
 
-                except WebDriverException as e:
-                    logger.error("[{}][{}] Browser error during waiting URL: {}, {}".format(
-                        self.request.client_id, self.task_hash, url, e))
-                    return {self.order: chunks}
-
-                except Exception as e:
-                    logger.error("[{}][{}] Unexpected error during waiting URL: {}, {}".format(
-                        self.request.client_id, self.task_hash, url, e))
-                    return {self.order: chunks}
+                    except Exception as e:
+                        logger.error("[{}][{}] Unexpected error during waiting URL: {}, {}".format(
+                            self.request.client_id, self.task_hash, url, e))
+                        return {self.order: chunks}
 
             if ready:
                 break
