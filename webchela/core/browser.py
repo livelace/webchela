@@ -69,26 +69,16 @@ class Browser:
         # selenium.common.exceptions.InvalidSessionIdException:
         # Message: Tried to run command without establishing a connection
 
-        # save window handles order.
-        window_handles = []
+        handles = []  # don't use map, there are might be same urls.
+        handles_counter = 1  # exclude first blank tab.
 
         # open urls.
-        for index in range(len(urls)):
-            url = urls[index]
-
+        for url in urls:
             try:
-                if index == 0:
-                    self.browser.get(url)
-                    window_handles.append(self.browser.current_window_handle)
-                else:
-                    self.browser.execute_script('window.open("{}","_blank");'.format(url))
-                    self.browser.switch_to.window(self.browser.window_handles[index])
-                    window_handles.append(self.browser.current_window_handle)
-
-            except TimeoutException:
-                logger.warning("[{}][{}] Timeout during open URL: {}".format(
-                    self.request.client_id, self.task_hash, url))
-                continue
+                self.browser.execute_script('window.open("{0}","_blank");'.format(url))
+                sleep(self.config.params.default.handle_populate_delay)
+                handles.append(self.browser.window_handles[handles_counter])
+                handles_counter += 1
 
             except WebDriverException as e:
                 logger.error("[{}][{}] Browser error during open URL: {}, {}".format(
@@ -100,16 +90,20 @@ class Browser:
                     self.request.client_id, self.task_hash, url, e))
                 return {self.order: chunks}
 
+        # quit if something wrong.
+        if len(handles) != len(urls):
+            raise RuntimeError("Amount of tab handles are not equal to amount of URLs")
+
         # wait for all tabs.
         while True:
             ready = True
 
             for index in range(len(urls)):
                 url = urls[index]
-                window = window_handles[index]
+                handle = handles[index]
 
                 try:
-                    self.browser.switch_to.window(window)
+                    self.browser.switch_to.window(handle)
                     status = self.browser.execute_script('return document.readyState;')
 
                     if status != "complete":
@@ -144,21 +138,29 @@ class Browser:
 
         # process tabs.
         for index in range(len(urls)):
-            uid = str(uuid.uuid4())
             url = urls[index]
-            window = window_handles[index]
+            handle = handles[index]
+
+            result_uuid = str(uuid.uuid4())
 
             try:
-                self.browser.switch_to.window(window)
+                self.browser.switch_to.window(handle)
+
+                try:
+                    status_code = urls_data[self.browser.current_url][0]
+                    content_type = urls_data[self.browser.current_url][1]
+                except KeyError:
+                    status_code = 400
+                    content_type = "unknown"
 
                 # Result will contain all data.
                 result = webchela_pb2.Result(
-                    UUID=uid,
+                    UUID=result_uuid,
                     page_url=self.browser.current_url,
                     page_title=self.browser.title,
                     url=url,
-                    status_code=urls_data[self.browser.current_url][0],
-                    content_type=urls_data[self.browser.current_url][1]
+                    status_code=status_code,
+                    content_type=content_type
                 )
 
                 # Check page size.
@@ -194,7 +196,7 @@ class Browser:
                         result.script_output.append(msg)
 
                 # Show what we got.
-                logger.debug("uuid: {}, url: {}, title: {}".format(uid, url, self.browser.title))
+                logger.debug("uuid: {}, url: {}, title: {}".format(result_uuid, url, self.browser.title))
 
                 # Serialize and split result into chunks.
                 result_binary = result.SerializeToString()

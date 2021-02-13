@@ -5,7 +5,7 @@ from os.path import dirname, join, isdir
 # ----------------------------------------------------------------------------------------------------------------------
 
 APP_NAME = "webchela"
-APP_VERSION = "v1.3.0"
+APP_VERSION = "v1.4.0"
 
 BASE_DIR = dirname(find_spec("webchela").loader.path)
 
@@ -40,7 +40,8 @@ if webchela_extensions:
     if isdir(fd):
         FIREFOX_EXTENSIONS_DIR = fd
 
-TAB_HOP_DELAY = 0.3
+HANDLE_POPULATE_DELAY = 0.5  # amount of time to wait "selenium.driver.windows_handles" will be updated.
+TAB_HOP_DELAY = 0.3          # delay between tab "hopping" (for page status checking).
 
 # ----------------------------------------------------------------------------------------------------------------------
 
@@ -97,6 +98,7 @@ DEFAULT_PARAMS = {
         "firefox_extensions_dir": FIREFOX_EXTENSIONS_DIR,
         "firefox_path": FIREFOX_PATH,
         "firefox_profiles_dir": FIREFOX_PROFILES_DIR,
+        "handle_populate_delay": HANDLE_POPULATE_DELAY,
         "log_level": DEFAULT_LOG_LEVEL,
         "mem_free": DEFAULT_MEM_FREE,
         "tab_hop_delay": TAB_HOP_DELAY,
