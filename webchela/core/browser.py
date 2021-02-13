@@ -71,7 +71,8 @@ class Browser:
 
         handles = []  # don't use map, there are might be same urls.
         handles_counter = 1  # exclude first blank tab.
-        handles_status = {}
+        handles_readiness = {}
+        handles_timestamp = []
 
         # open urls.
         for url in urls:
@@ -79,6 +80,7 @@ class Browser:
                 self.browser.execute_script('window.open("{0}","_blank");'.format(url))
                 sleep(self.config.params.default.handle_populate_delay)
                 handles.append(self.browser.window_handles[handles_counter])
+                handles_timestamp.append(get_timestamp())
                 handles_counter += 1
 
             except WebDriverException as e:
@@ -97,7 +99,7 @@ class Browser:
 
         # put handles to status map.
         for handle in handles:
-            handles_status[handle] = False
+            handles_readiness[handle] = False
 
         # wait for all tabs.
         while True:
@@ -106,15 +108,17 @@ class Browser:
             for index in range(len(urls)):
                 url = urls[index]
                 handle = handles[index]
+                timestamp = handles_timestamp[index]
 
-                if not handles_status[handle]:
+                if not handles_readiness[handle]:
                     try:
                         self.browser.switch_to.window(handle)
-                        sleep(self.config.params.default.tab_hop_delay)  # pause allows to load pages more effectively.
+                        # pause allows to load pages more effectively.
+                        sleep(self.config.params.default.tab_hop_delay)
                         status = self.browser.execute_script('return document.readyState;')
 
                         if status == "complete":
-                            handles_status[handle] = True
+                            handles_readiness[handle] = True
                         else:
                             ready = False
 
@@ -132,6 +136,18 @@ class Browser:
                         logger.error("[{}][{}] Unexpected error during waiting URL: {}, {}".format(
                             self.request.client_id, self.task_hash, url, e))
                         return {self.order: chunks}
+
+                    # stop loading if page isn't ready yet and timeout is reached.
+                    if not handles_readiness[handle] and \
+                            get_timestamp() - timestamp > self.config.params.default.browser_page_timeout:
+                        try:
+                            self.browser.execute_script("window.stop();")
+                            handles_readiness[handle] = True
+                        except:
+                            handles_readiness[handle] = True
+
+                        logger.warning("[{}][{}] Timeout during page content loading for URL: {}".format(
+                            self.request.client_id, self.task_hash, url))
 
             if ready:
                 break

@@ -3,6 +3,7 @@ import logging
 import psutil
 import sys
 
+from datetime import datetime
 from random import randint
 
 from webchela.core.vars import *
@@ -46,6 +47,10 @@ def get_load(cpu, mem, interval=1):
         return True, cpu_load, mem_free, score
     else:
         return False, cpu_load, mem_free, score
+
+
+def get_timestamp():
+    return int(datetime.utcnow().timestamp())
 
 
 def human_size(size):
