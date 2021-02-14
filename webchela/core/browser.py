@@ -141,6 +141,7 @@ class Browser:
 
                     # stop loading if page isn't ready yet and timeout is reached.
                     time_diff = get_timestamp() - timestamp
+
                     if not handles_readiness[handle] and time_diff > self.request.browser.page_timeout:
                         try:
                             self.browser.execute_script("window.stop();")
