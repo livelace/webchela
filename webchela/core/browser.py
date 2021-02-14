@@ -141,14 +141,14 @@ class Browser:
 
                     # stop loading if page isn't ready yet and timeout is reached.
                     time_diff = get_timestamp() - timestamp
-                    if not handles_readiness[handle] and time_diff > self.config.params.default.browser_page_timeout:
+                    if not handles_readiness[handle] and time_diff > self.request.browser.page_timeout:
                         try:
                             self.browser.execute_script("window.stop();")
                             handles_readiness[handle] = True
                         except:
                             handles_readiness[handle] = True
 
-                        logger.warning("[{}][{}] Timeout during page content loading for URL: {}, {}s".format(
+                        logger.warning("[{}][{}] Timeout during page content loading for URL: {}: {}s".format(
                             self.request.client_id, self.task_hash, url, time_diff))
 
             if ready:
