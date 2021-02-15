@@ -42,8 +42,7 @@ if webchela_extensions:
     if isdir(fd):
         FIREFOX_EXTENSIONS_DIR = fd
 
-HANDLE_POPULATE_DELAY = 3    # amount of time to wait "selenium.driver.windows_handles" will be updated.
-TAB_HOP_DELAY = 1            # delay between tab "hopping" (for page status checking).
+TAB_HOP_DELAY = 1  # delay between tab "hopping" (for page status checking).
 
 # ----------------------------------------------------------------------------------------------------------------------
 
@@ -100,7 +99,6 @@ DEFAULT_PARAMS = {
         "firefox_extensions_dir": FIREFOX_EXTENSIONS_DIR,
         "firefox_path": FIREFOX_PATH,
         "firefox_profiles_dir": FIREFOX_PROFILES_DIR,
-        "handle_populate_delay": HANDLE_POPULATE_DELAY,
         "keep_temp": DEFAULT_KEEP_TEMP,
         "log_level": DEFAULT_LOG_LEVEL,
         "mem_free": DEFAULT_MEM_FREE,
