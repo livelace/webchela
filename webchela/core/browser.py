@@ -69,21 +69,17 @@ class Browser:
         # selenium.common.exceptions.InvalidSessionIdException:
         # Message: Tried to run command without establishing a connection
 
-        handles = []  # don't use map, there are might be same urls.
-        handles_counter = 1  # exclude first blank tab.
-        handles_readiness = {}
-        handles_timestamp = []
+        urls = [0] + urls           # exclude first blank tab.
+        handles_readiness = {0: 0}  # exclude first blank tab.
+        handles_timestamp = [0]     # exclude first blank tab.
 
         # open urls.
-        for url in urls:
+        for index in range(1, len(urls)):
+            url = urls[index]
+
             try:
                 self.browser.execute_script('window.open("{0}","_blank");'.format(url))
-                # need for complete handle "registration" inside webdriver.
-                sleep(self.config.params.default.handle_populate_delay)
-
-                handles.append(self.browser.window_handles[handles_counter])
                 handles_timestamp.append(get_timestamp())
-                handles_counter += 1
 
             except WebDriverException as e:
                 logger.error("[{}][{}] Browser error during open URL: {}, {}".format(
@@ -95,24 +91,20 @@ class Browser:
                     self.request.client_id, self.task_hash, url, e))
                 return {self.order: chunks}
 
-        # quit if something wrong.
-        if len(handles) != len(urls):
-            raise RuntimeError("Amount of tab handles are not equal to amount of URLs")
-
         # put handles to status map.
-        for handle in handles:
-            handles_readiness[handle] = False
+        for index in range(1, len(self.browser.window_handles)):
+            handles_readiness[index] = False
 
         # wait for all tabs.
         while True:
             ready = True
 
-            for index in range(len(urls)):
+            for index in range(1, len(urls)):
                 url = urls[index]
-                handle = handles[index]
+                handle = self.browser.window_handles[index]
                 timestamp = handles_timestamp[index]
 
-                if not handles_readiness[handle]:
+                if not handles_readiness[index]:
                     try:
                         self.browser.switch_to.window(handle)
                         # pause allows to load pages more effectively in case of CPU resource starving.
@@ -142,7 +134,7 @@ class Browser:
                     # stop loading if page isn't ready yet and timeout is reached.
                     time_diff = get_timestamp() - timestamp
 
-                    if not handles_readiness[handle] and time_diff > self.request.browser.page_timeout:
+                    if not handles_readiness[index] and time_diff > self.request.browser.page_timeout:
                         try:
                             self.browser.execute_script("window.stop();")
                             handles_readiness[handle] = True
@@ -162,10 +154,9 @@ class Browser:
                 urls_data[request.url] = (request.response.status_code, request.response.headers['Content-Type'])
 
         # process tabs.
-        for index in range(len(urls)):
+        for index in range(1, len(urls)):
             url = urls[index]
-            handle = handles[index]
-
+            handle = self.browser.window_handles[index]
             result_uuid = str(uuid.uuid4())
 
             try:
