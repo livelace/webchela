@@ -112,7 +112,7 @@ class Browser:
                         status = self.browser.execute_script('return document.readyState;')
 
                         if status == "complete":
-                            handles_readiness[handle] = True
+                            handles_readiness[index] = True
                         else:
                             ready = False
 
@@ -137,9 +137,9 @@ class Browser:
                     if not handles_readiness[index] and time_diff > self.request.browser.page_timeout:
                         try:
                             self.browser.execute_script("window.stop();")
-                            handles_readiness[handle] = True
+                            handles_readiness[index] = True
                         except:
-                            handles_readiness[handle] = True
+                            handles_readiness[index] = True
 
                         logger.warning("[{}][{}] Timeout during page content loading for URL: {}: {}s".format(
                             self.request.client_id, self.task_hash, url, time_diff))
