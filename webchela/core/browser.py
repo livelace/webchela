@@ -99,7 +99,7 @@ class Browser:
         while True:
             ready = True
 
-            for index in range(1, len(urls)):
+            for index in range(1, len(self.browser.window_handles)):
                 url = urls[index]
                 handle = self.browser.window_handles[index]
                 timestamp = handles_timestamp[index]
@@ -154,7 +154,7 @@ class Browser:
                 urls_data[request.url] = (request.response.status_code, request.response.headers['Content-Type'])
 
         # process tabs.
-        for index in range(1, len(urls)):
+        for index in range(1, len(self.browser.window_handles)):
             url = urls[index]
             handle = self.browser.window_handles[index]
             result_uuid = str(uuid.uuid4())
