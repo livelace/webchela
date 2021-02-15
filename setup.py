@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="webchela",
-    version="1.4.0",
+    version="1.4.2",
     url="https://github.com/livelace/webchela",
     author="Oleg Popov",
     author_email="o.popov@livelace.ru",
