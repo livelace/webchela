@@ -112,25 +112,16 @@ class Browser:
 
             for index in range(1, len(self.browser.window_handles)):
                 url = urls[index]
-                handle = self.browser.window_handles[index]
-                timestamp = handles_timestamp[index]
 
                 if not handles_readiness[index]:
                     try:
-                        self.browser.switch_to.window(handle)
-                        # pause allows to load pages more effectively in case of CPU starving.
-                        sleep(self.config.params.default.tab_hop_delay)
+                        self.browser.switch_to.window(self.browser.window_handles[index])
                         status = self.browser.execute_script('return document.readyState;')
 
                         if status == "complete":
                             # Try to reload page if specific status codes have been appeared.
-                            # update_urls - is too expensive, but we need updated status codes :(
-                            # try to save cycles.
-                            try:
-                                status_code, _ = urls_status[self.browser.current_url]
-                            except:
-                                urls_status = update_urls(self.browser.requests, urls_status)
-                                status_code, _ = urls_status[self.browser.current_url]
+                            urls_status = update_urls(self.browser.requests, urls_status)
+                            status_code, _ = urls_status[self.browser.current_url]
 
                             if status_code in self.request.browser.retry_codes and \
                                     handles_retries[index] < self.request.browser.retry_codes_tries:
@@ -140,7 +131,7 @@ class Browser:
                                 handles_retries[index] += 1
                                 handles_timestamp[index] = get_timestamp()
 
-                                logger.warning("[{}][{}] Trying to reload page for URL: code: {}, {}, {} -> {}".format(
+                                logger.warning("[{}][{}] Trying to reload page for URL: code: {}, {}, {} of {}".format(
                                     self.request.client_id,
                                     self.task_hash,
                                     status_code,
@@ -149,13 +140,12 @@ class Browser:
                                     self.request.browser.retry_codes_tries
                                 ))
 
-                                # we started page reloading, so, update status codes again :(
-                                urls_status = update_urls(self.browser.requests, urls_status)
-
                                 ready = False
                             else:
                                 handles_readiness[index] = True
                         else:
+                            # pause allows to load pages more effectively in case of CPU starving.
+                            sleep(self.config.params.default.tab_hop_delay)
                             ready = False
 
                     except TimeoutException:
@@ -174,7 +164,7 @@ class Browser:
                         return {self.order: chunks}
 
                     # stop loading if page isn't ready yet and timeout is reached.
-                    time_diff = get_timestamp() - timestamp
+                    time_diff = get_timestamp() - handles_timestamp[index]
 
                     if not handles_readiness[index] and time_diff > self.request.browser.page_timeout:
                         try:
