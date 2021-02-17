@@ -125,6 +125,7 @@ class Browser:
                         if status == "complete":
                             # Try to reload page if specific status codes have been appeared.
                             # update_urls - is too expensive, but we need updated status codes :(
+                            # try to save cycles.
                             try:
                                 status_code, _ = urls_status[self.browser.current_url]
                             except:
