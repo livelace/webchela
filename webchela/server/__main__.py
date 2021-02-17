@@ -94,6 +94,12 @@ class Server(webchela_pb2_grpc.ServerServicer):
         if not request.browser.proxy:
             request.browser.proxy = config.params.default.browser_proxy
 
+        if not request.browser.retry_codes:
+            request.browser.retry_codes.extend(config.params.default.browser_retry_codes)
+
+        if request.browser.retry_codes_tries == 0:
+            request.browser.retry_codes_tries = config.params.default.browser_retry_codes_tries
+
         if request.chunk_size == 0:
             request.chunk_size = config.params.default.chunk_size
 
@@ -140,6 +146,10 @@ class Server(webchela_pb2_grpc.ServerServicer):
             request.client_id, task_hash, request.browser.script_timeout))
         logger.debug("[{}][{}] browser.proxy: {}".format(
             request.client_id, task_hash, request.browser.proxy))
+        logger.debug("[{}][{}] browser.retry_codes: {}".format(
+            request.client_id, task_hash, request.browser.retry_codes))
+        logger.debug("[{}][{}] browser.retry_codes_tries: {}".format(
+            request.client_id, task_hash, request.browser.retry_codes_tries))
 
         logger.debug("[{}][{}] chunk_size: {}".format(
             request.client_id, task_hash, human_size(request.chunk_size)))

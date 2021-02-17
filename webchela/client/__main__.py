@@ -129,7 +129,7 @@ def main():
     elif args.url_file:
         for url in args.url_file.read().split("\n"):
             if url:
-                urls.append(url)
+                urls.append(url.strip())
 
     # Derive user-defined javascript.
     # In this simple client we use only one script,
@@ -162,6 +162,8 @@ def main():
         task.browser.page_size = config.params.default.browser_page_size
         task.browser.page_timeout = config.params.default.browser_page_timeout
         task.browser.proxy = config.params.default.browser_proxy
+        task.browser.retry_codes.extend(config.params.default.browser_retry_codes)
+        task.browser.retry_codes_tries = config.params.default.browser_retry_codes_tries
         task.browser.script_timeout = config.params.default.browser_script_timeout
         task.browser.type = config.params.default.browser_type
 

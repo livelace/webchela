@@ -153,6 +153,13 @@ class Config:
         self._params["default"]["browser_proxy"] = is_string(
             "default.browser_proxy", self._params["default"]["browser_proxy"], DEFAULT_BROWSER_PROXY)
 
+        self._params["default"]["browser_retry_codes"] = is_list(
+            "default.browser_retry_codes", self._params["default"]["browser_retry_codes"], DEFAULT_BROWSER_RETRY_CODES)
+
+        self._params["default"]["browser_retry_codes_tries"] = is_int(
+            "default.browser_retry_codes_tries", self._params["default"]["browser_retry_codes_tries"],
+            DEFAULT_BROWSER_RETRY_CODES_TRIES)
+
         self._params["default"]["chrome_driver_path"] = is_file(
             "default.chrome_driver_path", self._params["default"]["chrome_driver_path"], CHROME_DRIVER_PATH)
 

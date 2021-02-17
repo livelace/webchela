@@ -29,6 +29,14 @@ def firefox_grabber(config, request, task_hash, order, urls):
     return b.process(urls)
 
 
+def update_urls(requests, urls):
+    for request in requests:
+        if request.response:
+            urls[request.url] = (request.response.status_code, request.response.headers['Content-Type'])
+
+    return urls
+
+
 class Browser:
     def __init__(self, config, request, task_hash, order):
         self.config = config
@@ -70,7 +78,9 @@ class Browser:
         # Message: Tried to run command without establishing a connection
 
         urls = [0] + urls           # exclude first blank tab.
+        urls_status = {}            # save urls data (status_code AND content_type).
         handles_readiness = {0: 0}  # exclude first blank tab.
+        handles_retries = [0]       # exclude first blank tab.
         handles_timestamp = [0]     # exclude first blank tab.
 
         # open urls.
@@ -79,6 +89,7 @@ class Browser:
 
             try:
                 self.browser.execute_script('window.open("{0}","_blank");'.format(url))
+                handles_retries.append(0)
                 handles_timestamp.append(get_timestamp())
 
             except WebDriverException as e:
@@ -107,12 +118,35 @@ class Browser:
                 if not handles_readiness[index]:
                     try:
                         self.browser.switch_to.window(handle)
-                        # pause allows to load pages more effectively in case of CPU resource starving.
+                        # pause allows to load pages more effectively in case of CPU starving.
                         sleep(self.config.params.default.tab_hop_delay)
                         status = self.browser.execute_script('return document.readyState;')
 
                         if status == "complete":
-                            handles_readiness[index] = True
+                            # Try to reload page if specific status codes have been appeared.
+                            urls_status = update_urls(self.browser.requests, urls_status)
+                            status_code, _ = urls_status[self.browser.current_url]
+
+                            if status_code in self.request.browser.retry_codes and \
+                                    handles_retries[index] < self.request.browser.retry_codes_tries:
+
+                                self.browser.execute_script('location.reload();')
+
+                                handles_retries[index] += 1
+                                handles_timestamp[index] = get_timestamp()
+
+                                logger.warning("[{}][{}] Trying to reload page for URL: code: {}, {}, {} -> {}".format(
+                                    self.request.client_id,
+                                    self.task_hash,
+                                    status_code,
+                                    url,
+                                    handles_retries[index],
+                                    self.request.browser.retry_codes_tries
+                                ))
+
+                                ready = False
+                            else:
+                                handles_readiness[index] = True
                         else:
                             ready = False
 
@@ -147,12 +181,6 @@ class Browser:
             if ready:
                 break
 
-        # save urls data (status_code AND content_type).
-        urls_data = {}
-        for request in self.browser.requests:
-            if request.response:
-                urls_data[request.url] = (request.response.status_code, request.response.headers['Content-Type'])
-
         # process tabs.
         for index in range(1, len(self.browser.window_handles)):
             url = urls[index]
@@ -163,8 +191,8 @@ class Browser:
                 self.browser.switch_to.window(handle)
 
                 try:
-                    status_code = urls_data[self.browser.current_url][0]
-                    content_type = urls_data[self.browser.current_url][1]
+                    status_code = urls_status[self.browser.current_url][0]
+                    content_type = urls_status[self.browser.current_url][1]
                 except KeyError:
                     status_code = 400
                     content_type = "unknown"
@@ -212,7 +240,8 @@ class Browser:
                         result.script_output.append(msg)
 
                 # Show what we got.
-                logger.debug("uuid: {}, url: {}, title: {}".format(result_uuid, url, self.browser.title))
+                logger.debug("uuid: {}, code: {}, url: {}, title: {}".format(
+                    result_uuid, status_code, url, self.browser.title))
 
                 # Serialize and split result into chunks.
                 result_binary = result.SerializeToString()
