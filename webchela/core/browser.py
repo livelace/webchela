@@ -124,8 +124,12 @@ class Browser:
 
                         if status == "complete":
                             # Try to reload page if specific status codes have been appeared.
-                            urls_status = update_urls(self.browser.requests, urls_status)
-                            status_code, _ = urls_status[self.browser.current_url]
+                            # update_urls - is too expensive, but we need updated status codes :(
+                            try:
+                                status_code, _ = urls_status[self.browser.current_url]
+                            except:
+                                urls_status = update_urls(self.browser.requests, urls_status)
+                                status_code, _ = urls_status[self.browser.current_url]
 
                             if status_code in self.request.browser.retry_codes and \
                                     handles_retries[index] < self.request.browser.retry_codes_tries:
@@ -143,6 +147,9 @@ class Browser:
                                     handles_retries[index],
                                     self.request.browser.retry_codes_tries
                                 ))
+
+                                # we started page reloading, so, update status codes again :(
+                                urls_status = update_urls(self.browser.requests, urls_status)
 
                                 ready = False
                             else:

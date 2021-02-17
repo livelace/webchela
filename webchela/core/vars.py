@@ -42,7 +42,7 @@ if webchela_extensions:
     if isdir(fd):
         FIREFOX_EXTENSIONS_DIR = fd
 
-TAB_HOP_DELAY = 1       # delay between tab "hopping" (for page status checking).
+TAB_HOP_DELAY = 0.5  # delay between tab "hopping" (for page status checking).
 
 # ----------------------------------------------------------------------------------------------------------------------
 
