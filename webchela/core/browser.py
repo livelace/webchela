@@ -113,12 +113,12 @@ class Browser:
                     self.request.client_id, self.task_hash, url, e))
                 return {self.order: chunks}
 
-        # wait for all tabs.
+        # ------------------------------------------------------
+        # Wait for all tabs.
         while True:
             ready = True
 
             # Check if origin urls are completely loaded.
-
             for index in range(1, len(self.browser.window_handles)):
                 url = urls_origin[index]
 
@@ -165,11 +165,7 @@ class Browser:
                         logger.warning("[{}][{}] Timeout during page content loading for URL: {}: {}s".format(
                             self.request.client_id, self.task_hash, url, time_diff))
 
-                logger.debug("[{}][{}] Tab {}: url: {}, status: {}".format(
-                    self.request.client_id, self.task_hash, index, url, tabs_states[index]))
-
             # Check if final urls should be reloaded.
-
             urls_final_data_old = len(urls_final_data)
             urls_final_data = update_urls(self.browser.requests)  # too costly to do for each tab.
 
@@ -189,6 +185,7 @@ class Browser:
 
                         tabs_readiness[index] = False
                         tabs_retries[index] += 1
+                        tabs_states[index] = "reloaded"
                         tabs_timestamp[index] = get_timestamp()
 
                         logger.warning("[{}][{}] Trying to reload page for URL: code: {}, {}, tries: {} of {}".format(
@@ -205,8 +202,14 @@ class Browser:
                 except KeyError:
                     ready = False
 
-            # Quit.
+            # Show URL states after all.
+            for index in range(1, len(self.browser.window_handles)):
+                url = urls_final[index]
 
+                logger.debug("[{}][{}] Tab {}: url: {}, status: {}".format(
+                    self.request.client_id, self.task_hash, index, url, tabs_states[index]))
+
+            # Quit.
             if ready:
                 break
 
