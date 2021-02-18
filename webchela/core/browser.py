@@ -177,35 +177,34 @@ class Browser:
 
                 try:
                     status_code, _ = urls_final_data[url]
-                except KeyError:
-                    status_code = 0
 
+                    if status_code in self.request.browser.retry_codes and \
+                            tabs_retries[index] < self.request.browser.retry_codes_tries:
+                        self.browser.switch_to.window(self.browser.window_handles[index])
+                        self.browser.execute_script('location.reload();')
+
+                        tabs_readiness[index] = False
+                        tabs_retries[index] += 1
+                        tabs_states[index] = "reloaded"
+                        tabs_timestamp[index] = get_timestamp()
+
+                        logger.warning("[{}][{}] Trying to reload page for URL: code: {}, {}, tries: {} of {}".format(
+                            self.request.client_id,
+                            self.task_hash,
+                            status_code,
+                            url,
+                            tabs_retries[index],
+                            self.request.browser.retry_codes_tries
+                        ))
+
+                        ready = False
+
+                except KeyError:
                     logger.warning("[{}][{}] Cannot find captured URL: {}".format(
                         self.request.client_id,
                         self.task_hash,
                         url
                     ))
-
-                if status_code in self.request.browser.retry_codes and \
-                        tabs_retries[index] < self.request.browser.retry_codes_tries:
-                    self.browser.switch_to.window(self.browser.window_handles[index])
-                    self.browser.execute_script('location.reload();')
-
-                    tabs_readiness[index] = False
-                    tabs_retries[index] += 1
-                    tabs_states[index] = "reloaded"
-                    tabs_timestamp[index] = get_timestamp()
-
-                    logger.warning("[{}][{}] Trying to reload page for URL: code: {}, {}, tries: {} of {}".format(
-                        self.request.client_id,
-                        self.task_hash,
-                        status_code,
-                        url,
-                        tabs_retries[index],
-                        self.request.browser.retry_codes_tries
-                    ))
-
-                    ready = False
 
             # Show URL states after all.
             for index in range(1, len(self.browser.window_handles)):
