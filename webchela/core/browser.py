@@ -52,16 +52,15 @@ class Browser:
 
         _, self.x, self.y = is_browser_geometry("", request.browser.geometry, config.params.default.browser_geometry)
 
-        self.selenium_wire_options = {}
+        self.selenium_wire_options = {
+            "backend": "default",
+        }
 
         if self.request.browser.proxy:
-            self.selenium_wire_options = {
-                "connection_keep_alive": True,
-                "proxy": {
-                    "http": "{}".format(self.request.browser.proxy),
-                    "https": "{}".format(self.request.browser.proxy),
-                    "no_proxy": "localhost,127.0.0.1"
-                }
+            self.selenium_wire_options["proxy"] = {
+                "http": "{}".format(self.request.browser.proxy),
+                "https": "{}".format(self.request.browser.proxy),
+                "no_proxy": "localhost,127.0.0.1"
             }
 
     def fetch(self, urls) -> dict:
@@ -120,7 +119,7 @@ class Browser:
 
                 if not tabs_readiness[index]:
                     try:
-                        self.browser.switch_to.window(self.browser.window_handles[index])  # switch to tab.
+                        self.browser.switch_to.window(self.browser.window_handles[index])
                         status = self.browser.execute_script('return document.readyState;')  # get tab status.
 
                         if self.browser.current_url != 'about:blank':
