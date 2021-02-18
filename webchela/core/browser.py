@@ -109,7 +109,7 @@ class Browser:
         while True:
             ready = True
 
-            # ----------------------------------------------------------------------------------------------------------
+            # ------------------------------------------------------
             # Check if origin urls are completely loaded.
 
             for index in range(1, len(self.browser.window_handles)):
@@ -157,10 +157,12 @@ class Browser:
                         logger.warning("[{}][{}] Timeout during page content loading for URL: {}: {}s".format(
                             self.request.client_id, self.task_hash, url, time_diff))
 
-            # ----------------------------------------------------------------------------------------------------------
+            # ------------------------------------------------------
             # Check if final urls have to be reloaded.
 
+            logger.debug("Start update URL status: total urls: {}".format(len(self.browser.requests)))
             urls_final_data = update_urls(self.browser.requests, urls_final_data)  # too costly to do for each tab.
+            logger.debug("Stop update URL status: total urls: {}".format(len(self.browser.requests)))
 
             for index in range(1, len(self.browser.window_handles)):
                 url = urls_final[index]
@@ -187,7 +189,7 @@ class Browser:
 
                     ready = False
 
-            # ----------------------------------------------------------------------------------------------------------
+            # ------------------------------------------------------
             # Quit.
 
             if ready:
