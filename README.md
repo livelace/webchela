@@ -18,7 +18,7 @@ Provide a plugin endpoint to other tool - [gosquito](https://github.com/livelace
 
 ### Dependencies:
 
-* Python 3.7+
+* Python 3.8+
 * Chrome, [chromedriver](https://chromedriver.chromium.org/).
 * Firefox, [geckodriver](https://github.com/mozilla/geckodriver).
 * TigerVNC.
