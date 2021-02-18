@@ -77,20 +77,23 @@ class Browser:
         # selenium.common.exceptions.InvalidSessionIdException:
         # Message: Tried to run command without establishing a connection
 
-        urls = [0] + urls           # exclude first blank tab.
-        urls_status = {}            # save urls data (status_code AND content_type).
-        handles_readiness = {0: 0}  # exclude first blank tab.
-        handles_retries = [0]       # exclude first blank tab.
-        handles_timestamp = [0]     # exclude first blank tab.
+        urls_origin = [0] + urls  # list of original urls + first blank tab.
+        urls_final = urls_origin  # list of final urls (after all redirects) + first blank tab.
+        urls_final_data = {}      # list of final urls and their data (status code, content type) + first blank tab.
+
+        tabs_readiness = [False]  # list of tabs statuses + first blank tab.
+        tabs_retries = [0]        # list of tabs retries + first blank tab.
+        tabs_timestamp = [0]      # list of timestamps when tabs were opened + first blank tab.
 
         # open urls.
-        for index in range(1, len(urls)):
-            url = urls[index]
+        for index in range(1, len(urls_origin)):
+            url = urls_origin[index]
 
             try:
                 self.browser.execute_script('window.open("{0}","_blank");'.format(url))
-                handles_retries.append(0)
-                handles_timestamp.append(get_timestamp())
+                tabs_readiness.append(False)
+                tabs_retries.append(0)
+                tabs_timestamp.append(get_timestamp())
 
             except WebDriverException as e:
                 logger.error("[{}][{}] Browser error during open URL: {}, {}".format(
@@ -102,49 +105,27 @@ class Browser:
                     self.request.client_id, self.task_hash, url, e))
                 return {self.order: chunks}
 
-        # put handles to status map.
-        for index in range(1, len(self.browser.window_handles)):
-            handles_readiness[index] = False
-
         # wait for all tabs.
         while True:
             ready = True
 
-            for index in range(1, len(self.browser.window_handles)):
-                url = urls[index]
+            # ----------------------------------------------------------------------------------------------------------
+            # Check if origin urls are completely loaded.
 
-                if not handles_readiness[index]:
+            for index in range(1, len(self.browser.window_handles)):
+                url = urls_origin[index]
+
+                if not tabs_readiness[index]:
                     try:
-                        self.browser.switch_to.window(self.browser.window_handles[index])
-                        status = self.browser.execute_script('return document.readyState;')
+                        self.browser.switch_to.window(self.browser.window_handles[index])  # switch to tab.
+                        status = self.browser.execute_script('return document.readyState;')  # get tab status.
+
+                        if self.browser.current_url != 'about:blank':
+                            urls_final[index] = self.browser.current_url  # save possible redirected url.
 
                         if status == "complete":
-                            # Try to reload page if specific status codes have been appeared.
-                            urls_status = update_urls(self.browser.requests, urls_status)
-                            status_code, _ = urls_status[self.browser.current_url]
-
-                            if status_code in self.request.browser.retry_codes and \
-                                    handles_retries[index] < self.request.browser.retry_codes_tries:
-
-                                self.browser.execute_script('location.reload();')
-
-                                handles_retries[index] += 1
-                                handles_timestamp[index] = get_timestamp()
-
-                                logger.warning("[{}][{}] Trying to reload page for URL: code: {}, {}, {} of {}".format(
-                                    self.request.client_id,
-                                    self.task_hash,
-                                    status_code,
-                                    url,
-                                    handles_retries[index],
-                                    self.request.browser.retry_codes_tries
-                                ))
-
-                                ready = False
-                            else:
-                                handles_readiness[index] = True
+                            tabs_readiness[index] = True
                         else:
-                            # pause allows to load pages more effectively in case of CPU starving.
                             sleep(self.config.params.default.tab_hop_delay)
                             ready = False
 
@@ -163,25 +144,58 @@ class Browser:
                             self.request.client_id, self.task_hash, url, e))
                         return {self.order: chunks}
 
-                    # stop loading if page isn't ready yet and timeout is reached.
-                    time_diff = get_timestamp() - handles_timestamp[index]
+                    # Stop page loading if timeout is reached.
+                    time_diff = get_timestamp() - tabs_timestamp[index]
 
-                    if not handles_readiness[index] and time_diff > self.request.browser.page_timeout:
+                    if not tabs_readiness[index] and time_diff > self.request.browser.page_timeout:
                         try:
                             self.browser.execute_script("window.stop();")
-                            handles_readiness[index] = True
+                            tabs_readiness[index] = True
                         except:
-                            handles_readiness[index] = True
+                            tabs_readiness[index] = True
 
                         logger.warning("[{}][{}] Timeout during page content loading for URL: {}: {}s".format(
                             self.request.client_id, self.task_hash, url, time_diff))
+
+            # ----------------------------------------------------------------------------------------------------------
+            # Check if final urls have to be reloaded.
+
+            urls_final_data = update_urls(self.browser.requests, urls_final_data)  # too costly for each tab.
+
+            for index in range(1, len(self.browser.window_handles)):
+                url = urls_final[index]
+                status_code, _ = urls_final_data[url]
+
+                if status_code in self.request.browser.retry_codes and \
+                        tabs_retries[index] < self.request.browser.retry_codes_tries:
+
+                    self.browser.switch_to.window(self.browser.window_handles[index])
+                    self.browser.execute_script('location.reload();')
+
+                    tabs_readiness[index] = False
+                    tabs_retries[index] += 1
+                    tabs_timestamp[index] = get_timestamp()
+
+                    logger.warning("[{}][{}] Trying to reload page for URL: code: {}, {}, {} of {}".format(
+                        self.request.client_id,
+                        self.task_hash,
+                        status_code,
+                        url,
+                        tabs_retries[index],
+                        self.request.browser.retry_codes_tries
+                    ))
+
+                    ready = False
+
+            # ----------------------------------------------------------------------------------------------------------
+            # Quit.
 
             if ready:
                 break
 
         # process tabs.
         for index in range(1, len(self.browser.window_handles)):
-            url = urls[index]
+            url = urls_origin[index]
             handle = self.browser.window_handles[index]
             result_uuid = str(uuid.uuid4())
 
@@ -189,8 +203,8 @@ class Browser:
                 self.browser.switch_to.window(handle)
 
                 try:
-                    status_code = urls_status[self.browser.current_url][0]
-                    content_type = urls_status[self.browser.current_url][1]
+                    status_code = urls_final_data[self.browser.current_url][0]
+                    content_type = urls_final_data[self.browser.current_url][1]
                 except KeyError:
                     status_code = 400
                     content_type = "unknown"
