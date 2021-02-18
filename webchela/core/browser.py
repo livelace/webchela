@@ -85,6 +85,7 @@ class Browser:
 
         tabs_readiness = [False]  # list of tabs statuses + first blank tab.
         tabs_retries = [0]        # list of tabs retries + first blank tab.
+        tabs_states = [""]        # list of tabs states (verbose) + first blank tab.
         tabs_timestamp = [0]      # list of timestamps when tabs were opened + first blank tab.
 
         # open urls.
@@ -95,6 +96,7 @@ class Browser:
                 self.browser.execute_script('window.open("{0}","_blank");'.format(url))
                 tabs_readiness.append(False)
                 tabs_retries.append(0)
+                tabs_states.append("opened")
                 tabs_timestamp.append(get_timestamp())
 
             except WebDriverException as e:
@@ -120,19 +122,17 @@ class Browser:
                 if not tabs_readiness[index]:
                     try:
                         self.browser.switch_to.window(self.browser.window_handles[index])
-                        status = self.browser.execute_script('return document.readyState;')  # get tab status.
+                        state = self.browser.execute_script('return document.readyState;')
 
+                        # save possible redirected url.
                         if self.browser.current_url != 'about:blank':
-                            urls_final[index] = self.browser.current_url  # save possible redirected url.
+                            urls_final[index] = self.browser.current_url
 
-                        if status == "complete":
-                            tabs_readiness[index] = True
-                        else:
+                        tabs_states[index] = state
+
+                        if state != "complete":
                             sleep(self.config.params.default.tab_hop_delay)
                             ready = False
-
-                        logger.debug("[{}][{}] Tab {}: url: {}, status: {}".format(
-                            self.request.client_id, self.task_hash, index, url, status))
 
                     except TimeoutException:
                         logger.warning("[{}][{}] Timeout during waiting URL: {}".format(
@@ -162,11 +162,15 @@ class Browser:
                         logger.warning("[{}][{}] Timeout during page content loading for URL: {}: {}s".format(
                             self.request.client_id, self.task_hash, url, time_diff))
 
+                logger.debug("[{}][{}] Tab {}: url: {}, status: {}".format(
+                    self.request.client_id, self.task_hash, index, url, tabs_states[index]))
+
             # ------------------------------------------------------
             # Check if final urls should be reloaded.
 
             urls_final_data_old = len(urls_final_data)
             urls_final_data = update_urls(self.browser.requests)  # too costly to do for each tab.
+
             logger.debug("[{}][{}] Total captured URLs: {} -> {}".format(
                 self.request.client_id, self.task_hash, urls_final_data_old, len(urls_final_data)))
 
