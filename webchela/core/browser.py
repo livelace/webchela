@@ -79,6 +79,8 @@ class Browser:
         # selenium.common.exceptions.InvalidSessionIdException:
         # Message: Tried to run command without establishing a connection
 
+        self.browser.scopes = urls
+
         urls_origin = [0] + urls  # list of original urls + first blank tab.
         urls_final = urls_origin  # list of final urls (after all redirects) + first blank tab.
         urls_final_data = {}      # list of final urls and their data (status code, content type) + first blank tab.
@@ -88,7 +90,9 @@ class Browser:
         tabs_states = [""]        # list of tabs states (verbose) + first blank tab.
         tabs_timestamp = [0]      # list of timestamps when tabs were opened + first blank tab.
 
-        # open urls.
+        # ------------------------------------------------------
+        # Open urls.
+
         for index in range(1, len(urls_origin)):
             url = urls_origin[index]
 
@@ -113,7 +117,6 @@ class Browser:
         while True:
             ready = True
 
-            # ------------------------------------------------------
             # Check if origin urls are completely loaded.
 
             for index in range(1, len(self.browser.window_handles)):
@@ -165,7 +168,6 @@ class Browser:
                 logger.debug("[{}][{}] Tab {}: url: {}, status: {}".format(
                     self.request.client_id, self.task_hash, index, url, tabs_states[index]))
 
-            # ------------------------------------------------------
             # Check if final urls should be reloaded.
 
             urls_final_data_old = len(urls_final_data)
@@ -203,13 +205,14 @@ class Browser:
                 except KeyError:
                     ready = False
 
-            # ------------------------------------------------------
             # Quit.
 
             if ready:
                 break
 
-        # process tabs.
+        # ------------------------------------------------------
+        # Process tabs.
+
         for index in range(1, len(self.browser.window_handles)):
             url = urls_origin[index]
             handle = self.browser.window_handles[index]
