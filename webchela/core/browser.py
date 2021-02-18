@@ -53,7 +53,7 @@ class Browser:
         _, self.x, self.y = is_browser_geometry("", request.browser.geometry, config.params.default.browser_geometry)
 
         self.selenium_wire_options = {
-            "backend": "default",
+            "backend": "mitmproxy",
         }
 
         if self.request.browser.proxy:
