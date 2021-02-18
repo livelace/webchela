@@ -29,12 +29,14 @@ def firefox_grabber(config, request, task_hash, order, urls):
     return b.process(urls)
 
 
-def update_urls(requests, urls):
+def update_urls(requests):
+    data = {}
+
     for request in requests:
         if request.response:
-            urls[request.url] = (request.response.status_code, request.response.headers['Content-Type'])
+            data[request.url] = (request.response.status_code, request.response.headers['Content-Type'])
 
-    return urls
+    return data
 
 
 class Browser:
@@ -162,7 +164,7 @@ class Browser:
             # ------------------------------------------------------
             # Check if final urls have to be reloaded.
             urls_final_data_old = len(urls_final_data)
-            urls_final_data = update_urls(self.browser.requests, urls_final_data)  # too costly to do for each tab.
+            urls_final_data = update_urls(self.browser.requests)  # too costly to do for each tab.
             logger.debug("Update URLs statuses: {} -> {}".format(urls_final_data_old, len(urls_final_data)))
 
             for index in range(1, len(self.browser.window_handles)):
