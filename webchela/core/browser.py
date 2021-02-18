@@ -129,6 +129,8 @@ class Browser:
                             sleep(self.config.params.default.tab_hop_delay)
                             ready = False
 
+                        logger.debug("Page status: {}, {}".format(url, status))
+
                     except TimeoutException:
                         logger.warning("[{}][{}] Timeout during waiting URL: {}".format(
                             self.request.client_id, self.task_hash, url))
@@ -160,9 +162,9 @@ class Browser:
             # ------------------------------------------------------
             # Check if final urls have to be reloaded.
 
-            logger.debug("Start update URL status: total urls: {}".format(len(self.browser.requests)))
+            logger.debug("Start updating URLs statuses: {}".format(len(self.browser.requests)))
             urls_final_data = update_urls(self.browser.requests, urls_final_data)  # too costly to do for each tab.
-            logger.debug("Stop update URL status: total urls: {}".format(len(self.browser.requests)))
+            logger.debug("Stop updating URLs statuses: {}".format(len(self.browser.requests)))
 
             for index in range(1, len(self.browser.window_handles)):
                 url = urls_final[index]
