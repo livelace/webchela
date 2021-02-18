@@ -160,7 +160,7 @@ class Browser:
             # ----------------------------------------------------------------------------------------------------------
             # Check if final urls have to be reloaded.
 
-            urls_final_data = update_urls(self.browser.requests, urls_final_data)  # too costly for each tab.
+            urls_final_data = update_urls(self.browser.requests, urls_final_data)  # too costly to do for each tab.
 
             for index in range(1, len(self.browser.window_handles)):
                 url = urls_final[index]
