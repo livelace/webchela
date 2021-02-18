@@ -56,7 +56,7 @@ class Browser:
 
         if self.request.browser.proxy:
             self.selenium_wire_options = {
-                "backend": "mitmproxy",
+                "connection_keep_alive": True,
                 "proxy": {
                     "http": "{}".format(self.request.browser.proxy),
                     "https": "{}".format(self.request.browser.proxy),
