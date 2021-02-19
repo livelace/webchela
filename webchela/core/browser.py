@@ -80,8 +80,8 @@ class Browser:
         # Message: Tried to run command without establishing a connection
 
         urls_origin = [0] + urls  # list of original urls + first blank tab.
-        urls_final = urls_origin  # list of final urls (after all redirects) + first blank tab.
-        urls_final_data = {}      # list of final urls and their data (status code, content type) + first blank tab.
+        urls_final = urls_origin.copy()  # list of final urls (after all redirects) + first blank tab.
+        urls_final_data = {}  # list of final urls and their data (status code, content type) + first blank tab.
 
         tabs_readiness = [False]  # list of tabs statuses + first blank tab.
         tabs_retries = [0]        # list of tabs retries + first blank tab.
