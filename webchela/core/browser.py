@@ -389,10 +389,10 @@ class ChromeBrowser(Browser):
         # add extensions.
         for extension in self.request.browser.extension:
             try:
-                options.add_extension(os.path.join(self.config.params.default.chrome_extensions_dir, extension))
+                options.add_extension(os.path.join(self.config.params.default.chrome_extensions_dir, extension.strip()))
             except IOError as e:
                 logger.warning("[{}][{}] Invalid extension: {}, {}".format(
-                    self.request.client_id, self.task_hash, extension, e))
+                    self.request.client_id, self.task_hash, extension.strip(), e))
                 continue
 
         # create browser.
@@ -488,10 +488,11 @@ class FirefoxBrowser(Browser):
         # add extensions.
         for extension in self.request.browser.extension:
             try:
-                self.browser.install_addon(os.path.join(self.config.params.default.firefox_extensions_dir, extension))
+                self.browser.install_addon(
+                    os.path.join(self.config.params.default.firefox_extensions_dir, extension.strip()))
             except Exception as e:
                 logger.warning("[{}][{}] Invalid extension: {}, {}".format(
-                    self.request.client_id, self.task_hash, extension, e))
+                    self.request.client_id, self.task_hash, extension.strip(), e))
                 continue
 
         # set geometry.
