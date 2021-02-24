@@ -143,7 +143,7 @@ class Browser:
                     except WebDriverException as e:
                         logger.error("[{}][{}] Browser error during waiting URL: {}, {}".format(
                             self.request.client_id, self.task_hash, url, e))
-                        return {self.order: chunks}
+                        ready = False
 
                     except Exception as e:
                         logger.error("[{}][{}] Unexpected error during waiting URL: {}, {}".format(
