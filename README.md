@@ -27,13 +27,13 @@ Provide a plugin endpoint to other tool - [gosquito](https://github.com/livelace
 
 ```shell script
 # start daemon
-user@localhost / $ docker run --name webchela -ti --rm -v /dev/shm:/dev/shm docker.io/livelace/webchela:v1.5.0
+user@localhost / $ docker run --name webchela -ti --rm -v /dev/shm:/dev/shm docker.io/livelace/webchela:v1.5.1
 2021-02-09 18:11:54 webchela.config INFO Config sample was written successfully: /home/webchela/.webchela.toml
-2021-02-09 18:11:54 webchela.server INFO webchela v1.5.0
+2021-02-09 18:11:54 webchela.server INFO webchela v1.5.1
 
 # fetch page with simple client
 user@localhost / $ docker exec webchela webchela-cli --url https://google.com
-2021-02-09 18:12:13 webchela.client INFO webchela v1.5.0
+2021-02-09 18:12:13 webchela.client INFO webchela v1.5.1
 2021-02-09 18:12:13 webchela.client INFO Send task. Total urls: 1. Total batches: 1.
 2021-02-09 18:12:13 webchela.client INFO Send batch: 0. Batch size: 1
 2021-02-09 18:12:19 webchela.client INFO Task completed.
