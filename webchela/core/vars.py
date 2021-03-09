@@ -5,7 +5,7 @@ from os.path import dirname, join, isdir
 # ----------------------------------------------------------------------------------------------------------------------
 
 APP_NAME = "webchela"
-APP_VERSION = "v1.5.1"
+APP_VERSION = "v1.5.2"
 
 BASE_DIR = dirname(find_spec("webchela").loader.path)
 
