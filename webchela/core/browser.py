@@ -383,6 +383,7 @@ class ChromeBrowser(Browser):
         options.add_argument("user-data-dir={}".format(self.temp_dir))
 
         # "hide" selenium.
+        options.add_argument("disable-blink-features=AutomationControlled")
         options.add_experimental_option("excludeSwitches", ["enable-automation", "test-type"])
         options.add_experimental_option("useAutomationExtension", False)
 
