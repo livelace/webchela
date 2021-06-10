@@ -27,7 +27,7 @@ Provide a plugin endpoint to other tool - [gosquito](https://github.com/livelace
 
 ```shell script
 # start daemon
-user@localhost / $ docker run --name webchela -ti --rm -v /dev/shm:/dev/shm docker.io/livelace/webchela:v1.5.2
+user@localhost / $ docker run --name webchela -ti --rm -v /dev/shm:/dev/shm ghcr.io/livelace/webchela:v1.5.2
 2021-02-09 18:11:54 webchela.config INFO Config sample was written successfully: /home/webchela/.webchela.toml
 2021-02-09 18:11:54 webchela.server INFO webchela v1.5.2
 
