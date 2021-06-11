@@ -13,10 +13,7 @@ RUN             emerge -G -q \
                 eselect python set "python3.8" && \
                 rm -rf "/usr/portage/packages"
 
-# create user.
-RUN             useradd -m -u 1000 -s "/bin/bash" "webchela"
-
-USER            "webchela"
+USER            "user"
 
 # webchela.
 RUN             git clone --depth 1 --branch "$VERSION" "$WEBCHELA_URL" "$WEBCHELA_TEMP" && \
