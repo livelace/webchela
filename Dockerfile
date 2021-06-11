@@ -32,4 +32,4 @@ ENV             PATH=$PATH:"/home/webchela/.local/bin"
 
 WORKDIR         "/home/user"
 
-CMD             ["tini", "--", "/home/webchela/.local/bin/webchela"]
+CMD             ["tini", "--", "/home/user/.local/bin/webchela"]
