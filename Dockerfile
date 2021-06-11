@@ -30,6 +30,6 @@ RUN             git clone "$WEBCHELA_EXTENSIONS_URL" "$WEBCHELA_EXTENSIONS_TEMP"
 
 ENV             PATH=$PATH:"/home/webchela/.local/bin"
 
-WORKDIR         "/home/webchela"
+WORKDIR         "/home/user"
 
 CMD             ["tini", "--", "/home/webchela/.local/bin/webchela"]
