@@ -15,5 +15,5 @@ libraries {
 }
 
 keywords {
-    build_image = 'docker.io/python:3.8'
+    build_image = 'harbor-core.k8s-2.livelace.ru/infra/service-core:latest'
 }
