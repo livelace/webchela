@@ -3,7 +3,7 @@ libraries {
         repo_url = "https://github.com/livelace/webchela.git"
     }
     k8s {
-        image = "harbor-core.k8s-2.livelace.ru/infra/service-core:latest"
+        build_image = "harbor-core.k8s-2.livelace.ru/infra/service-core:latest"
     }
     mattermost
     nexus {
