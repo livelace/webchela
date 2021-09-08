@@ -11,4 +11,5 @@ libraries {
        destination = "dists-internal/webchela/webchela-1.5.2-py3.8.egg"
     }
     python
+    sonarqube
 }
