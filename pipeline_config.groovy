@@ -1,6 +1,9 @@
 libraries {
     dependency_check
-    dependency_track
+    dependency_track {
+        project = "webchela"
+        version = "latest"
+    }
     git {
         repo_url = "https://github.com/livelace/webchela.git"
     }
