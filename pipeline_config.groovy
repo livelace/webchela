@@ -7,8 +7,14 @@ libraries {
     git {
         repo_url = "https://github.com/livelace/webchela.git"
     }
+    harbor_replicate {
+        policy = "webchela"
+    }
     k8s_build {
         image = "harbor-core.k8s-2.livelace.ru/infra/service-core:latest"
+    }
+    kaniko {
+        destination = "data/webchela:latest"
     }
     mattermost
     nexus {
