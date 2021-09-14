@@ -37,4 +37,4 @@ export TEMP="$TEMP_DIR"
 export TMP="$TEMP_DIR"
 
 # exec is needed for correct quitting of geckodriver.
-exec "$ORIGINAL_BINARY" $(echo ${ORIGINAL_ARGS[*]})
+exec "$ORIGINAL_BINARY" "$(printf "%s " "${ORIGINAL_ARGS[@]}")"
