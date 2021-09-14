@@ -1,4 +1,4 @@
-FROM            docker.io/livelace/gentoo-x11:latest
+FROM            harbor-core.k8s-2.livelace.ru/infra/gentoo-x11:latest
 
 ENV             WEBCHELA_TEMP="/tmp/webchela"
 ENV             WEBCHELA_EXTENSIONS_TEMP="/tmp/webchela_extensions"
