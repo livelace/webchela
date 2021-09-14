@@ -9,7 +9,7 @@ ENV             WEBCHELA_EXTENSIONS_URL="https://github.com/livelace/webchela-ex
 # portage packages.
 RUN             emerge -G -q \
                 "dev-python/pip" && \
-                eselect python set "python3.8" && \
+                echo "python3.8" > "/etc/python-exec/python-exec.conf" && \
                 rm -rf "/usr/portage/packages"
 
 USER            "user"
