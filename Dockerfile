@@ -28,7 +28,7 @@ RUN             git clone "$WEBCHELA_EXTENSIONS_URL" "$WEBCHELA_EXTENSIONS_TEMP"
                 pip install --user . && \
                 rm -rf "$WEBCHELA_EXTENSIONS_TEMP"
 
-ENV             PATH=$PATH:"/home/webchela/.local/bin"
+ENV             PATH=$PATH:"/home/user/.local/bin"
 
 WORKDIR         "/home/user"
 
