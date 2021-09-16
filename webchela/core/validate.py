@@ -83,7 +83,7 @@ def is_dir(name, value, default):
         try:
             os.makedirs(value)
             v = value
-        except:
+        except Exception:
             v = default
 
     logger.debug("{}: {}".format(name, v))
