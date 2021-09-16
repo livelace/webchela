@@ -6,7 +6,7 @@ import sys
 from datetime import datetime
 from random import randint
 
-from webchela.core.vars import *
+from webchela.core.vars import DEFAULT_LOG_FORMAT, DEFAULT_LOG_LEVEL
 
 logger = logging.getLogger("webchela.utils")
 coloredlogs.install(fmt=DEFAULT_LOG_FORMAT, level=DEFAULT_LOG_LEVEL)

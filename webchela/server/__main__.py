@@ -15,15 +15,15 @@ import webchela.core.protobuf.webchela_pb2_grpc as webchela_pb2_grpc
 
 from webchela.core.browser import chrome_grabber, firefox_grabber
 from webchela.core.config import Config
-from webchela.core.utils import *
-from webchela.core.validate import *
-from webchela.core.vars import *
 
 # Get configuration, set log level.
+from webchela.core.utils import get_load, gen_hash, split_urls, human_size, exit_handler
+from webchela.core.validate import is_browser_type
+from webchela.core.vars import DEFAULT_LOG_FORMAT, APP_NAME, APP_VERSION
+
 config = Config()
 logger = logging.getLogger("webchela.server")
 coloredlogs.install(fmt=DEFAULT_LOG_FORMAT, level=config.params.default.log_level)
-
 
 # Disable "noise" logging.
 logging.getLogger("easyprocess").setLevel(logging.ERROR)

@@ -4,7 +4,7 @@ import os
 import re
 
 from webchela.core.utils import human_size
-from webchela.core.vars import *
+from webchela.core.vars import DEFAULT_LOG_FORMAT, DEFAULT_LOG_LEVEL
 
 logger = logging.getLogger("webchela.validate")
 coloredlogs.install(fmt=DEFAULT_LOG_FORMAT, level=DEFAULT_LOG_LEVEL)
