@@ -1,4 +1,6 @@
 import argparse
+import sys
+
 import grpc
 import coloredlogs
 import logging
@@ -12,8 +14,9 @@ import webchela.core.protobuf.webchela_pb2 as webchela_pb2
 import webchela.core.protobuf.webchela_pb2_grpc as webchela_pb2_grpc
 
 from webchela.core.config import Config
-from webchela.core.utils import *
-from webchela.core.vars import *
+from webchela.core.utils import exit_handler, split_urls
+from webchela.core.vars import APP_NAME, APP_VERSION, DEFAULT_LOG_FORMAT, HELP_CLIENT_URL, HELP_CLIENT_URL_FILE, \
+    HELP_CLIENT_SCRIPT, HELP_CLIENT_SCRIPT_FILE
 
 config = Config()
 logger = logging.getLogger("webchela.client")

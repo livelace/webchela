@@ -1,31 +1,34 @@
+import os
+
 import coloredlogs
 import logging
 import shutil
 import uuid
 
 from pyvirtualdisplay import Display
+from selenium.common.exceptions import WebDriverException, TimeoutException, JavascriptException, \
+    InvalidArgumentException
 from seleniumwire import webdriver
-from selenium.common.exceptions import *
 from selenium.webdriver import FirefoxOptions
 from tempfile import mkdtemp
 from time import sleep
 
 import webchela.core.protobuf.webchela_pb2 as webchela_pb2
 
-from webchela.core.utils import *
-from webchela.core.validate import *
-from webchela.core.vars import *
+from webchela.core.utils import get_timestamp, human_size
+from webchela.core.validate import is_browser_geometry
+from webchela.core.vars import FIREFOX_GECKODRIVER_WRAPPER
 
 logger = logging.getLogger("webchela.server.browser")
 
 
 def chrome_grabber(config, request, task_hash, order, urls):
-    b = ChromeBrowser(config, request, task_hash, order)
+    b = ChromeGenericBrowser(config, request, task_hash, order)
     return b.process(urls)
 
 
 def firefox_grabber(config, request, task_hash, order, urls):
-    b = FirefoxBrowser(config, request, task_hash, order)
+    b = FirefoxGenericBrowser(config, request, task_hash, order)
     return b.process(urls)
 
 
@@ -39,7 +42,7 @@ def update_urls(requests):
     return data
 
 
-class Browser:
+class GenericBrowser:
     def __init__(self, config, request, task_hash, order):
         self.config = config
         self.request = request
@@ -157,7 +160,7 @@ class Browser:
                         try:
                             self.browser.execute_script("window.stop();")
                             tabs_readiness[index] = True
-                        except:
+                        except Exception:
                             tabs_readiness[index] = True
 
                         logger.warning("[{}][{}] Timeout during page content loading for URL: {}: {}s".format(
@@ -345,7 +348,7 @@ class Browser:
                     self.request.client_id, self.task_hash, e))
 
 
-class ChromeBrowser(Browser):
+class ChromeGenericBrowser(GenericBrowser):
     def __init__(self, config, request, task_hash, order):
         super().__init__(config, request, task_hash, order)
 
@@ -426,12 +429,12 @@ class ChromeBrowser(Browser):
             return {}
 
     def __del__(self):
-        super(ChromeBrowser, self).__del__()
+        super(ChromeGenericBrowser, self).__del__()
 
 
-class FirefoxBrowser(Browser):
+class FirefoxGenericBrowser(GenericBrowser):
     def __init__(self, config, request, task_hash, order):
-        super(FirefoxBrowser, self).__init__(config, request, task_hash, order)
+        super(FirefoxGenericBrowser, self).__init__(config, request, task_hash, order)
 
     def create_browser(self) -> bool:
         try:
@@ -512,4 +515,4 @@ class FirefoxBrowser(Browser):
             return {}
 
     def __del__(self):
-        super(FirefoxBrowser, self).__del__()
+        super(FirefoxGenericBrowser, self).__del__()
