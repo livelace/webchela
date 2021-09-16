@@ -1,5 +1,7 @@
 FROM            harbor-core.k8s-2.livelace.ru/infra/gentoo-x11:latest
 
+ENV             PIP_CONFIG_FILE="pip.conf"
+
 ENV             WEBCHELA_TEMP="/tmp/webchela"
 ENV             WEBCHELA_EXTENSIONS_TEMP="/tmp/webchela_extensions"
 
