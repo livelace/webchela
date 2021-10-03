@@ -1,4 +1,6 @@
-FROM            harbor-core.k8s-2.livelace.ru/infra/gentoo-x11:latest
+ARG             IMAGE_TAG
+
+FROM            harbor-core.k8s-2.livelace.ru/dev/webchela:${IMAGE_TAG}
 
 ENV             PIP_CONFIG_FILE="pip.conf"
 
