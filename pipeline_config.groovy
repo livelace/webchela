@@ -1,5 +1,5 @@
-def APP_NAME = "gosquito"
-def APP_REPO = "https://github.com/livelace/gosquito.git"
+def APP_NAME = "webchela"
+def APP_REPO = "https://github.com/livelace/webchela.git"
 def APP_VERSION = env.VERSION + '-${GIT_COMMIT_SHORT}'
 def IMAGE_TAG = env.VERSION == "master" ? "latest" : env.VERSION
 
