@@ -17,7 +17,7 @@ libraries {
         policy = "${APP_NAME}"
     }
     k8s_build {
-        image = "harbor-core.k8s-2.livelace.ru/infra/service-core:latest"
+        image = "harbor-core.k8s-2.livelace.ru/infra/tools:latest"
     }
     kaniko {
         destination = "data/${APP_NAME}:${IMAGE_TAG}"
@@ -28,6 +28,7 @@ libraries {
        destination = "dists-internal/${APP_NAME}/${APP_NAME}-${APP_VERSION}.egg"
 
     }
+    pytest
     python
     sonarqube
 }
