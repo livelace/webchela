@@ -9,5 +9,5 @@ from webchela.core.validate import is_bool
 
 def test_is_bool():
     assert is_bool("test", True, False)
-    assert not is_bool("test", "", True)
+    assert not is_bool("test", "", False)
     assert not is_bool("test", "True", False)
