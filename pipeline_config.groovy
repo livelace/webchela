@@ -28,7 +28,6 @@ libraries {
        destination = "dists-internal/${APP_NAME}/${APP_NAME}-${APP_VERSION}.egg"
 
     }
-    pytest
     python
     sonarqube
 }
