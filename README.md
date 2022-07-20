@@ -80,7 +80,7 @@ user@localhost / $ docker exec webchela tree /tmp/webchela
 #chrome_driver_path         = "/usr/bin/chromedriver"
 #chrome_extensions_dir      = "/tmp"
 #chrome_path                = "/usr/bin/google-chrome-stable"
-#chrome_profiles_dir        = "/tmp"
+#chrome_profiles_dir        = "/tmp/webchela/profiles/chrome"
 
 #chunk_size                 = "3M"
 
@@ -89,7 +89,7 @@ user@localhost / $ docker exec webchela tree /tmp/webchela
 #firefox_driver_path        = "/usr/bin/geckodriver"
 #firefox_extensions_dir     = "/tmp"
 #firefox_path               = "/usr/lib64/firefox/firefox"
-#firefox_profiles_dir       = "/tmp"
+#firefox_profiles_dir       = "/tmp/webchela/profiles/firefox"
 
 #keep_temp                  = false
 
