@@ -142,6 +142,7 @@ CONFIG_SAMPLE = """
 #chrome_driver_path         = "/usr/bin/chromedriver"
 #chrome_extensions_dir      = "<INSTALL_PATH>/extensions/chrome"
 #chrome_path                = "/usr/bin/google-chrome-stable"
+#chrome_profile             = ""
 #chrome_profiles_dir        = "/tmp/webchela/chrome"
 
 #chunk_size                 = "3M"
@@ -151,6 +152,7 @@ CONFIG_SAMPLE = """
 #firefox_driver_path        = "/usr/logcal/bin/geckodriver"
 #firefox_extensions_dir     = "<INSTALL_PATH>/extensions/firefox"
 #firefox_path               = "/opt/firefox/firefox-bin"
+#firefox_profile            = ""
 #firefox_profiles_dir       = "/tmp/webchela/firefox"
 
 #keep_temp                  = false
