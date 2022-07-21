@@ -117,13 +117,14 @@ DEFAULT_PARAMS = {
 # ----------------------------------------------------------------------------------------------------------------------
 
 CONFIG_SAMPLE = """
+
 [default]
 
 #browser_type               = "chrome"
-#browser_extension          = ["bypass-paywalls-1.7.6.crx", "ublock-origin-1.30.6.crx"]
+#browser_extension          = ["bypass-paywalls-1.8.0.crx", "privacy-pass-3.0.3.crx", "ublock-origin-1.43.0.crx"]
 
 #browser_type               = "firefox"
-#browser_extension          = ["bypass-paywalls-1.7.6.xpi", "ublock-origin-1.30.6.xpi"]
+#browser_extension          = ["bypass-paywalls-1.8.0.xpi", "privacy-pass-3.0.3.xpi", "ublock-origin-1.43.0.xpi"]
 
 #browser_geometry           = "1024x768"
 #browser_instance           = 1
@@ -139,18 +140,18 @@ CONFIG_SAMPLE = """
 #browser_retry_codes_tries  = 1
 
 #chrome_driver_path         = "/usr/bin/chromedriver"
-#chrome_extensions_dir      = "/tmp"
+#chrome_extensions_dir      = "<INSTALL_PATH>/extensions/chrome"
 #chrome_path                = "/usr/bin/google-chrome-stable"
-#chrome_profiles_dir        = "/tmp"
+#chrome_profiles_dir        = "/tmp/webchela/chrome"
 
 #chunk_size                 = "3M"
 
 #cpu_load                   = 25
 
-#firefox_driver_path        = "/usr/bin/geckodriver"
-#firefox_extensions_dir     = "/tmp"
-#firefox_path               = "/usr/lib64/firefox/firefox"
-#firefox_profiles_dir       = "/tmp"
+#firefox_driver_path        = "/usr/logcal/bin/geckodriver"
+#firefox_extensions_dir     = "<INSTALL_PATH>/extensions/firefox"
+#firefox_path               = "/opt/firefox/firefox-bin"
+#firefox_profiles_dir       = "/tmp/webchela/firefox"
 
 #keep_temp                  = false
 
