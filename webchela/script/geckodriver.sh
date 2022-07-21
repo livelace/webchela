@@ -10,12 +10,11 @@ set -x
 ALL_ARGS=("$@")
 TOTAL_ARGS="$#"
 
-ORIGINAL_OFFSET=$((TOTAL_ARGS-2))
-ORIGINAL_ARGS=("${@:1:ORIGINAL_OFFSET}")
-
-ORIGINAL_BINARY=${ALL_ARGS[ORIGINAL_OFFSET]}
-TEMP_DIR=${ALL_ARGS[ORIGINAL_OFFSET+1]}
-
+ORIGINAL_ARGS=("${@:5:TOTAL_ARGS}")
+LOG_ARG=$1
+LOG_LEVEL=$2
+ORIGINAL_BINARY=$3
+TEMP_DIR=$4
 
 if [[ ! "$ORIGINAL_BINARY" || ! "$TEMP_DIR" ]];then
   echo "ERROR: Usage $0 <ORIGINAL_ARGS> /path/to/original/geckodriver /path/to/custom/temp/dir"
@@ -38,4 +37,4 @@ export TMP="$TEMP_DIR"
 
 # exec is needed for correct quitting of geckodriver.
 # shellcheck disable=SC2068
-exec "$ORIGINAL_BINARY" ${ORIGINAL_ARGS[@]}
+exec "$ORIGINAL_BINARY" $LOG_ARG $LOG_LEVEL ${ORIGINAL_ARGS[@]}

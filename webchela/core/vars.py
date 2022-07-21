@@ -5,7 +5,7 @@ from os.path import dirname, join, isdir
 # ----------------------------------------------------------------------------------------------------------------------
 
 APP_NAME = "webchela"
-APP_VERSION = "v1.5.2"
+APP_VERSION = "v1.7.0"
 
 BASE_DIR = dirname(find_spec("webchela").loader.path)
 
@@ -19,28 +19,18 @@ DEFAULT_KEEP_TEMP = False
 # ----------------------------------------------------------------------------------------------------------------------
 # Chrome settings.
 CHROME_DRIVER_PATH = "/usr/bin/chromedriver"
-CHROME_EXTENSIONS_DIR = "/tmp"
+CHROME_EXTENSIONS_DIR = os.path.join(BASE_DIR, "extensions", "chrome")
 CHROME_PATH = "/usr/bin/google-chrome-stable"
-CHROME_PROFILES_DIR = "/tmp/webchela/profiles/chrome"
+CHROME_PROFILE = ""
+CHROME_PROFILES_DIR = "/tmp/webchela/chrome"
 
 # Firefox settings.
-FIREFOX_DRIVER_PATH = "/usr/bin/geckodriver"
-FIREFOX_EXTENSIONS_DIR = "/tmp"
-FIREFOX_LOG_FILE = "/tmp/geckodriver.log"
+FIREFOX_DRIVER_PATH = "/usr/local/bin/geckodriver"
+FIREFOX_EXTENSIONS_DIR = os.path.join(BASE_DIR, "extensions", "firefox")
 FIREFOX_PATH = "/usr/lib64/firefox/firefox"
-FIREFOX_PROFILES_DIR = "/tmp/webchela/profiles/firefox"
-FIREFOX_GECKODRIVER_WRAPPER = os.path.join(BASE_DIR, "core", "script", "geckodriver.sh")
-
-webchela_extensions = find_spec("webchela-extensions")
-if webchela_extensions:
-    cd = join(dirname(webchela_extensions.loader.path), "chrome")
-    fd = join(dirname(webchela_extensions.loader.path), "firefox")
-
-    if isdir(cd):
-        CHROME_EXTENSIONS_DIR = cd
-
-    if isdir(fd):
-        FIREFOX_EXTENSIONS_DIR = fd
+FIREFOX_PROFILE = ""
+FIREFOX_PROFILES_DIR = "/tmp/webchela/firefox"
+FIREFOX_GECKODRIVER_WRAPPER = os.path.join(BASE_DIR, "script", "geckodriver.sh")
 
 TAB_HOP_DELAY = 1  # delay between tab "hopping" (for page status checking).
 
@@ -53,7 +43,7 @@ DEFAULT_SERVER_WORKERS = 1
 # Client.
 DEFAULT_CLIENT_BATCH_SIZE = 100
 DEFAULT_BROWSER_ARGUMENT = []
-DEFAULT_BROWSER_EXTENSION = ["bypass-paywalls-1.7.6.xpi", "ublock-origin-1.30.6.xpi"]
+DEFAULT_BROWSER_EXTENSION = []
 DEFAULT_BROWSER_GEOMETRY = "1024x768"
 DEFAULT_BROWSER_INSTANCE = 1
 DEFAULT_BROWSER_INSTANCE_TAB = 5
@@ -96,12 +86,14 @@ DEFAULT_PARAMS = {
         "chrome_driver_path": CHROME_DRIVER_PATH,
         "chrome_extensions_dir": CHROME_EXTENSIONS_DIR,
         "chrome_path": CHROME_PATH,
+        "chrome_profile": CHROME_PROFILE,
         "chrome_profiles_dir": CHROME_PROFILES_DIR,
         "chunk_size": DEFAULT_CHUNK_SIZE,
         "cpu_load": DEFAULT_CPU_LOAD,
         "firefox_driver_path": FIREFOX_DRIVER_PATH,
         "firefox_extensions_dir": FIREFOX_EXTENSIONS_DIR,
         "firefox_path": FIREFOX_PATH,
+        "firefox_profile": FIREFOX_PROFILE,
         "firefox_profiles_dir": FIREFOX_PROFILES_DIR,
         "keep_temp": DEFAULT_KEEP_TEMP,
         "log_level": DEFAULT_LOG_LEVEL,

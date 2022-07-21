@@ -26,12 +26,6 @@ RUN             cd "$WEBCHELA_TEMP" && \
                 pip install --user . && \
                 rm -rf "$WEBCHELA_TEMP"
 
-# install webchela-extensions.
-RUN             git clone "$WEBCHELA_EXTENSIONS_URL" "$WEBCHELA_EXTENSIONS_TEMP" && \
-                cd "$WEBCHELA_EXTENSIONS_TEMP" && \
-                pip install --user . && \
-                rm -rf "$WEBCHELA_EXTENSIONS_TEMP"
-
 ENV             PATH=$PATH:"/home/user/.local/bin"
 
 WORKDIR         "/home/user"

@@ -37,7 +37,8 @@ def update_urls(requests):
 
     for request in requests:
         if request.response:
-            data[request.url] = (request.response.status_code, request.response.headers['Content-Type'])
+            data[request.url] = (request.response.status_code,
+                                 request.response.headers['Content-Type'])
 
     return data
 
@@ -51,9 +52,11 @@ class GenericBrowser:
 
         self.browser = None
         self.display = None
-        self.temp_dir = None
+        self.keep_temp = None
+        self.profile_dir = None
 
-        _, self.x, self.y = is_browser_geometry("", request.browser.geometry, config.params.default.browser_geometry)
+        _, self.x, self.y = is_browser_geometry(
+            "", request.browser.geometry, config.params.default.browser_geometry)
 
         self.selenium_wire_options = {
             "backend": "default",
@@ -83,13 +86,17 @@ class GenericBrowser:
         # Message: Tried to run command without establishing a connection
 
         urls_origin = [0] + urls  # list of original urls + first blank tab.
-        urls_final = urls_origin.copy()  # list of final urls (after all redirects) + first blank tab.
-        urls_final_data = {}  # list of final urls and their data (status code, content type) + first blank tab.
+        # list of final urls (after all redirects) + first blank tab.
+        urls_final = urls_origin.copy()
+        # list of final urls and their data (status code, content type) + first blank tab.
+        urls_final_data = {}
 
         tabs_readiness = [False]  # list of tabs statuses + first blank tab.
         tabs_retries = [0]        # list of tabs retries + first blank tab.
-        tabs_states = [""]        # list of tabs states (verbose) + first blank tab.
-        tabs_timestamp = [0]      # list of timestamps when tabs were opened + first blank tab.
+        # list of tabs states (verbose) + first blank tab.
+        tabs_states = [""]
+        # list of timestamps when tabs were opened + first blank tab.
+        tabs_timestamp = [0]
 
         # ------------------------------------------------------
         # Open urls.
@@ -98,7 +105,8 @@ class GenericBrowser:
             url = urls_origin[index]
 
             try:
-                self.browser.execute_script('window.open("{0}","_blank");'.format(url))
+                self.browser.execute_script(
+                    'window.open("{0}","_blank");'.format(url))
                 tabs_readiness.append(False)
                 tabs_retries.append(0)
                 tabs_states.append("opened")
@@ -125,8 +133,10 @@ class GenericBrowser:
 
                 if not tabs_readiness[index]:
                     try:
-                        self.browser.switch_to.window(self.browser.window_handles[index])
-                        state = self.browser.execute_script('return document.readyState;')
+                        self.browser.switch_to.window(
+                            self.browser.window_handles[index])
+                        state = self.browser.execute_script(
+                            'return document.readyState;')
 
                         # save possible redirected url.
                         if self.browser.current_url != 'about:blank':
@@ -168,7 +178,8 @@ class GenericBrowser:
 
             # Check if final urls should be reloaded.
             urls_final_data_old = len(urls_final_data)
-            urls_final_data = update_urls(self.browser.requests)  # too costly to do for each tab.
+            # too costly to do for each tab.
+            urls_final_data = update_urls(self.browser.requests)
 
             logger.debug("[{}][{}] Total captured URLs: {} -> {}".format(
                 self.request.client_id, self.task_hash, urls_final_data_old, len(urls_final_data)))
@@ -181,7 +192,8 @@ class GenericBrowser:
 
                     if status_code in self.request.browser.retry_codes and \
                             tabs_retries[index] < self.request.browser.retry_codes_tries:
-                        self.browser.switch_to.window(self.browser.window_handles[index])
+                        self.browser.switch_to.window(
+                            self.browser.window_handles[index])
                         self.browser.execute_script('location.reload();')
 
                         tabs_readiness[index] = False
@@ -340,9 +352,9 @@ class GenericBrowser:
                 logger.error("[{}][{}] Cannot stop virtual display properly: {}".format(
                     self.request.client_id, self.task_hash, e))
 
-        if self.temp_dir and not self.config.params.default.keep_temp:
+        if self.profile_dir and not self.keep_temp:
             try:
-                shutil.rmtree(self.temp_dir)
+                shutil.rmtree(self.profile_dir)
             except Exception as e:
                 logger.error("[{}][{}] Cannot clean temporary directory properly: {}".format(
                     self.request.client_id, self.task_hash, e))
@@ -354,20 +366,37 @@ class ChromeGenericBrowser(GenericBrowser):
 
     def create_browser(self) -> bool:
         try:
-            self.display = Display(backend="xvnc", size=(self.x, self.y), rfbport=0)
+            self.display = Display(
+                backend="xvnc", size=(self.x, self.y), rfbport=0)
             self.display.start()
         except Exception as e:
             logger.warning("[{}][{}] Cannot create virtual display: {}".format(
                 self.request.client_id, self.task_hash, e))
             return False
 
-        try:
-            self.temp_dir = mkdtemp(dir=self.config.params.default.chrome_profiles_dir,
-                                    prefix="task_{}_".format(self.task_hash))
-        except Exception as e:
-            logger.warning("[{}][{}] Cannot create temporary directory: {}".format(
-                self.request.client_id, self.task_hash, e))
-            return False
+        if self.config.params.default.chrome_profile:
+            self.keep_temp = True
+
+            self.profile_dir = os.path.join(
+                self.config.params.default.chrome_profiles_dir, self.config.params.default.chrome_profile)
+
+            try:
+                os.makedirs(self.profile_dir, exist_ok=True)
+            except Exception as e:
+                logger.warning("[{}][{}] Cannot create profile directory: {}".format(
+                    self.request.client_id, self.task_hash, e))
+                return False
+
+        if not self.config.params.default.chrome_profile:
+            self.keep_temp = self.config.params.default.keep_temp
+
+            try:
+                self.profile_dir = mkdtemp(dir=self.config.params.default.chrome_profiles_dir,
+                                           prefix="task_{}_".format(self.task_hash))
+            except Exception as e:
+                logger.warning("[{}][{}] Cannot create temporary directory: {}".format(
+                    self.request.client_id, self.task_hash, e))
+                return False
 
         options = webdriver.ChromeOptions()
         options.binary_location = self.config.params.default.chrome_path
@@ -383,17 +412,19 @@ class ChromeGenericBrowser(GenericBrowser):
 
         # add application related arguments.
         options.add_argument("no-sandbox")
-        options.add_argument("user-data-dir={}".format(self.temp_dir))
+        options.add_argument("user-data-dir={}".format(self.profile_dir))
 
         # "hide" selenium.
         options.add_argument("disable-blink-features=AutomationControlled")
-        options.add_experimental_option("excludeSwitches", ["enable-automation", "test-type"])
+        options.add_experimental_option(
+            "excludeSwitches", ["enable-automation", "test-type"])
         options.add_experimental_option("useAutomationExtension", False)
 
         # add extensions.
         for extension in self.request.browser.extension:
             try:
-                options.add_extension(os.path.join(self.config.params.default.chrome_extensions_dir, extension.strip()))
+                options.add_extension(os.path.join(
+                    self.config.params.default.chrome_extensions_dir, extension.strip()))
             except IOError as e:
                 logger.warning("[{}][{}] Invalid extension: {}, {}".format(
                     self.request.client_id, self.task_hash, extension.strip(), e))
@@ -401,12 +432,15 @@ class ChromeGenericBrowser(GenericBrowser):
 
         # create browser.
         try:
-            log = os.path.join(self.temp_dir, "chromedriver.log")
+            log = os.path.join(self.profile_dir, "chromedriver.log")
 
             self.browser = webdriver.Chrome(executable_path=self.config.params.default.chrome_driver_path,
                                             options=options,
                                             seleniumwire_options=self.selenium_wire_options,
-                                            service_args=["--log-level=DEBUG"],
+                                            service_args=[
+                                                "--log-level={}".format(
+                                                    self.config.params.default.log_level),
+                                            ],
                                             service_log_path=log)
         except WebDriverException as e:
             logger.error("[{}][{}] Cannot create browser: {}".format(
@@ -434,33 +468,56 @@ class ChromeGenericBrowser(GenericBrowser):
 
 class FirefoxGenericBrowser(GenericBrowser):
     def __init__(self, config, request, task_hash, order):
-        super(FirefoxGenericBrowser, self).__init__(config, request, task_hash, order)
+        super(FirefoxGenericBrowser, self).__init__(
+            config, request, task_hash, order)
 
     def create_browser(self) -> bool:
         try:
-            self.display = Display(backend="xvnc", size=(self.x, self.y), rfbport=0)
+            self.display = Display(
+                backend="xvnc", size=(self.x, self.y), rfbport=0)
             self.display.start()
         except Exception as e:
             logger.warning("[{}][{}] Cannot create virtual display: {}".format(
                 self.request.client_id, self.task_hash, e))
             return False
 
-        try:
-            self.temp_dir = mkdtemp(dir=self.config.params.default.firefox_profiles_dir,
-                                    prefix="task_{}_".format(self.task_hash))
-        except Exception as e:
-            logger.warning("[{}][{}] Cannot create temporary directory: {}".format(
-                self.request.client_id, self.task_hash, e))
-            return False
+        if self.config.params.default.firefox_profile:
+            self.keep_temp = True
+
+            self.profile_dir = os.path.join(
+                self.config.params.default.firefox_profiles_dir, self.config.params.default.firefox_profile)
+
+            try:
+                os.makedirs(self.profile_dir, exist_ok=True)
+            except Exception as e:
+                logger.warning("[{}][{}] Cannot create profile directory: {}".format(
+                    self.request.client_id, self.task_hash, e))
+                return False
+
+        if not self.config.params.default.firefox_profile:
+            self.keep_temp = self.config.params.default.keep_temp
+
+            try:
+                self.profile_dir = mkdtemp(dir=self.config.params.default.firefox_profiles_dir,
+                                           prefix="task_{}_".format(self.task_hash))
+            except Exception as e:
+                logger.warning("[{}][{}] Cannot create temporary directory: {}".format(
+                    self.request.client_id, self.task_hash, e))
+                return False
 
         options = FirefoxOptions()
         options.binary_location = self.config.params.default.firefox_path
 
         # add application related arguments.
         options.add_argument("--new-instance")
-        options.set_preference("browser.link.open_newwindow", 3)  # open urls in tabs, not in windows.
-        options.set_preference("dom.webnotifications.enabled", False)  # disable all notifications.
-        options.set_preference("media.autoplay.default", 5)  # disable all media autoplaying.
+        options.add_argument("-profile")
+        options.add_argument(self.profile_dir)
+        # open urls in tabs, not in windows.
+        options.set_preference("browser.link.open_newwindow", 3)
+        # disable all notifications.
+        options.set_preference("dom.webnotifications.enabled", False)
+        # disable all media autoplaying.
+        options.set_preference("media.autoplay.default", 5)
 
         # add user-defined arguments.
         for argument in self.request.browser.argument:
@@ -472,21 +529,22 @@ class FirefoxGenericBrowser(GenericBrowser):
                 continue
 
         # create browser.
-        try:
-            log = os.path.join(self.temp_dir, "geckodriver.log")
+        log = os.path.join(self.profile_dir, "geckodriver.log")
 
+        try:
             self.browser = webdriver.Firefox(executable_path=FIREFOX_GECKODRIVER_WRAPPER,
                                              firefox_binary=self.config.params.default.firefox_path,
-                                             log_path=log,
+                                             service_log_path=log,
                                              options=options,
                                              seleniumwire_options=self.selenium_wire_options,
                                              service_args=[
-                                                 "--log", "trace",
-                                                 self.config.params.default.firefox_driver_path,  # must be before last
-                                                 self.temp_dir                                    # must be last
+                                                 "--log", self.config.params.default.log_level.lower(),
+                                                 self.config.params.default.firefox_driver_path,
+                                                 self.profile_dir
                                              ])
         except WebDriverException as e:
-            logger.error("[{}][{}] Cannot create browser: {}".format(self.request.client_id, self.task_hash, e))
+            logger.error("[{}][{}] Cannot create browser: {}".format(
+                self.request.client_id, self.task_hash, e))
             return False
 
         # add extensions.
