@@ -4,7 +4,7 @@ def APP_VERSION = env.VERSION + '-${GIT_COMMIT_SHORT}'
 def IMAGE_TAG = env.VERSION == "master" ? "latest" : env.VERSION
 
 libraries {
-    //dependency_check
+    dependency_check
     //dependency_track {
     //    project = "${APP_NAME}"
     //    version = env.VERSION
