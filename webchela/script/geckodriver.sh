@@ -37,4 +37,4 @@ export TMP="$TEMP_DIR"
 
 # exec is needed for correct quitting of geckodriver.
 # shellcheck disable=SC2068
-exec "$ORIGINAL_BINARY" $LOG_ARG $LOG_LEVEL ${ORIGINAL_ARGS[@]}
+exec $ORIGINAL_BINARY $LOG_ARG $LOG_LEVEL ${ORIGINAL_ARGS[@]}
