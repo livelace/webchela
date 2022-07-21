@@ -27,7 +27,7 @@ CHROME_PROFILES_DIR = "/tmp/webchela/chrome"
 # Firefox settings.
 FIREFOX_DRIVER_PATH = "/usr/local/bin/geckodriver"
 FIREFOX_EXTENSIONS_DIR = os.path.join(BASE_DIR, "extensions", "firefox")
-FIREFOX_PATH = "/usr/lib64/firefox/firefox"
+FIREFOX_PATH = "/opt/firefox/firefox-bin"
 FIREFOX_PROFILE = ""
 FIREFOX_PROFILES_DIR = "/tmp/webchela/firefox"
 FIREFOX_GECKODRIVER_WRAPPER = os.path.join(BASE_DIR, "script", "geckodriver.sh")
