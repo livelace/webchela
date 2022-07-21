@@ -5,7 +5,6 @@ FROM            harbor-core.k8s-2.livelace.ru/dev/webchela:${IMAGE_TAG}
 ENV             PIP_CONFIG_FILE="pip.conf"
 
 ENV             WEBCHELA_TEMP="/tmp/webchela"
-ENV             WEBCHELA_URL="https://github.com/livelace/webchela"
 
 # portage packages.
 RUN             emerge -G -q \
