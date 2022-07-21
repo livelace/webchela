@@ -24,7 +24,7 @@ libraries {
     }
     mattermost
     nexus {
-       source = "dist/webchela-1.5.2-py3.8.egg"
+       source = "dist/webchela-1.7.0-py3.8.egg"
        destination = "dists-internal/${APP_NAME}/${APP_NAME}-${APP_VERSION}.egg"
 
     }
