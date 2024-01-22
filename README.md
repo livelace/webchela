@@ -122,3 +122,8 @@ user@localhost / $ docker exec webchela tree /tmp/webchela
          <img src="https://img.youtube.com/vi/kxJSVvcW-p8/0.jpg" style="width:100%;">
       </a>
 </div>
+
+### Credits:
+<br>
+
+[![main](assets/jetbrains.png)](https://www.jetbrains.com/ides/)
