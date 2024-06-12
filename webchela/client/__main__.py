@@ -14,7 +14,7 @@ import webchela.core.protobuf.webchela_pb2 as webchela_pb2
 import webchela.core.protobuf.webchela_pb2_grpc as webchela_pb2_grpc
 
 from webchela.core.config import Config
-from webchela.core.utils import exit_handler, split_urls
+from webchela.core.utils import exit_handler, split_items
 from webchela.core.vars import APP_NAME, APP_VERSION, DEFAULT_LOG_FORMAT, HELP_CLIENT_URL, HELP_CLIENT_URL_FILE, \
     HELP_CLIENT_SCRIPT, HELP_CLIENT_SCRIPT_FILE
 
@@ -145,7 +145,7 @@ def main():
         scripts.append(args.script_file.read())
 
     # Assemble and send task.
-    urls_batches = split_urls(urls, config.params.client.batch_size)
+    urls_batches = split_items(urls, config.params.client.batch_size)
 
     logger.info("Send task. Total urls: {}. Total batches: {}.".format(len(urls), len(urls_batches)))
 

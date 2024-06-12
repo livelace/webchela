@@ -10,11 +10,11 @@ set -x
 ALL_ARGS=("$@")
 TOTAL_ARGS="$#"
 
-ORIGINAL_ARGS=("${@:5:TOTAL_ARGS}")
+ORIGINAL_ARGS=("${@:7:TOTAL_ARGS}")
 LOG_ARG=$1
 LOG_LEVEL=$2
-ORIGINAL_BINARY=$3
-TEMP_DIR=$4
+ORIGINAL_BINARY=$5
+TEMP_DIR=$6
 
 if [[ ! "$ORIGINAL_BINARY" || ! "$TEMP_DIR" ]];then
   echo "ERROR: Usage $0 <ORIGINAL_ARGS> /path/to/original/geckodriver /path/to/custom/temp/dir"

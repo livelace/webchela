@@ -1,4 +1,5 @@
 import os
+import re
 
 import coloredlogs
 import logging
@@ -7,7 +8,10 @@ import uuid
 
 from pyvirtualdisplay import Display
 from selenium.common.exceptions import WebDriverException, TimeoutException, JavascriptException, \
-    InvalidArgumentException
+    InvalidArgumentException, NoSuchElementException
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.firefox.service import Service as FirefoxService
+from selenium.webdriver.common.by import By
 from seleniumwire import webdriver
 from selenium.webdriver import FirefoxOptions
 from tempfile import mkdtemp
@@ -22,14 +26,14 @@ from webchela.core.vars import FIREFOX_GECKODRIVER_WRAPPER
 logger = logging.getLogger("webchela.server.browser")
 
 
-def chrome_grabber(config, request, task_hash, order, urls):
+def chrome_grabber(config, request, task_hash, order, urls, screenshots, scripts):
     b = ChromeGenericBrowser(config, request, task_hash, order)
-    return b.process(urls)
+    return b.process(urls, screenshots, scripts)
 
 
-def firefox_grabber(config, request, task_hash, order, urls):
+def firefox_grabber(config, request, task_hash, order, urls, screenshots, scripts):
     b = FirefoxGenericBrowser(config, request, task_hash, order)
-    return b.process(urls)
+    return b.process(urls, screenshots, scripts)
 
 
 def update_urls(requests):
@@ -69,7 +73,7 @@ class GenericBrowser:
                 "no_proxy": "localhost,127.0.0.1"
             }
 
-    def fetch(self, urls) -> dict:
+    def fetch(self, urls, screenshots, scripts) -> dict:
         chunks = []
 
         # --------------------------------------------------------------------------------------------------
@@ -85,14 +89,17 @@ class GenericBrowser:
         # selenium.common.exceptions.InvalidSessionIdException:
         # Message: Tried to run command without establishing a connection
 
-        urls_origin = [0] + urls  # list of original urls + first blank tab.
+        urls_origin = ["0"] + urls  # list of original urls + first blank tab.
         # list of final urls (after all redirects) + first blank tab.
         urls_final = urls_origin.copy()
         # list of final urls and their data (status code, content type) + first blank tab.
         urls_final_data = {}
 
+        screenshots = ["0"] + screenshots  # list of screenshots + first blank tab.
+        scripts = ["0"] + scripts  # list of scripts + first blank tab.
+
         tabs_readiness = [False]  # list of tabs statuses + first blank tab.
-        tabs_retries = [0]        # list of tabs retries + first blank tab.
+        tabs_retries = [0]  # list of tabs retries + first blank tab.
         # list of tabs states (verbose) + first blank tab.
         tabs_states = [""]
         # list of timestamps when tabs were opened + first blank tab.
@@ -276,17 +283,22 @@ class GenericBrowser:
                     result.page_body = self.browser.page_source
 
                 # Execute javascript code.
-                for script in self.request.scripts:
+                for script_index, script_value in enumerate(
+                        re.split(self.config.params.default.unique_separator, scripts[index])):
+
                     try:
-                        output = self.browser.execute_script(script)
-                        result.script_output.append(str(output))
+                        script_output = self.browser.execute_script(script_value)
+
+                        result.scripts.append(str(script_output))
+                        result.scripts_id.append(script_index)
 
                     except JavascriptException as e:
                         msg = "[{}][{}] Javascript execution error: {}, {}".format(
                             self.request.client_id, self.task_hash, url, e.msg)
 
                         logger.warning(msg)
-                        result.script_output.append(msg)
+                        result.scripts.append(msg)
+                        result.scripts_id.append(script_index)
 
                     except TimeoutException:
                         msg = "[{}][{}] Javascript execution timeout: {}, {}".format(
@@ -294,7 +306,45 @@ class GenericBrowser:
                             self.request.browser.script_timeout)
 
                         logger.warning(msg)
-                        result.script_output.append(msg)
+                        result.scripts.append(msg)
+                        result.scripts_id.append(script_index)
+
+                # Get screenshots.
+                for screenshot_index, screenshot_value in enumerate(
+                        re.split(self.config.params.default.unique_separator, screenshots[index])):
+
+                    prefix, value = screenshot_value.split(':')
+
+                    screenshot_elements = None
+
+                    try:
+                        match prefix:
+                            case "class":
+                                screenshot_elements = self.browser.find_elements(By.CLASS_NAME, value)
+                            case "css":
+                                screenshot_elements = self.browser.find_elements(By.CSS_SELECTOR, value)
+                            case "id":
+                                screenshot_elements = self.browser.find_elements(By.ID, value)
+                            case "name":
+                                screenshot_elements = self.browser.find_elements(By.NAME, value)
+                            case "tag":
+                                screenshot_elements = self.browser.find_elements(By.TAG_NAME, value)
+                            case "xpath":
+                                screenshot_elements = self.browser.find_elements(By.XPATH, value)
+                            case _:
+                                pass
+                    except NoSuchElementException as e:
+                        msg = "[{}][{}] Cannot find screenshot elements: {}, {}".format(
+                            self.request.client_id, self.task_hash, url, e.msg)
+
+                        logger.warning(msg)
+
+                    for screenshot_element in screenshot_elements:
+                        r = screenshot_element.rect
+                        if r["width"] > 0 and r["height"] > 0:
+                            self.browser.execute_script("arguments[0].scrollIntoView(true);", screenshot_element)
+                            result.screenshots.append(screenshot_element.screenshot_as_base64)
+                            result.screenshots_id.append(screenshot_index)
 
                 # Show what we got.
                 logger.debug("uuid: {}, code: {}, url: {}, title: {}".format(
@@ -434,14 +484,14 @@ class ChromeGenericBrowser(GenericBrowser):
         try:
             log = os.path.join(self.profile_dir, "chromedriver.log")
 
-            self.browser = webdriver.Chrome(executable_path=self.config.params.default.chrome_driver_path,
-                                            options=options,
-                                            seleniumwire_options=self.selenium_wire_options,
-                                            service_args=[
-                                                "--log-level={}".format(
-                                                    self.config.params.default.log_level),
-                                            ],
-                                            service_log_path=log)
+            self.browser = webdriver.Chrome(
+                options=options,
+                seleniumwire_options=self.selenium_wire_options,
+                service=ChromeService(
+                    executable_path=self.config.params.default.chrome_driver_path,
+                    service_args=["--log-level={}".format(self.config.params.default.log_level)],
+                    log_output=log
+                ))
         except WebDriverException as e:
             logger.error("[{}][{}] Cannot create browser: {}".format(
                 self.request.client_id, self.task_hash, e))
@@ -456,9 +506,9 @@ class ChromeGenericBrowser(GenericBrowser):
 
         return True
 
-    def process(self, urls) -> dict:
+    def process(self, urls, screenshots, scripts) -> dict:
         if self.create_browser():
-            return self.fetch(urls)
+            return self.fetch(urls, screenshots, scripts)
         else:
             return {}
 
@@ -532,16 +582,19 @@ class FirefoxGenericBrowser(GenericBrowser):
         log = os.path.join(self.profile_dir, "geckodriver.log")
 
         try:
-            self.browser = webdriver.Firefox(executable_path=FIREFOX_GECKODRIVER_WRAPPER,
-                                             firefox_binary=self.config.params.default.firefox_path,
-                                             service_log_path=log,
-                                             options=options,
-                                             seleniumwire_options=self.selenium_wire_options,
-                                             service_args=[
-                                                 "--log", self.config.params.default.log_level.lower(),
-                                                 self.config.params.default.firefox_driver_path,
-                                                 self.profile_dir
-                                             ])
+            self.browser = webdriver.Firefox(
+                options=options,
+                service=FirefoxService(
+                    executable_path=FIREFOX_GECKODRIVER_WRAPPER,
+                    log_output=log,
+                    service_args=[
+                        "--log", self.config.params.default.log_level.lower(),
+                        self.config.params.default.firefox_driver_path,
+                        self.profile_dir
+                    ]
+                ),
+                seleniumwire_options=self.selenium_wire_options,
+            )
         except WebDriverException as e:
             logger.error("[{}][{}] Cannot create browser: {}".format(
                 self.request.client_id, self.task_hash, e))
@@ -566,9 +619,9 @@ class FirefoxGenericBrowser(GenericBrowser):
 
         return True
 
-    def process(self, urls) -> dict:
+    def process(self, urls, screenshots, scripts) -> dict:
         if self.create_browser():
-            return self.fetch(urls)
+            return self.fetch(urls, screenshots, scripts)
         else:
             return {}
 

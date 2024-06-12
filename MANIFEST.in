@@ -1,5 +1,4 @@
 include webchela/core/protobuf/webchela.proto
-include webchela/script/geckodriver.sh
-include webchela/script/geckodriver.sh
 include webchela/extensions/chrome/*.crx
 include webchela/extensions/firefox/*.xpi
+include webchela/script/geckodriver.sh

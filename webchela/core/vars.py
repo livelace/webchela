@@ -5,7 +5,7 @@ from os.path import dirname, join, isdir
 # ----------------------------------------------------------------------------------------------------------------------
 
 APP_NAME = "webchela"
-APP_VERSION = "v1.7.0"
+APP_VERSION = "v1.8.0"
 
 BASE_DIR = dirname(find_spec("webchela").loader.path)
 
@@ -25,9 +25,9 @@ CHROME_PROFILE = ""
 CHROME_PROFILES_DIR = "/tmp/webchela/chrome"
 
 # Firefox settings.
-FIREFOX_DRIVER_PATH = "/usr/local/bin/geckodriver"
+FIREFOX_DRIVER_PATH = "/usr/bin/geckodriver"
 FIREFOX_EXTENSIONS_DIR = os.path.join(BASE_DIR, "extensions", "firefox")
-FIREFOX_PATH = "/opt/firefox/firefox-bin"
+FIREFOX_PATH = "/usr/bin/firefox"
 FIREFOX_PROFILE = ""
 FIREFOX_PROFILES_DIR = "/tmp/webchela/firefox"
 FIREFOX_GECKODRIVER_WRAPPER = os.path.join(BASE_DIR, "script", "geckodriver.sh")
@@ -67,6 +67,8 @@ DEFAULT_CLIENT_OUTPUT_DIR = "/tmp/webchela"
 DEFAULT_CLIENT_SCRIPTS = []
 DEFAULT_CLIENT_SERVER = "127.0.0.1:50051"
 
+DEFAULT_UNIQUE_SEPARATOR = "= == === ==== ====="
+
 # ----------------------------------------------------------------------------------------------------------------------
 
 DEFAULT_PARAMS = {
@@ -99,7 +101,8 @@ DEFAULT_PARAMS = {
         "log_level": DEFAULT_LOG_LEVEL,
         "mem_free": DEFAULT_MEM_FREE,
         "tab_hop_delay": TAB_HOP_DELAY,
-        "task_timeout": DEFAULT_TASK_TIMEOUT
+        "task_timeout": DEFAULT_TASK_TIMEOUT,
+        "unique_separator": DEFAULT_UNIQUE_SEPARATOR
     },
     "client": {
         "batch_size": DEFAULT_CLIENT_BATCH_SIZE,

@@ -62,7 +62,7 @@ def human_size(size):
     return size
 
 
-def split_urls(urls, amount):
+def split_items(urls, amount):
     urls_parts = [urls[i:i + amount] for i in range(0, len(urls), amount)]
 
     return urls_parts

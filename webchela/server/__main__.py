@@ -1,3 +1,5 @@
+import sys
+
 import coloredlogs
 import gc
 import grpc
@@ -17,7 +19,7 @@ from webchela.core.browser import chrome_grabber, firefox_grabber
 from webchela.core.config import Config
 
 # Get configuration, set log level.
-from webchela.core.utils import get_load, gen_hash, split_urls, human_size, exit_handler
+from webchela.core.utils import get_load, gen_hash, split_items, human_size, exit_handler
 from webchela.core.validate import is_browser_type
 from webchela.core.vars import DEFAULT_LOG_FORMAT, APP_NAME, APP_VERSION
 
@@ -33,7 +35,6 @@ logging.getLogger("pyvirtualdisplay.abstractdisplay").setLevel(logging.ERROR)
 logging.getLogger("seleniumwire").setLevel(logging.ERROR)
 logging.getLogger("selenium.webdriver.remote.remote_connection").setLevel(logging.ERROR)
 logging.getLogger("urllib3.connectionpool").setLevel(logging.ERROR)
-
 
 get_load_mutex = Lock()
 get_load_busy = False
@@ -117,15 +118,22 @@ class Server(webchela_pb2_grpc.ServerServicer):
             request.scripts.extend(config.params.client.scripts)
 
         # Split urls per tabs.
-        jobs = split_urls(request.urls, request.browser.instance_tab)
+        jobs_urls = split_items(request.urls, request.browser.instance_tab)
+        jobs_screenshots = split_items(request.screenshots, request.browser.instance_tab)
+        jobs_scripts = split_items(request.scripts, request.browser.instance_tab)
 
         # --------------------------------------------------------------------------------------------------------------
 
         # Save jobs amount (jobs list will be shrunk).
-        jobs_amount = len(jobs)
+        jobs_amount = len(jobs_urls)
 
-        logger.info("[{}][{}] Task received. Total: jobs: {}, urls: {}, scripts {}.".format(
-            request.client_id, task_hash, jobs_amount, len(request.urls), len(request.scripts)))
+        logger.info("[{}][{}] Task received. Total: jobs: {}, urls: {}, screenshots: {}, scripts {}.".format(
+            request.client_id,
+            task_hash,
+            jobs_amount,
+            len(request.urls),
+            len(request.screenshots),
+            len(request.scripts)))
 
         logger.debug("[{}][{}] browser.type: {}".format(
             request.client_id, task_hash, request.browser.type))
@@ -161,9 +169,9 @@ class Server(webchela_pb2_grpc.ServerServicer):
         logger.debug("[{}][{}] timeout: {}".format(
             request.client_id, task_hash, request.timeout))
 
-        jobs_running = []       # will contain jobs/threads.
-        results = {}            # will contain results of all jobs.
-        timeout_counter = 0     # count task timeout.
+        jobs_running = []  # will contain jobs/threads.
+        results = {}  # will contain results of all jobs.
+        timeout_counter = 0  # count task timeout.
 
         # Main thread pool for job processing.
         # Amount of threads is limited by browser instances amount, not pool itself.
@@ -176,26 +184,31 @@ class Server(webchela_pb2_grpc.ServerServicer):
                 break
 
             # No jobs, no running jobs. Exit.
-            if len(jobs) == 0 and len(jobs_running) == 0:
+            if len(jobs_urls) == 0 and len(jobs_running) == 0:
                 break
 
             # Run new job if limits (number of jobs, workload limits) are good.
-            if len(jobs) > 0 and len(jobs_running) < request.browser.instance:
+            if len(jobs_urls) > 0 and len(jobs_running) < request.browser.instance:
                 # 1 second resolution workload stat.
                 load, cpu, mem, _ = get_load(request.cpu_load, request.mem_free)
                 if load:
-                    job_urls = jobs.pop()
-                    job_order = len(jobs)  # be careful of jobs.pop()
+                    job_urls = jobs_urls.pop()
+                    job_screenshots = jobs_screenshots.pop()
+                    job_scripts = jobs_scripts.pop()
+
+                    job_order = len(jobs_urls)  # be careful of jobs.pop()
 
                     if request.browser.type == "chrome":
-                        job = executor.submit(chrome_grabber, config, request, task_hash, job_order, job_urls)
+                        job = executor.submit(chrome_grabber, config, request, task_hash, job_order, job_urls,
+                                              job_screenshots, job_scripts)
                     else:
-                        job = executor.submit(firefox_grabber, config, request, task_hash, job_order, job_urls)
+                        job = executor.submit(firefox_grabber, config, request, task_hash, job_order, job_urls,
+                                              job_screenshots, job_scripts)
 
                     jobs_running.append(job)
 
                     logger.debug("[{}][{}] Run job: {} of {}".format(
-                        request.client_id, task_hash, jobs_amount - len(jobs), jobs_amount))
+                        request.client_id, task_hash, jobs_amount - len(jobs_urls), jobs_amount))
                 else:
                     logger.warning(
                         "[{}][{}] Workload limits are reached: current: {:>4}%, {}, limit: {:>2}%, {}".format(

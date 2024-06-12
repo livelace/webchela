@@ -1,0 +1,2 @@
+*.crx filter=lfs diff=lfs merge=lfs -text
+*.xpi filter=lfs diff=lfs merge=lfs -text
