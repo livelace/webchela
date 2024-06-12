@@ -18,7 +18,7 @@ Provide a plugin endpoint to other tool - [gosquito](https://github.com/livelace
 
 ### Dependencies:
 
-* Python 3.8+
+* Python 3.11+
 * Chrome, [chromedriver](https://chromedriver.chromium.org/).
 * Firefox, [geckodriver](https://github.com/mozilla/geckodriver).
 * TigerVNC.
@@ -27,13 +27,13 @@ Provide a plugin endpoint to other tool - [gosquito](https://github.com/livelace
 
 ```shell script
 # start daemon
-user@localhost / $ docker run --name webchela -ti --rm -v /dev/shm:/dev/shm ghcr.io/livelace/webchela:v1.7.0
+user@localhost / $ docker run --name webchela -ti --rm -v /dev/shm:/dev/shm ghcr.io/livelace/webchela:v1.8.0
 2021-02-09 18:11:54 webchela.config INFO Config sample was written successfully: /home/webchela/.webchela.toml
-2021-02-09 18:11:54 webchela.server INFO webchela v1.7.0
+2021-02-09 18:11:54 webchela.server INFO webchela v1.8.0
 
 # fetch page with simple client
 user@localhost / $ docker exec webchela webchela-cli --url https://google.com
-2021-02-09 18:12:13 webchela.client INFO webchela v1.7.0
+2021-02-09 18:12:13 webchela.client INFO webchela v1.8.0
 2021-02-09 18:12:13 webchela.client INFO Send task. Total urls: 1. Total batches: 1.
 2021-02-09 18:12:13 webchela.client INFO Send batch: 0. Batch size: 1
 2021-02-09 18:12:19 webchela.client INFO Task completed.
@@ -59,12 +59,12 @@ user@localhost / $ docker exec webchela tree /tmp/webchela
 [default]
 
 #browser_type               = "chrome"
-#browser_extension          = ["bypass-paywalls-1.8.0.crx", "privacy-pass-3.0.3.crx", "ublock-origin-1.43.0.crx"]
+#browser_extension          = ["bypass-paywalls-clean-3.7.1.0.crx", "ublock-origin-1.58.0.crx"]
 
 #browser_type               = "firefox"
-#browser_extension          = ["bypass-paywalls-1.8.0.xpi", "privacy-pass-3.0.3.xpi", "ublock-origin-1.43.0.xpi"]
+#browser_extension          = ["bypass-paywalls-clean-3.7.1.0.xpi", "ublock-origin-1.58.0.xpi"]
 
-#browser_geometry           = "1024x768"
+#browser_geometry           = "1920x1080"
 #browser_instance           = 1
 #browser_instance_tab       = 5
 #browser_page_size          = "10M"
@@ -89,7 +89,7 @@ user@localhost / $ docker exec webchela tree /tmp/webchela
 
 #firefox_driver_path        = "/usr/logcal/bin/geckodriver"
 #firefox_extensions_dir     = "<INSTALL_PATH>/extensions/firefox"
-#firefox_path               = "/opt/firefox/firefox-bin"
+#firefox_path               = "/usr/bin/firefox"
 #firefox_profile            = ""
 #firefox_profiles_dir       = "/tmp/webchela/firefox"
 
@@ -115,15 +115,6 @@ user@localhost / $ docker exec webchela tree /tmp/webchela
 #workers                    = 1
 ```
 
-### Demo:
+### Grabbed screenshot example:
 
-<div align="left">
-      <a href="https://www.youtube.com/watch?v=kxJSVvcW-p8">
-         <img src="https://img.youtube.com/vi/kxJSVvcW-p8/0.jpg" style="width:100%;">
-      </a>
-</div>
-
-### Credits:
-<br>
-
-[![main](assets/jetbrains.png)](https://www.jetbrains.com/ides/)
+![main](assets/worldclock.png)

@@ -44,13 +44,13 @@ DEFAULT_SERVER_WORKERS = 1
 DEFAULT_CLIENT_BATCH_SIZE = 100
 DEFAULT_BROWSER_ARGUMENT = []
 DEFAULT_BROWSER_EXTENSION = []
-DEFAULT_BROWSER_GEOMETRY = "1024x768"
+DEFAULT_BROWSER_GEOMETRY = "1920x1080"
 DEFAULT_BROWSER_INSTANCE = 1
 DEFAULT_BROWSER_INSTANCE_TAB = 5
 DEFAULT_BROWSER_PAGE_SIZE = 10 * 1024 * 1024    # 10MB.
 DEFAULT_BROWSER_PAGE_TIMEOUT = 20               # seconds.
 DEFAULT_BROWSER_SCRIPT_TIMEOUT = 20             # seconds.
-DEFAULT_BROWSER_TYPE = "firefox"
+DEFAULT_BROWSER_TYPE = "chrome"
 DEFAULT_BROWSER_PROXY = ""
 DEFAULT_BROWSER_RETRY_CODES = []                # list of status codes which will trigger page reloading.
 DEFAULT_BROWSER_RETRY_CODES_TRIES = 1           # how many tries we should perform if status code is in the list.
@@ -124,12 +124,12 @@ CONFIG_SAMPLE = """
 [default]
 
 #browser_type               = "chrome"
-#browser_extension          = ["bypass-paywalls-1.8.0.crx", "privacy-pass-3.0.3.crx", "ublock-origin-1.43.0.crx"]
+#browser_extension          = ["bypass-paywalls-clean-3.7.1.0.crx", "ublock-origin-1.58.0.crx"]
 
 #browser_type               = "firefox"
-#browser_extension          = ["bypass-paywalls-1.8.0.xpi", "privacy-pass-3.0.3.xpi", "ublock-origin-1.43.0.xpi"]
+#browser_extension          = ["bypass-paywalls-clean-3.7.1.0.xpi", "ublock-origin-1.58.0.xpi"]
 
-#browser_geometry           = "1024x768"
+#browser_geometry           = "1920x1080"
 #browser_instance           = 1
 #browser_instance_tab       = 5
 #browser_page_size          = "10M"
@@ -154,7 +154,7 @@ CONFIG_SAMPLE = """
 
 #firefox_driver_path        = "/usr/logcal/bin/geckodriver"
 #firefox_extensions_dir     = "<INSTALL_PATH>/extensions/firefox"
-#firefox_path               = "/opt/firefox/firefox-bin"
+#firefox_path               = "/usr/bin/firefox"
 #firefox_profile            = ""
 #firefox_profiles_dir       = "/tmp/webchela/firefox"
 

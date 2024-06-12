@@ -310,6 +310,24 @@ class GenericBrowser:
                         result.scripts_id.append(script_index)
 
                 # Get screenshots.
+                if self.request.browser.geometry == "dynamic":
+                    try:
+                        width = self.browser.execute_script(
+                            "return Math.max( document.body.scrollWidth, document.body.offsetWidth, "
+                            "document.documentElement.clientWidth, document.documentElement.scrollWidth, "
+                            "document.documentElement.offsetWidth );")
+                        height = self.browser.execute_script(
+                            "return Math.max( document.body.scrollHeight, document.body.offsetHeight, "
+                            "document.documentElement.clientHeight, document.documentElement.scrollHeight, "
+                            "document.documentElement.offsetHeight );")
+
+                        self.browser.set_window_size(width, height)
+
+                    except Exception as e:
+                        msg = "[{}][{}] Browser window maximizing error: {}, {}".format(
+                            self.request.client_id, self.task_hash, url, e)
+                        logger.warning(msg)
+
                 for screenshot_index, screenshot_value in enumerate(
                         re.split(self.config.params.default.unique_separator, screenshots[index])):
 
@@ -333,18 +351,25 @@ class GenericBrowser:
                                 screenshot_elements = self.browser.find_elements(By.XPATH, value)
                             case _:
                                 pass
+
                     except NoSuchElementException as e:
-                        msg = "[{}][{}] Cannot find screenshot elements: {}, {}".format(
+                        msg = "[{}][{}] Screenshot elements searching error: {}, {}".format(
                             self.request.client_id, self.task_hash, url, e.msg)
 
                         logger.warning(msg)
 
-                    for screenshot_element in screenshot_elements:
-                        r = screenshot_element.rect
-                        if r["width"] > 0 and r["height"] > 0:
-                            self.browser.execute_script("arguments[0].scrollIntoView(true);", screenshot_element)
-                            result.screenshots.append(screenshot_element.screenshot_as_base64)
-                            result.screenshots_id.append(screenshot_index)
+                    try:
+                        for screenshot_element in screenshot_elements:
+                            r = screenshot_element.rect
+                            if r["width"] > 0 and r["height"] > 0:
+                                self.browser.execute_script("arguments[0].scrollIntoView(true);", screenshot_element)
+                                result.screenshots.append(screenshot_element.screenshot_as_base64)
+                                result.screenshots_id.append(screenshot_index)
+
+                    except JavascriptException as e:
+                        msg = "[{}][{}] Screenshot elements processing error: {}, {}".format(
+                            self.request.client_id, self.task_hash, url, e.msg)
+                        logger.warning(msg)
 
                 # Show what we got.
                 logger.debug("uuid: {}, code: {}, url: {}, title: {}".format(
