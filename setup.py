@@ -11,8 +11,7 @@ setup(
     include_package_data=True,
     entry_points={
         "console_scripts": [
-            "webchela=webchela.server.__main__:main",
-            "webchela-cli=webchela.client.__main__:main"
+            "webchela=webchela.server.__main__:main"
         ],
     }
 )

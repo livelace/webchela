@@ -16,10 +16,10 @@ from webchela.core.vars import DEFAULT_LOG_FORMAT, DEFAULT_LOG_LEVEL, DEFAULT_PA
     DEFAULT_BROWSER_TYPE, DEFAULT_BROWSER_ARGUMENT, DEFAULT_BROWSER_EXTENSION, DEFAULT_BROWSER_GEOMETRY, \
     DEFAULT_BROWSER_INSTANCE, DEFAULT_BROWSER_PAGE_SIZE, DEFAULT_BROWSER_INSTANCE_TAB, DEFAULT_BROWSER_PAGE_TIMEOUT, \
     DEFAULT_BROWSER_SCRIPT_TIMEOUT, DEFAULT_BROWSER_PROXY, DEFAULT_BROWSER_RETRY_CODES, \
-    DEFAULT_BROWSER_RETRY_CODES_TRIES, CHROME_DRIVER_PATH, CHROME_EXTENSIONS_DIR, CHROME_PATH, CHROME_PROFILE, CHROME_PROFILES_DIR, \
+    DEFAULT_BROWSER_RETRY_CODES_TRIES, CHROME_DRIVER_PATH, CHROME_EXTENSIONS_DIR, CHROME_PATH, CHROME_PROFILE, \
+    CHROME_PROFILES_DIR, \
     DEFAULT_CHUNK_SIZE, DEFAULT_CPU_LOAD, FIREFOX_DRIVER_PATH, FIREFOX_EXTENSIONS_DIR, FIREFOX_PATH, \
-    FIREFOX_PROFILE, FIREFOX_PROFILES_DIR, DEFAULT_KEEP_TEMP, DEFAULT_MEM_FREE, DEFAULT_TASK_TIMEOUT, DEFAULT_CLIENT_BATCH_SIZE, \
-    DEFAULT_CLIENT_ID, DEFAULT_CLIENT_OUTPUT_DIR, DEFAULT_CLIENT_SERVER, DEFAULT_CLIENT_SCRIPTS, \
+    FIREFOX_PROFILE, FIREFOX_PROFILES_DIR, DEFAULT_KEEP_TEMP, DEFAULT_MEM_FREE, DEFAULT_TASK_TIMEOUT, \
     DEFAULT_SERVER_LISTEN, DEFAULT_SERVER_WORKERS
 
 logger = logging.getLogger("webchela.config")
@@ -89,7 +89,7 @@ class Config:
         try:
             toml_dict = toml.load(self.config_file)
 
-            for section in ["default", "client", "server"]:
+            for section in ["default", "server"]:
                 if section in toml_dict:
                     self._params[section] = {**self._params[section], **toml_dict[section]}
 
@@ -139,8 +139,8 @@ class Config:
             "default.browser_extension", self._params["default"]["browser_extension"], DEFAULT_BROWSER_EXTENSION)
 
         self._params["default"]["browser_geometry"], \
-        self._params["default"]["browser_geometry_x"], \
-        self._params["default"]["browser_geometry_y"] = is_browser_geometry(
+            self._params["default"]["browser_geometry_x"], \
+            self._params["default"]["browser_geometry_y"] = is_browser_geometry(
             "default.browser_geometry", self._params["default"]["browser_geometry"], DEFAULT_BROWSER_GEOMETRY)
 
         self._params["default"]["browser_instance"] = is_int(
@@ -179,7 +179,7 @@ class Config:
 
         self._params["default"]["chrome_path"] = is_file(
             "default.chrome_path", self._params["default"]["chrome_path"], CHROME_PATH)
-        
+
         self._params["default"]["chrome_profile"] = is_dir(
             "default.chrome_profile", self._params["default"]["chrome_profile"], CHROME_PROFILE)
 
@@ -215,22 +215,6 @@ class Config:
 
         self._params["default"]["task_timeout"] = is_int(
             "default.task_timeout", self._params["default"]["task_timeout"], DEFAULT_TASK_TIMEOUT)
-
-        # Client.
-        self._params["client"]["batch_size"] = is_int(
-            "client.batch_size", self._params["client"]["batch_size"], DEFAULT_CLIENT_BATCH_SIZE)
-
-        self._params["client"]["client_id"] = is_string(
-            "client.client_id", self._params["client"]["client_id"], DEFAULT_CLIENT_ID)
-
-        self._params["client"]["output_dir"] = is_dir(
-            "client.output_dir", self._params["client"]["output_dir"], DEFAULT_CLIENT_OUTPUT_DIR)
-
-        self._params["client"]["server"] = is_string(
-            "client.server", self._params["client"]["server"], DEFAULT_CLIENT_SERVER)
-
-        self._params["client"]["scripts"] = is_list(
-            "client.scripts", self._params["client"]["scripts"], DEFAULT_CLIENT_SCRIPTS)
 
         # Server.
         self._params["server"]["listen"] = is_string(

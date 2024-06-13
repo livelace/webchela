@@ -41,7 +41,6 @@ DEFAULT_SERVER_LISTEN = "0.0.0.0:50051"
 DEFAULT_SERVER_WORKERS = 1
 
 # Client.
-DEFAULT_CLIENT_BATCH_SIZE = 100
 DEFAULT_BROWSER_ARGUMENT = []
 DEFAULT_BROWSER_EXTENSION = []
 DEFAULT_BROWSER_GEOMETRY = "1920x1080"
@@ -62,11 +61,6 @@ DEFAULT_GEOMETRY_WIDTH = 1024
 DEFAULT_MEM_FREE = 1 * 1024 * 1024 * 1024       # 1GB.
 DEFAULT_SCREENSHOT_TIMEOUT = 10                 # 10 seconds.
 DEFAULT_TASK_TIMEOUT = 300                      # 5 minutes.
-
-DEFAULT_CLIENT_ID = "webchela-cli"
-DEFAULT_CLIENT_OUTPUT_DIR = "/tmp/webchela"
-DEFAULT_CLIENT_SCRIPTS = []
-DEFAULT_CLIENT_SERVER = "127.0.0.1:50051"
 
 DEFAULT_UNIQUE_SEPARATOR = "= == === ==== ====="
 
@@ -105,13 +99,6 @@ DEFAULT_PARAMS = {
         "tab_hop_delay": TAB_HOP_DELAY,
         "task_timeout": DEFAULT_TASK_TIMEOUT,
         "unique_separator": DEFAULT_UNIQUE_SEPARATOR
-    },
-    "client": {
-        "batch_size": DEFAULT_CLIENT_BATCH_SIZE,
-        "client_id": DEFAULT_CLIENT_ID,
-        "output_dir": DEFAULT_CLIENT_OUTPUT_DIR,
-        "server": DEFAULT_CLIENT_SERVER,
-        "scripts": DEFAULT_CLIENT_SCRIPTS,
     },
     "server": {
         "listen": DEFAULT_SERVER_LISTEN,
@@ -169,14 +156,6 @@ CONFIG_SAMPLE = """
 #screenshot_timeout         = 10
 
 #task_timeout               = 300
-
-[client]
-
-#client_id                  = "webchela-cli"
-#batch_size                 = 100
-#output_dir                 = "/tmp/webchela"
-#server                     = "127.0.0.1:50051"
-#scripts                    = ["return 42;"]
 
 [server]
 
