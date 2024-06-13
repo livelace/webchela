@@ -111,6 +111,9 @@ class Server(webchela_pb2_grpc.ServerServicer):
         if request.mem_free == 0:
             request.mem_free = config.params.default.mem_free
 
+        if request.screenshot_timeout == 0:
+            request.screenshot_timeout = config.params.default.screenshot_timeout
+
         if request.timeout == 0:
             request.timeout = config.params.default.task_timeout
 
@@ -119,6 +122,7 @@ class Server(webchela_pb2_grpc.ServerServicer):
 
         # Split urls per tabs.
         jobs_urls = split_items(request.urls, request.browser.instance_tab)
+        jobs_cookies = split_items(request.cookies, request.browser.instance_tab)
         jobs_screenshots = split_items(request.screenshots, request.browser.instance_tab)
         jobs_scripts = split_items(request.scripts, request.browser.instance_tab)
 
@@ -127,13 +131,15 @@ class Server(webchela_pb2_grpc.ServerServicer):
         # Save jobs amount (jobs list will be shrunk).
         jobs_amount = len(jobs_urls)
 
-        logger.info("[{}][{}] Task received. Total: jobs: {}, urls: {}, screenshots: {}, scripts {}.".format(
-            request.client_id,
-            task_hash,
-            jobs_amount,
-            len(request.urls),
-            len(request.screenshots),
-            len(request.scripts)))
+        logger.info(
+            "[{}][{}] Task received. Total: jobs: {}, urls: {}, cookies: {}, screenshots: {}, scripts {}.".format(
+                request.client_id,
+                task_hash,
+                jobs_amount,
+                len(request.urls),
+                len(request.cookies),
+                len(request.screenshots),
+                len(request.scripts)))
 
         logger.debug("[{}][{}] browser.type: {}".format(
             request.client_id, task_hash, request.browser.type))
@@ -166,6 +172,8 @@ class Server(webchela_pb2_grpc.ServerServicer):
             request.client_id, task_hash, request.cpu_load))
         logger.debug("[{}][{}] mem_free: {}".format(
             request.client_id, task_hash, human_size(request.mem_free)))
+        logger.debug("[{}][{}] screenshot_timeout: {}".format(
+            request.client_id, task_hash, request.screenshot_timeout))
         logger.debug("[{}][{}] timeout: {}".format(
             request.client_id, task_hash, request.timeout))
 
@@ -193,17 +201,27 @@ class Server(webchela_pb2_grpc.ServerServicer):
                 load, cpu, mem, _ = get_load(request.cpu_load, request.mem_free)
                 if load:
                     job_urls = jobs_urls.pop()
-                    job_screenshots = jobs_screenshots.pop()
-                    job_scripts = jobs_scripts.pop()
+                    job_cookies = []
+                    job_screenshots = []
+                    job_scripts = []
+
+                    if len(jobs_cookies) > 0:
+                        job_cookies = jobs_cookies.pop()
+
+                    if len(jobs_screenshots) > 0:
+                        job_screenshots = jobs_screenshots.pop()
+
+                    if len(jobs_scripts) > 0:
+                        job_scripts = jobs_scripts.pop()
 
                     job_order = len(jobs_urls)  # be careful of jobs.pop()
 
                     if request.browser.type == "chrome":
                         job = executor.submit(chrome_grabber, config, request, task_hash, job_order, job_urls,
-                                              job_screenshots, job_scripts)
+                                              job_cookies, job_screenshots, job_scripts)
                     else:
                         job = executor.submit(firefox_grabber, config, request, task_hash, job_order, job_urls,
-                                              job_screenshots, job_scripts)
+                                              job_cookies, job_screenshots, job_scripts)
 
                     jobs_running.append(job)
 

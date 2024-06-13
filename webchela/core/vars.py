@@ -60,6 +60,7 @@ DEFAULT_CPU_LOAD = 50                           # percents.
 DEFAULT_GEOMETRY_HEIGHT = 768
 DEFAULT_GEOMETRY_WIDTH = 1024
 DEFAULT_MEM_FREE = 1 * 1024 * 1024 * 1024       # 1GB.
+DEFAULT_SCREENSHOT_TIMEOUT = 10                 # 10 seconds.
 DEFAULT_TASK_TIMEOUT = 300                      # 5 minutes.
 
 DEFAULT_CLIENT_ID = "webchela-cli"
@@ -100,6 +101,7 @@ DEFAULT_PARAMS = {
         "keep_temp": DEFAULT_KEEP_TEMP,
         "log_level": DEFAULT_LOG_LEVEL,
         "mem_free": DEFAULT_MEM_FREE,
+        "screenshot_timeout": DEFAULT_SCREENSHOT_TIMEOUT,
         "tab_hop_delay": TAB_HOP_DELAY,
         "task_timeout": DEFAULT_TASK_TIMEOUT,
         "unique_separator": DEFAULT_UNIQUE_SEPARATOR
@@ -163,6 +165,8 @@ CONFIG_SAMPLE = """
 #log_level                  = "DEBUG"
 
 #mem_free                   = "1G"
+
+#screenshot_timeout         = 10
 
 #task_timeout               = 300
 

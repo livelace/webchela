@@ -1,5 +1,7 @@
+import json
 import os
 import re
+import time
 
 import coloredlogs
 import logging
@@ -26,14 +28,14 @@ from webchela.core.vars import FIREFOX_GECKODRIVER_WRAPPER
 logger = logging.getLogger("webchela.server.browser")
 
 
-def chrome_grabber(config, request, task_hash, order, urls, screenshots, scripts):
+def chrome_grabber(config, request, task_hash, order, urls, cookies, screenshots, scripts):
     b = ChromeGenericBrowser(config, request, task_hash, order)
-    return b.process(urls, screenshots, scripts)
+    return b.process(urls, cookies, screenshots, scripts)
 
 
-def firefox_grabber(config, request, task_hash, order, urls, screenshots, scripts):
+def firefox_grabber(config, request, task_hash, order, urls, cookies, screenshots, scripts):
     b = FirefoxGenericBrowser(config, request, task_hash, order)
-    return b.process(urls, screenshots, scripts)
+    return b.process(urls, cookies, screenshots, scripts)
 
 
 def update_urls(requests):
@@ -73,7 +75,7 @@ class GenericBrowser:
                 "no_proxy": "localhost,127.0.0.1"
             }
 
-    def fetch(self, urls, screenshots, scripts) -> dict:
+    def fetch(self, urls, cookies, screenshots, scripts) -> dict:
         chunks = []
 
         # --------------------------------------------------------------------------------------------------
@@ -95,6 +97,7 @@ class GenericBrowser:
         # list of final urls and their data (status code, content type) + first blank tab.
         urls_final_data = {}
 
+        cookies = ["0"] + cookies  # list of screenshots + first blank tab.
         screenshots = ["0"] + screenshots  # list of screenshots + first blank tab.
         scripts = ["0"] + scripts  # list of scripts + first blank tab.
 
@@ -106,7 +109,8 @@ class GenericBrowser:
         tabs_timestamp = [0]
 
         # ------------------------------------------------------
-        # Open urls.
+        # ------------------------------------------------------
+        # Open URLs.
 
         for index in range(1, len(urls_origin)):
             url = urls_origin[index]
@@ -130,7 +134,9 @@ class GenericBrowser:
                 return {self.order: chunks}
 
         # ------------------------------------------------------
-        # Wait for all tabs.
+        # ------------------------------------------------------
+        # Wait for tabs loading.
+
         while True:
             ready = True
 
@@ -142,6 +148,7 @@ class GenericBrowser:
                     try:
                         self.browser.switch_to.window(
                             self.browser.window_handles[index])
+
                         state = self.browser.execute_script(
                             'return document.readyState;')
 
@@ -151,7 +158,9 @@ class GenericBrowser:
 
                         tabs_states[index] = state
 
-                        if state != "complete":
+                        if state == "complete":
+                            tabs_readiness[index] = True
+                        else:
                             sleep(self.config.params.default.tab_hop_delay)
                             ready = False
 
@@ -173,6 +182,7 @@ class GenericBrowser:
                     # Stop page loading if timeout is reached.
                     time_diff = get_timestamp() - tabs_timestamp[index]
 
+                    # Enough is enough, stop waiting.
                     if not tabs_readiness[index] and time_diff > self.request.browser.page_timeout:
                         try:
                             self.browser.execute_script("window.stop();")
@@ -244,7 +254,8 @@ class GenericBrowser:
                 break
 
         # ------------------------------------------------------
-        # Process tabs.
+        # ------------------------------------------------------
+        # Processing tabs.
 
         for index in range(1, len(self.browser.window_handles)):
             url = urls_origin[index]
@@ -271,7 +282,9 @@ class GenericBrowser:
                     content_type=content_type
                 )
 
+                # ------------------------------------------------------------
                 # Check page size.
+
                 page_size = len(self.browser.page_source.encode())
                 if page_size > self.request.browser.page_size:
                     msg = "[{}][{}] Page size exceeded: {}, {}".format(
@@ -282,34 +295,34 @@ class GenericBrowser:
                 else:
                     result.page_body = self.browser.page_source
 
-                # Execute javascript code.
-                for script_index, script_value in enumerate(
-                        re.split(self.config.params.default.unique_separator, scripts[index])):
+                # ------------------------------------------------------------
+                # Set cookies.
 
-                    try:
-                        script_output = self.browser.execute_script(script_value)
+                for cookie_index, cookie_value in enumerate(
+                        re.split(self.config.params.default.unique_separator, cookies[index])):
 
-                        result.scripts.append(str(script_output))
-                        result.scripts_id.append(script_index)
+                    if cookie_value:
+                        try:
+                            cookie_object = json.loads(cookie_value)
+                            if isinstance(cookie_object, list):
+                                for o in cookie_object:
+                                    self.browser.add_cookie(o)
+                            else:
+                                self.browser.add_cookie(cookie_object)
 
-                    except JavascriptException as e:
-                        msg = "[{}][{}] Javascript execution error: {}, {}".format(
-                            self.request.client_id, self.task_hash, url, e.msg)
+                        except Exception as e:
+                            msg = "[{}][{}] Cookie injecting error: {}, {}".format(
+                                self.request.client_id, self.task_hash, url, e)
 
-                        logger.warning(msg)
-                        result.scripts.append(msg)
-                        result.scripts_id.append(script_index)
+                            logger.warning(msg)
 
-                    except TimeoutException:
-                        msg = "[{}][{}] Javascript execution timeout: {}, {}".format(
-                            self.request.client_id, self.task_hash, url,
-                            self.request.browser.script_timeout)
+                # reload page after cookie injecting.
+                if cookies[index]:
+                    self.browser.execute_script('location.reload();')
 
-                        logger.warning(msg)
-                        result.scripts.append(msg)
-                        result.scripts_id.append(script_index)
+                # ------------------------------------------------------------
+                # Resize browser window.
 
-                # Get screenshots.
                 if self.request.browser.geometry == "dynamic":
                     try:
                         width = self.browser.execute_script(
@@ -328,53 +341,93 @@ class GenericBrowser:
                             self.request.client_id, self.task_hash, url, e)
                         logger.warning(msg)
 
+                # ------------------------------------------------------------
+                # Execute javascript code.
+
+                for script_index, script_value in enumerate(
+                        re.split(self.config.params.default.unique_separator, scripts[index])):
+
+                    if script_value:
+                        try:
+                            script_output = self.browser.execute_script(script_value)
+
+                            result.scripts.append(str(script_output))
+                            result.scripts_id.append(script_index)
+
+                        except JavascriptException as e:
+                            msg = "[{}][{}] Javascript execution error: {}, {}".format(
+                                self.request.client_id, self.task_hash, url, e.msg)
+
+                            logger.warning(msg)
+                            result.scripts.append(msg)
+                            result.scripts_id.append(script_index)
+
+                        except TimeoutException:
+                            msg = "[{}][{}] Javascript execution timeout: {}, {}".format(
+                                self.request.client_id, self.task_hash, url,
+                                self.request.browser.script_timeout)
+
+                            logger.warning(msg)
+                            result.scripts.append(msg)
+                            result.scripts_id.append(script_index)
+
+                # ------------------------------------------------------------
+                # Get screenshots.
+
+                if len(screenshots) > 1:
+                    self.browser.implicitly_wait(self.request.screenshot_timeout)
+
                 for screenshot_index, screenshot_value in enumerate(
                         re.split(self.config.params.default.unique_separator, screenshots[index])):
 
-                    prefix, value = screenshot_value.split(':')
+                    if screenshot_value:
+                        prefix, value = screenshot_value.split(':')
 
-                    screenshot_elements = None
+                        screenshot_elements = None
 
-                    try:
-                        match prefix:
-                            case "class":
-                                screenshot_elements = self.browser.find_elements(By.CLASS_NAME, value)
-                            case "css":
-                                screenshot_elements = self.browser.find_elements(By.CSS_SELECTOR, value)
-                            case "id":
-                                screenshot_elements = self.browser.find_elements(By.ID, value)
-                            case "name":
-                                screenshot_elements = self.browser.find_elements(By.NAME, value)
-                            case "tag":
-                                screenshot_elements = self.browser.find_elements(By.TAG_NAME, value)
-                            case "xpath":
-                                screenshot_elements = self.browser.find_elements(By.XPATH, value)
-                            case _:
-                                pass
+                        try:
+                            match prefix:
+                                case "class":
+                                    screenshot_elements = self.browser.find_elements(By.CLASS_NAME, value)
+                                case "css":
+                                    screenshot_elements = self.browser.find_elements(By.CSS_SELECTOR, value)
+                                case "id":
+                                    screenshot_elements = self.browser.find_elements(By.ID, value)
+                                case "name":
+                                    screenshot_elements = self.browser.find_elements(By.NAME, value)
+                                case "tag":
+                                    screenshot_elements = self.browser.find_elements(By.TAG_NAME, value)
+                                case "xpath":
+                                    screenshot_elements = self.browser.find_elements(By.XPATH, value)
+                                case _:
+                                    pass
 
-                    except NoSuchElementException as e:
-                        msg = "[{}][{}] Screenshot elements searching error: {}, {}".format(
-                            self.request.client_id, self.task_hash, url, e.msg)
+                        except NoSuchElementException as e:
+                            msg = "[{}][{}] Screenshot elements searching error: {}, {}".format(
+                                self.request.client_id, self.task_hash, url, e.msg)
 
-                        logger.warning(msg)
+                            logger.warning(msg)
 
-                    try:
-                        for screenshot_element in screenshot_elements:
-                            r = screenshot_element.rect
-                            if r["width"] > 0 and r["height"] > 0:
-                                self.browser.execute_script("arguments[0].scrollIntoView(true);", screenshot_element)
-                                result.screenshots.append(screenshot_element.screenshot_as_base64)
-                                result.screenshots_id.append(screenshot_index)
+                        try:
+                            for screenshot_element in screenshot_elements:
+                                r = screenshot_element.rect
+                                if r["width"] > 0 and r["height"] > 0:
+                                    self.browser.execute_script("arguments[0].scrollIntoView(true);", screenshot_element)
+                                    result.screenshots.append(screenshot_element.screenshot_as_base64)
+                                    result.screenshots_id.append(screenshot_index)
 
-                    except JavascriptException as e:
-                        msg = "[{}][{}] Screenshot elements processing error: {}, {}".format(
-                            self.request.client_id, self.task_hash, url, e.msg)
-                        logger.warning(msg)
+                        except JavascriptException as e:
+                            msg = "[{}][{}] Screenshot elements processing error: {}, {}".format(
+                                self.request.client_id, self.task_hash, url, e.msg)
+                            logger.warning(msg)
 
+                # ------------------------------------------------------------
                 # Show what we got.
+
                 logger.debug("uuid: {}, code: {}, url: {}, title: {}".format(
                     result_uuid, status_code, url, self.browser.title))
 
+                # ------------------------------------------------------------
                 # Serialize and split result into chunks.
                 result_binary = result.SerializeToString()
 
@@ -531,9 +584,9 @@ class ChromeGenericBrowser(GenericBrowser):
 
         return True
 
-    def process(self, urls, screenshots, scripts) -> dict:
+    def process(self, urls, cookies, screenshots, scripts) -> dict:
         if self.create_browser():
-            return self.fetch(urls, screenshots, scripts)
+            return self.fetch(urls, cookies, screenshots, scripts)
         else:
             return {}
 

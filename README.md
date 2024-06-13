@@ -9,19 +9,21 @@ Provide a plugin endpoint to other tool - [gosquito](https://github.com/livelace
 
 ### Features:
 
-* Accepts commands from clients over [GRPC](https://grpc.io/). 
-* Split fetched data into chunks.
-* Fully controlled on client side (browser type, browser extensions, loads etc.). 
-* Expose server loads to clients, control loads itself.
-* Works in headless mode ([TigerVNC](https://wiki.archlinux.org/index.php/TigerVNC)).
-* PoC command line client.
+* Accepts tasks from clients over single [GRPC](https://grpc.io/) connection (control/data links). 
+* Combines tasks into batches, control how many browser instances/tabs should run in parallel.
+* Splits fetched data into chunks (avoid transport limits).
+* Fully controlled on client side (browser type/arguments/extensions, cookies etc.). 
+* Exposes server load to clients (client may skip busy one and switch to an idle server).
+* Works in fully graphical mode (not native [headless mode](https://developer.chrome.com/docs/chromium/new-headless)), exposes 5901/VNC ports.
+* Resizes browser window dynamically. 
+* Makes full page screenshots and/or specific page elements. 
 
 ### Dependencies:
 
 * Python 3.11+
 * Chrome, [chromedriver](https://chromedriver.chromium.org/).
 * Firefox, [geckodriver](https://github.com/mozilla/geckodriver).
-* TigerVNC.
+* [TigerVNC](https://wiki.archlinux.org/index.php/TigerVNC).
 
 ### Quick start:
 
@@ -115,6 +117,6 @@ user@localhost / $ docker exec webchela tree /tmp/webchela
 #workers                    = 1
 ```
 
-### Grabbed screenshot example:
+### Screenshot example:
 
 ![main](assets/worldclock.png)
