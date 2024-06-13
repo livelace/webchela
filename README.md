@@ -14,7 +14,8 @@ Provide a plugin endpoint to other tool - [gosquito](https://github.com/livelace
 * Splits fetched data into chunks (avoid transport limits).
 * Fully controlled on client side (browser type/arguments/extensions, cookies etc.). 
 * Exposes server load to clients (client may skip busy one and switch to an idle server).
-* Works in fully graphical mode (not native [headless mode](https://developer.chrome.com/docs/chromium/new-headless)), exposes 5901/VNC ports.
+* Works in fully graphical mode (not native [headless mode](https://developer.chrome.com/docs/chromium/new-headless)), 
+exposes 590x/VNC ports per browser instance for visual control.
 * Resizes browser window dynamically. 
 * Makes full page screenshots and/or specific page elements. 
 
