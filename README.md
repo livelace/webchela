@@ -27,32 +27,14 @@ Provide a plugin endpoint to other tool - [gosquito](https://github.com/livelace
 
 ### Quick start:
 
+**Start daemon**
 ```shell script
-# start daemon
-user@localhost / $ docker run --name webchela -ti --rm -v /dev/shm:/dev/shm ghcr.io/livelace/webchela:v1.8.0
+user@localhost / $ docker run -p 50051 -ti --rm -v /dev/shm:/dev/shm ghcr.io/livelace/webchela:v1.8.0
 2021-02-09 18:11:54 webchela.config INFO Config sample was written successfully: /home/webchela/.webchela.toml
 2021-02-09 18:11:54 webchela.server INFO webchela v1.8.0
-
-# fetch page with simple client
-user@localhost / $ docker exec webchela webchela-cli --url https://google.com
-2021-02-09 18:12:13 webchela.client INFO webchela v1.8.0
-2021-02-09 18:12:13 webchela.client INFO Send task. Total urls: 1. Total batches: 1.
-2021-02-09 18:12:13 webchela.client INFO Send batch: 0. Batch size: 1
-2021-02-09 18:12:19 webchela.client INFO Task completed.
-
-# show data
-user@localhost / $ docker exec webchela tree /tmp/webchela
-/tmp/webchela
-└── 18:12:13_09.02.2021
-    └── BATCH0
-        ├── URL0_CONTENT_TYPE_google.txt
-        ├── URL0_PAGE_BODY_google.html
-        ├── URL0_PAGE_URL_google.txt
-        ├── URL0_STATUS_CODE_google.txt
-        └── URL0_URL_google.txt
-
-2 directories, 5 files
 ```
+
+**Use gosquito [example configuration](https://github.com/livelace/gosquito/blob/master/docs/plugins/process/webchela.md)**
 
 ### Config sample:
 
@@ -102,14 +84,6 @@ user@localhost / $ docker exec webchela tree /tmp/webchela
 #mem_free                   = "1G"
 
 #task_timeout               = 300
-
-[client]
-
-#client_id                  = "webchela-cli"
-#batch_size                 = 100
-#output_dir                 = "/tmp/webchela"
-#server                     = "127.0.0.1:50051"
-#scripts                    = ["return 42;"]
 
 [server]
 
