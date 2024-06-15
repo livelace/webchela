@@ -12,12 +12,13 @@ USER            "user"
 COPY            "work" "$WEBCHELA_TEMP"
 
 RUN             cd "$WEBCHELA_TEMP" && \
-                pip install --break-system-packages --no-cache-dir --user -r "requirements.txt" && \
-                pip install --break-system-packages --no-cache-dir --user . && \
+                python -m venv venv &&  source ./venv/bin/activate && \
+                pip install --no-cache-dir --user -r "requirements.txt" && \
+                pip install --no-cache-dir --user . && \
                 rm -rf "$WEBCHELA_TEMP"
 
-ENV             PATH=$PATH:"/home/user/.local/bin"
+ENV             PATH=$PATH:"/home/user/webchela/venv/bin"
 
 WORKDIR         "/home/user"
 
-CMD             ["tini", "--", "/home/user/.local/bin/webchela"]
+CMD             ["tini", "--", "/home/user/webchela/venv/bin/webchela"]
