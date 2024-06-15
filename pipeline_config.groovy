@@ -24,11 +24,10 @@ libraries {
         destination = "infra/${APP_NAME}:${IMAGE_TAG}"
     }
     mattermost
-    //nexus {
-    //   source = "dist/webchela-1.7.0-py3.8.egg"
-    //   destination = "dists-internal/${APP_NAME}/${APP_NAME}-${APP_VERSION}.egg"
-
-    //}
+    nexus {
+       source = "dist/webchela-1.8.0-py3.11.egg"
+       destination = "raw/${APP_NAME}/${APP_NAME}-${APP_VERSION}.egg"
+    }
     python
     //sonarqube
 }

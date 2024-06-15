@@ -12,8 +12,8 @@ USER            "user"
 COPY            "work" "$WEBCHELA_TEMP"
 
 RUN             cd "$WEBCHELA_TEMP" && \
-                pip install --no-cache-dir --user -r "requirements.txt" && \
-                pip install --no-cache-dir --user . && \
+                pip install --break-system-packages --no-cache-dir --user -r "requirements.txt" && \
+                pip install --break-system-packages --no-cache-dir --user . && \
                 rm -rf "$WEBCHELA_TEMP"
 
 ENV             PATH=$PATH:"/home/user/.local/bin"
