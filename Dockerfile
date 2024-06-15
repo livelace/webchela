@@ -13,8 +13,8 @@ COPY            "work" "$WEBCHELA_TEMP"
 
 RUN             cd "$WEBCHELA_TEMP" && \
                 python -m venv venv &&  source ./venv/bin/activate && \
-                pip install --no-cache-dir --user -r "requirements.txt" && \
-                pip install --no-cache-dir --user . && \
+                pip install --no-cache-dir -r "requirements.txt" && \
+                pip install --no-cache-dir . && \
                 rm -rf "$WEBCHELA_TEMP"
 
 ENV             PATH=$PATH:"/home/user/webchela/venv/bin"
