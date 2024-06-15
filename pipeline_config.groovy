@@ -18,6 +18,7 @@ libraries {
     //}
     k8s_build {
         image = "registry.livelace.ru/dev/webchela:${IMAGE_TAG}"
+        force_pull = true
     }
     kaniko {
         destination = "infra/${APP_NAME}:${IMAGE_TAG}"
