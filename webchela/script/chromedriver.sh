@@ -2,6 +2,8 @@
 
 set -x
 
+exec >/tmp/debug 2>&1
+
 TOTAL_ARGS="$#"
 
 ORIGINAL_ARGS=("${@:3:TOTAL_ARGS}")
