@@ -7,7 +7,6 @@ set -x
 # It needs for browser profile directory creation in a provided directory.
 # BTW, chrome browser can easily create profile with "user-data-dir" in any place (even in marionette mode).
 
-ALL_ARGS=("$@")
 TOTAL_ARGS="$#"
 
 ORIGINAL_ARGS=("${@:7:TOTAL_ARGS}")
@@ -37,4 +36,4 @@ export TMP="$TEMP_DIR"
 
 # exec is needed for correct quitting of geckodriver.
 # shellcheck disable=SC2068
-exec $ORIGINAL_BINARY $LOG_ARG $LOG_LEVEL ${ORIGINAL_ARGS[@]}
+exec vglrun "$ORIGINAL_BINARY" "$LOG_ARG" "$LOG_LEVEL" ${ORIGINAL_ARGS[@]}

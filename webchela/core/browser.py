@@ -23,6 +23,7 @@ import webchela.core.protobuf.webchela_pb2 as webchela_pb2
 
 from webchela.core.utils import get_timestamp, human_size
 from webchela.core.validate import is_browser_geometry
+from webchela.core.vars import CHROME_CHROMEDRIVER_WRAPPER
 from webchela.core.vars import FIREFOX_GECKODRIVER_WRAPPER
 
 logger = logging.getLogger("webchela.server.browser")
@@ -107,6 +108,17 @@ class GenericBrowser:
         tabs_states = [""]
         # list of timestamps when tabs were opened + first blank tab.
         tabs_timestamp = [0]
+
+        # ------------------------------------------------------
+        # ------------------------------------------------------
+        # Close unwanted tabs (might be opened by an extension).
+
+        if len(self.browser.window_handles) > 1:
+            for i in reversed(range(1, len(self.browser.window_handles))):
+                self.browser.switch_to.window(self.browser.window_handles[i])
+                self.browser.close()
+
+            self.browser.switch_to.window(self.browser.window_handles[0])
 
         # ------------------------------------------------------
         # ------------------------------------------------------
@@ -539,6 +551,8 @@ class ChromeGenericBrowser(GenericBrowser):
                 continue
 
         # add application related arguments.
+        options.add_argument("in-process-gpu")  # virtualgl
+        options.add_argument("use-gl=egl")      # virtualgl
         options.add_argument("no-sandbox")
         options.add_argument("user-data-dir={}".format(self.profile_dir))
 
@@ -566,8 +580,11 @@ class ChromeGenericBrowser(GenericBrowser):
                 options=options,
                 seleniumwire_options=self.selenium_wire_options,
                 service=ChromeService(
-                    executable_path=self.config.params.default.chrome_driver_path,
-                    service_args=["--log-level={}".format(self.config.params.default.log_level)],
+                    executable_path=CHROME_CHROMEDRIVER_WRAPPER,
+                    service_args=[
+                        self.config.params.default.chrome_driver_path,
+                        "--log-level={}".format(self.config.params.default.log_level)
+                    ],
                     log_output=log
                 ))
         except WebDriverException as e:
@@ -697,9 +714,9 @@ class FirefoxGenericBrowser(GenericBrowser):
 
         return True
 
-    def process(self, urls, screenshots, scripts) -> dict:
+    def process(self, urls, cookies, screenshots, scripts) -> dict:
         if self.create_browser():
-            return self.fetch(urls, screenshots, scripts)
+            return self.fetch(urls, cookies, screenshots, scripts)
         else:
             return {}
 

@@ -23,6 +23,7 @@ CHROME_EXTENSIONS_DIR = os.path.join(BASE_DIR, "extensions", "chrome")
 CHROME_PATH = "/usr/bin/google-chrome-stable"
 CHROME_PROFILE = ""
 CHROME_PROFILES_DIR = "/tmp/webchela/chrome"
+CHROME_CHROMEDRIVER_WRAPPER = os.path.join(BASE_DIR, "script", "chromedriver.sh")
 
 # Firefox settings.
 FIREFOX_DRIVER_PATH = "/usr/bin/geckodriver"
