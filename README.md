@@ -19,7 +19,7 @@ Provide a plugin endpoint to other tool - [gosquito](https://github.com/livelace
 exposes 590x/VNC ports per browser instance for visual control.
 * Resizes browser window dynamically. 
 * Makes full page screenshots and/or specific page elements. 
-* Passing cookies to pages in JSON format from strings/files.
+* Passing cookies to pages in JSON.
 
 
 ### Quick start:
