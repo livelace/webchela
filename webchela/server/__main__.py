@@ -84,23 +84,9 @@ class Server(webchela_pb2_grpc.ServerServicer):
         if request.browser.instance_tab == 0:
             request.browser.instance_tab = config.params.default.browser_instance_tab
 
-        if request.browser.page_size == 0:
-            request.browser.page_size = config.params.default.browser_page_size
-
-        if request.browser.page_timeout == 0:
-            request.browser.page_timeout = config.params.default.browser_page_timeout
-
-        if request.browser.script_timeout == 0:
-            request.browser.script_timeout = config.params.default.browser_script_timeout
-
         if not request.browser.proxy:
             request.browser.proxy = config.params.default.browser_proxy
 
-        if not request.browser.retry_codes:
-            request.browser.retry_codes.extend(config.params.default.browser_retry_codes)
-
-        if request.browser.retry_codes_tries == 0:
-            request.browser.retry_codes_tries = config.params.default.browser_retry_codes_tries
 
         if request.chunk_size == 0:
             request.chunk_size = config.params.default.chunk_size
@@ -111,14 +97,26 @@ class Server(webchela_pb2_grpc.ServerServicer):
         if request.mem_free == 0:
             request.mem_free = config.params.default.mem_free
 
+        if request.page_size == 0:
+            request.page_size = config.params.default.page_size
+
+        if request.page_timeout == 0:
+            request.page_timeout = config.params.default.page_timeout
+
+        if not request.retry_codes:
+            request.retry_codes.extend(config.params.default.retry_codes)
+
+        if request.retry_codes_tries == 0:
+            request.retry_codes_tries = config.params.default.retry_codes_tries
+
         if request.screenshot_timeout == 0:
             request.screenshot_timeout = config.params.default.screenshot_timeout
 
+        if request.script_timeout == 0:
+            request.script_timeout = config.params.default.script_timeout
+
         if request.timeout == 0:
             request.timeout = config.params.default.task_timeout
-
-        if not request.scripts:
-            request.scripts.extend(config.params.client.scripts)
 
         # Split urls per tabs.
         jobs_urls = split_items(request.urls, request.browser.instance_tab)
@@ -153,18 +151,8 @@ class Server(webchela_pb2_grpc.ServerServicer):
             request.client_id, task_hash, request.browser.instance))
         logger.debug("[{}][{}] browser.instance_tab: {}".format(
             request.client_id, task_hash, request.browser.instance_tab))
-        logger.debug("[{}][{}] browser.page_size: {}".format(
-            request.client_id, task_hash, human_size(request.browser.page_size)))
-        logger.debug("[{}][{}] browser.page_timeout: {}".format(
-            request.client_id, task_hash, request.browser.page_timeout))
-        logger.debug("[{}][{}] browser.script_timeout: {}".format(
-            request.client_id, task_hash, request.browser.script_timeout))
         logger.debug("[{}][{}] browser.proxy: {}".format(
             request.client_id, task_hash, request.browser.proxy))
-        logger.debug("[{}][{}] browser.retry_codes: {}".format(
-            request.client_id, task_hash, request.browser.retry_codes))
-        logger.debug("[{}][{}] browser.retry_codes_tries: {}".format(
-            request.client_id, task_hash, request.browser.retry_codes_tries))
 
         logger.debug("[{}][{}] chunk_size: {}".format(
             request.client_id, task_hash, human_size(request.chunk_size)))
@@ -172,8 +160,20 @@ class Server(webchela_pb2_grpc.ServerServicer):
             request.client_id, task_hash, request.cpu_load))
         logger.debug("[{}][{}] mem_free: {}".format(
             request.client_id, task_hash, human_size(request.mem_free)))
+        logger.debug("[{}][{}] page_size: {}".format(
+            request.client_id, task_hash, human_size(request.page_size)))
+        logger.debug("[{}][{}] page_timeout: {}".format(
+            request.client_id, task_hash, request.page_timeout))
+        logger.debug("[{}][{}] retry_codes: {}".format(
+            request.client_id, task_hash, request.retry_codes))
+        logger.debug("[{}][{}] retry_codes_tries: {}".format(
+            request.client_id, task_hash, request.retry_codes_tries))
         logger.debug("[{}][{}] screenshot_timeout: {}".format(
             request.client_id, task_hash, request.screenshot_timeout))
+        logger.debug("[{}][{}] script_timeout: {}".format(
+            request.client_id, task_hash, request.script_timeout))
+        logger.debug("[{}][{}] tab_open_randomize: {}".format(
+            request.client_id, task_hash, request.tab_open_randomize))
         logger.debug("[{}][{}] timeout: {}".format(
             request.client_id, task_hash, request.timeout))
 

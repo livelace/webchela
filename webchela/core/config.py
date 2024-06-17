@@ -9,18 +9,62 @@ import toml
 
 from webchela.core.utils import human_size
 
-from webchela.core.validate import is_log_level, is_browser_type, is_list, is_browser_geometry, is_int, is_bytes, \
-    is_string, is_file, is_dir, is_bool
+from webchela.core.validate import (
+    is_bool,
+    is_browser_geometry,
+    is_browser_type,
+    is_bytes,
+    is_dir,
+    is_file,
+    is_int,
+    is_list,
+    is_log_level,
+    is_string,
+    is_tab_open_randomize,
+)
 
-from webchela.core.vars import DEFAULT_LOG_FORMAT, DEFAULT_LOG_LEVEL, DEFAULT_PARAMS, CONFIG_SAMPLE, DEFAULT_SHM_SIZE, \
-    DEFAULT_BROWSER_TYPE, DEFAULT_BROWSER_ARGUMENT, DEFAULT_BROWSER_EXTENSION, DEFAULT_BROWSER_GEOMETRY, \
-    DEFAULT_BROWSER_INSTANCE, DEFAULT_BROWSER_PAGE_SIZE, DEFAULT_BROWSER_INSTANCE_TAB, DEFAULT_BROWSER_PAGE_TIMEOUT, \
-    DEFAULT_BROWSER_SCRIPT_TIMEOUT, DEFAULT_BROWSER_PROXY, DEFAULT_BROWSER_RETRY_CODES, \
-    DEFAULT_BROWSER_RETRY_CODES_TRIES, CHROME_DRIVER_PATH, CHROME_EXTENSIONS_DIR, CHROME_PATH, CHROME_PROFILE, \
-    CHROME_PROFILES_DIR, \
-    DEFAULT_CHUNK_SIZE, DEFAULT_CPU_LOAD, FIREFOX_DRIVER_PATH, FIREFOX_EXTENSIONS_DIR, FIREFOX_PATH, \
-    FIREFOX_PROFILE, FIREFOX_PROFILES_DIR, DEFAULT_KEEP_TEMP, DEFAULT_MEM_FREE, DEFAULT_TASK_TIMEOUT, \
-    DEFAULT_SERVER_LISTEN, DEFAULT_SERVER_WORKERS
+from webchela.core.vars import (
+    CHROME_DRIVER_PATH,
+    CHROME_EXTENSIONS_DIR,
+    CHROME_PATH, CHROME_PROFILE,
+    CHROME_PROFILES_DIR,
+
+    CONFIG_SAMPLE,
+
+    DEFAULT_BROWSER_ARGUMENT,
+    DEFAULT_BROWSER_EXTENSION,
+    DEFAULT_BROWSER_GEOMETRY,
+    DEFAULT_BROWSER_INSTANCE,
+    DEFAULT_BROWSER_INSTANCE_TAB,
+    DEFAULT_BROWSER_PROXY,
+    DEFAULT_BROWSER_RETRY_CODES,
+    DEFAULT_BROWSER_RETRY_CODES_TRIES,
+    DEFAULT_BROWSER_TYPE,
+    DEFAULT_CHUNK_SIZE,
+    DEFAULT_CPU_LOAD,
+    DEFAULT_KEEP_TEMP,
+    DEFAULT_LOG_FORMAT,
+    DEFAULT_LOG_LEVEL,
+    DEFAULT_MEM_FREE,
+    DEFAULT_PAGE_SIZE,
+    DEFAULT_PAGE_TIMEOUT,
+    DEFAULT_PARAMS,
+    DEFAULT_RETRY_CODES,
+    DEFAULT_RETRY_CODES_TRIES,
+    DEFAULT_SCREENSHOT_TIMEOUT,
+    DEFAULT_SCRIPT_TIMEOUT,
+    DEFAULT_SERVER_LISTEN,
+    DEFAULT_SERVER_WORKERS,
+    DEFAULT_SHM_SIZE,
+    DEFAULT_TAB_OPEN_RANDOMIZE,
+    DEFAULT_TASK_TIMEOUT,
+
+    FIREFOX_DRIVER_PATH,
+    FIREFOX_EXTENSIONS_DIR,
+    FIREFOX_PATH,
+    FIREFOX_PROFILE,
+    FIREFOX_PROFILES_DIR,
+)
 
 logger = logging.getLogger("webchela.config")
 coloredlogs.install(fmt=DEFAULT_LOG_FORMAT, level=DEFAULT_LOG_LEVEL)
@@ -150,22 +194,12 @@ class Config:
             "default.browser_instance_tab", self._params["default"]["browser_instance_tab"],
             DEFAULT_BROWSER_INSTANCE_TAB)
 
-        self._params["default"]["browser_page_size"] = is_bytes(
-            "default.browser_page_size", self._params["default"]["browser_page_size"], DEFAULT_BROWSER_PAGE_SIZE)
-
-        self._params["default"]["browser_page_timeout"] = is_int(
-            "default.browser_page_timeout", self._params["default"]["browser_page_timeout"],
-            DEFAULT_BROWSER_PAGE_TIMEOUT)
-
-        self._params["default"]["browser_script_timeout"] = is_int(
-            "default.browser_script_timeout", self._params["default"]["browser_script_timeout"],
-            DEFAULT_BROWSER_SCRIPT_TIMEOUT)
-
         self._params["default"]["browser_proxy"] = is_string(
             "default.browser_proxy", self._params["default"]["browser_proxy"], DEFAULT_BROWSER_PROXY)
 
         self._params["default"]["browser_retry_codes"] = is_list(
-            "default.browser_retry_codes", self._params["default"]["browser_retry_codes"], DEFAULT_BROWSER_RETRY_CODES)
+            "default.browser_retry_codes", self._params["default"]["browser_retry_codes"],
+            DEFAULT_BROWSER_RETRY_CODES)
 
         self._params["default"]["browser_retry_codes_tries"] = is_int(
             "default.browser_retry_codes_tries", self._params["default"]["browser_retry_codes_tries"],
@@ -175,7 +209,8 @@ class Config:
             "default.chrome_driver_path", self._params["default"]["chrome_driver_path"], CHROME_DRIVER_PATH)
 
         self._params["default"]["chrome_extensions_dir"] = is_dir(
-            "default.chrome_extensions_dir", self._params["default"]["chrome_extensions_dir"], CHROME_EXTENSIONS_DIR)
+            "default.chrome_extensions_dir", self._params["default"]["chrome_extensions_dir"],
+            CHROME_EXTENSIONS_DIR)
 
         self._params["default"]["chrome_path"] = is_file(
             "default.chrome_path", self._params["default"]["chrome_path"], CHROME_PATH)
@@ -196,7 +231,8 @@ class Config:
             "default.firefox_driver_path", self._params["default"]["firefox_driver_path"], FIREFOX_DRIVER_PATH)
 
         self._params["default"]["firefox_extensions_dir"] = is_dir(
-            "default.firefox_extensions_dir", self._params["default"]["firefox_extensions_dir"], FIREFOX_EXTENSIONS_DIR)
+            "default.firefox_extensions_dir", self._params["default"]["firefox_extensions_dir"],
+            FIREFOX_EXTENSIONS_DIR)
 
         self._params["default"]["firefox_path"] = is_file(
             "default.firefox_path", self._params["default"]["firefox_path"], FIREFOX_PATH)
@@ -212,6 +248,31 @@ class Config:
 
         self._params["default"]["mem_free"] = is_bytes(
             "default.mem_free", self._params["default"]["mem_free"], DEFAULT_MEM_FREE)
+
+        self._params["default"]["page_size"] = is_bytes(
+            "default.page_size", self._params["default"]["page_size"], DEFAULT_PAGE_SIZE)
+
+        self._params["default"]["page_timeout"] = is_int(
+            "default.page_timeout", self._params["default"]["page_timeout"], DEFAULT_PAGE_TIMEOUT)
+
+        self._params["default"]["retry_codes"] = is_list(
+            "default.retry_codes", self._params["default"]["retry_codes"], DEFAULT_RETRY_CODES)
+
+        self._params["default"]["retry_codes_tries"] = is_int(
+            "default.retry_codes_tries", self._params["default"]["retry_codes_tries"], DEFAULT_RETRY_CODES_TRIES)
+
+        self._params["default"]["screenshot_timeout"] = is_int(
+            "default.screenshot_timeout", self._params["default"]["screenshot_timeout"],
+            DEFAULT_SCREENSHOT_TIMEOUT)
+
+        self._params["default"]["script_timeout"] = is_int(
+            "default.script_timeout", self._params["default"]["script_timeout"], DEFAULT_SCRIPT_TIMEOUT)
+
+        self._params["default"]["tab_open_randomize"], \
+            self._params["default"]["tab_open_randomize_min"], \
+            self._params["default"]["tab_open_randomize_max"] = is_tab_open_randomize(
+            "default.tab_open_randomize", self._params["default"]["tab_open_randomize"],
+            DEFAULT_TAB_OPEN_RANDOMIZE)
 
         self._params["default"]["task_timeout"] = is_int(
             "default.task_timeout", self._params["default"]["task_timeout"], DEFAULT_TASK_TIMEOUT)

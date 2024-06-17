@@ -2,6 +2,7 @@ import json
 import os
 import re
 import time
+import random
 
 import coloredlogs
 import logging
@@ -9,20 +10,27 @@ import shutil
 import uuid
 
 from pyvirtualdisplay import Display
-from selenium.common.exceptions import WebDriverException, TimeoutException, JavascriptException, \
-    InvalidArgumentException, NoSuchElementException
-from selenium.webdriver.chrome.service import Service as ChromeService
-from selenium.webdriver.firefox.service import Service as FirefoxService
-from selenium.webdriver.common.by import By
-from seleniumwire import webdriver
+from selenium.common.exceptions import (
+    InvalidArgumentException,
+    JavascriptException,
+    NoSuchElementException,
+    TimeoutException,
+    WebDriverException,
+)
+
 from selenium.webdriver import FirefoxOptions
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.common.by import By
+from selenium.webdriver.firefox.service import Service as FirefoxService
+from seleniumwire import webdriver
 from tempfile import mkdtemp
 from time import sleep
 
 import webchela.core.protobuf.webchela_pb2 as webchela_pb2
 
 from webchela.core.utils import get_timestamp, human_size
-from webchela.core.validate import is_browser_geometry
+from webchela.core.validate import is_browser_geometry, is_tab_open_randomize
+
 from webchela.core.vars import CHROME_CHROMEDRIVER_WRAPPER
 from webchela.core.vars import FIREFOX_GECKODRIVER_WRAPPER
 
@@ -64,6 +72,9 @@ class GenericBrowser:
 
         _, self.x, self.y = is_browser_geometry(
             "", request.browser.geometry, config.params.default.browser_geometry)
+
+        _, self.rand_min, self.rand_max = is_tab_open_randomize(
+            "", request.tab_open_randomize, config.params.default.tab_open_randomize)
 
         self.selenium_wire_options = {
             "backend": "default",
@@ -145,6 +156,8 @@ class GenericBrowser:
                     self.request.client_id, self.task_hash, url, e))
                 return {self.order: chunks}
 
+            time.sleep(random.randint(self.rand_min, self.rand_max))
+
         # ------------------------------------------------------
         # ------------------------------------------------------
         # Wait for tabs loading.
@@ -195,7 +208,7 @@ class GenericBrowser:
                     time_diff = get_timestamp() - tabs_timestamp[index]
 
                     # Enough is enough, stop waiting.
-                    if not tabs_readiness[index] and time_diff > self.request.browser.page_timeout:
+                    if not tabs_readiness[index] and time_diff > self.request.page_timeout:
                         try:
                             self.browser.execute_script("window.stop();")
                             tabs_readiness[index] = True
@@ -219,8 +232,8 @@ class GenericBrowser:
                 try:
                     status_code, _ = urls_final_data[url]
 
-                    if status_code in self.request.browser.retry_codes and \
-                            tabs_retries[index] < self.request.browser.retry_codes_tries:
+                    if status_code in self.request.retry_codes and \
+                            tabs_retries[index] < self.request.retry_codes_tries:
                         self.browser.switch_to.window(
                             self.browser.window_handles[index])
                         self.browser.execute_script('location.reload();')
@@ -236,7 +249,7 @@ class GenericBrowser:
                             status_code,
                             url,
                             tabs_retries[index],
-                            self.request.browser.retry_codes_tries
+                            self.request.retry_codes_tries
                         ))
 
                         ready = False
@@ -298,7 +311,7 @@ class GenericBrowser:
                 # Check page size.
 
                 page_size = len(self.browser.page_source.encode())
-                if page_size > self.request.browser.page_size:
+                if page_size > self.request.page_size:
                     msg = "[{}][{}] Page size exceeded: {}, {}".format(
                         self.request.client_id, self.task_hash, url, human_size(page_size))
 
@@ -377,7 +390,7 @@ class GenericBrowser:
                         except TimeoutException:
                             msg = "[{}][{}] Javascript execution timeout: {}, {}".format(
                                 self.request.client_id, self.task_hash, url,
-                                self.request.browser.script_timeout)
+                                self.request.script_timeout)
 
                             logger.warning(msg)
                             result.scripts.append(msg)
@@ -596,8 +609,8 @@ class ChromeGenericBrowser(GenericBrowser):
         self.browser.set_window_size(self.x, self.y)
 
         # set timeouts.
-        self.browser.set_page_load_timeout(self.request.browser.page_timeout)
-        self.browser.set_script_timeout(self.request.browser.script_timeout)
+        self.browser.set_page_load_timeout(self.request.page_timeout)
+        self.browser.set_script_timeout(self.request.script_timeout)
 
         return True
 
@@ -709,8 +722,8 @@ class FirefoxGenericBrowser(GenericBrowser):
         self.browser.set_window_size(self.x, self.y)
 
         # set timeouts.
-        self.browser.set_page_load_timeout(self.request.browser.page_timeout)
-        self.browser.set_script_timeout(self.request.browser.script_timeout)
+        self.browser.set_page_load_timeout(self.request.page_timeout)
+        self.browser.set_script_timeout(self.request.script_timeout)
 
         return True
 

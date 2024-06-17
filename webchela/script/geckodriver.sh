@@ -36,4 +36,6 @@ export TMP="$TEMP_DIR"
 
 # exec is needed for correct quitting of geckodriver.
 # shellcheck disable=SC2068
+
+# virtualgl gpu offloading, can work without Xorg server available:
 exec vglrun "$ORIGINAL_BINARY" "$LOG_ARG" "$LOG_LEVEL" ${ORIGINAL_ARGS[@]}

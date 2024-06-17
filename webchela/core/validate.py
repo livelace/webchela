@@ -138,3 +138,22 @@ def is_string(name, value, default):
     logger.debug("{}: {}".format(name, v))
     return v
 
+
+def is_tab_open_randomize(name, value, default):
+    rand_min, rand_max = 0, 0
+    v = ""
+
+    if re.match("^[0-9]+:[0-9]+$", value):
+        x, y = value.split(":")
+        if int(x) <= int(y):
+            rand_min = x
+            rand_max = y
+            v = value
+    else:
+        rand_min, rand_max = default.split(":")
+        v = default
+
+    if name:
+        logger.debug("{}: {}".format(name, v))
+
+    return v, int(rand_min), int(rand_max)
