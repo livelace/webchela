@@ -11,33 +11,35 @@ Provide a plugin endpoint to other tool - [gosquito](https://github.com/livelace
 
 * Accepts tasks from clients over single [GRPC](https://grpc.io/) connection (control/data links). 
 * Combines tasks into batches, control how many browser instances/tabs should run in parallel.
-* Splits fetched data into chunks (avoid transport limits).
+* Splits fetched data into sized chunks (avoid transport limits).
 * Fully controlled on client side (browser type/arguments/extensions, cookies etc.). 
 * Exposes server load to clients (client may skip busy one and switch to an idle server).
+* Can utilize GPU with help of [VirtualGL](https://www.virtualgl.org/)/[TurboVNC](https://www.turbovnc.org/) for graphics offloading .
 * Works in fully graphical mode (not native [headless mode](https://developer.chrome.com/docs/chromium/new-headless)), 
 exposes 590x/VNC ports per browser instance for visual control.
 * Resizes browser window dynamically. 
 * Makes full page screenshots and/or specific page elements. 
 
-### Dependencies:
-
-* Python 3.11+
-* Chrome, [chromedriver](https://chromedriver.chromium.org/).
-* Firefox, [geckodriver](https://github.com/mozilla/geckodriver).
-* [TigerVNC](https://wiki.archlinux.org/index.php/TigerVNC).
 
 ### Quick start:
 
-**Start daemon**
+**Start daemon (software rendering)**
 ```shell script
 user@localhost / $ docker run -p 50051:50051 -ti --rm -v /dev/shm:/dev/shm ghcr.io/livelace/webchela:v1.8.0
 2021-02-09 18:11:54 webchela.config INFO Config sample was written successfully: /home/webchela/.webchela.toml
 2021-02-09 18:11:54 webchela.server INFO webchela v1.8.0
 ```
 
-**Use gosquito [example configuration](https://github.com/livelace/gosquito/blob/master/docs/plugins/process/webchela.md)**
+**Start daemon (GPU rendering)**
+```shell script
+user@localhost / $ docker run --privileged -p 50051:50051 -ti --rm -v /dev/shm:/dev/shm ghcr.io/livelace/webchela:v1.8.0
+2021-02-09 18:11:54 webchela.config INFO Config sample was written successfully: /home/webchela/.webchela.toml
+2021-02-09 18:11:54 webchela.server INFO webchela v1.8.0
+```
 
-### Config sample:
+**Use gosquito [configuration example](https://github.com/livelace/gosquito/blob/master/docs/plugins/process/webchela.md)**
+
+### Configuration example:
 
 ```toml
 
