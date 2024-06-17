@@ -44,17 +44,15 @@ user@localhost / $ docker run -p 50051:50051 -ti --rm -v /dev/shm:/dev/shm ghcr.
 [default]
 
 #browser_type               = "chrome"
-#browser_extension          = ["bypass-paywalls-clean-3.7.1.0.crx", "ublock-origin-1.58.0.crx"]
+#browser_extension          = []                                    # crx files included into webchela package
 
 #browser_type               = "firefox"
-#browser_extension          = ["bypass-paywalls-clean-3.7.1.0.xpi", "ublock-origin-1.58.0.xpi"]
+#browser_extension          = []                                    # xpi files included into webchela package
 
 #browser_geometry           = "1920x1080"
-#browser_instance           = 1
-#browser_instance_tab       = 5
-#browser_page_size          = "10M"
-#browser_page_timeout       = 20
-#browser_script_timeout     = 20
+#browser_geometry           = "dynamic"                             # window will be resized to page content
+#browser_instance           = 1                                     # amount of instances will be launched in parallel
+#browser_instance_tab       = 10
 
 #browser_proxy              = "http://1.2.3.4:3128"
 #browser_proxy              = "socks5://user:pass@1.2.3.4:1080"
@@ -65,31 +63,31 @@ user@localhost / $ docker run -p 50051:50051 -ti --rm -v /dev/shm:/dev/shm ghcr.
 #chrome_driver_path         = "/usr/bin/chromedriver"
 #chrome_extensions_dir      = "<INSTALL_PATH>/extensions/chrome"
 #chrome_path                = "/usr/bin/google-chrome-stable"
-#chrome_profile             = ""
+#chrome_profile             = ""                                    # only one browser instance at time if set
 #chrome_profiles_dir        = "/tmp/webchela/chrome"
-
-#chunk_size                 = "3M"
-
-#cpu_load                   = 25
 
 #firefox_driver_path        = "/usr/logcal/bin/geckodriver"
 #firefox_extensions_dir     = "<INSTALL_PATH>/extensions/firefox"
 #firefox_path               = "/usr/bin/firefox"
-#firefox_profile            = ""
+#firefox_profile            = ""                                    # only one browser instance at time if set
 #firefox_profiles_dir       = "/tmp/webchela/firefox"
 
+#chunk_size                 = "3M"
+#cpu_load                   = 30                                    # browser is a heavy thing, be careful with limits
 #keep_temp                  = false
-
 #log_level                  = "DEBUG"
-
-#mem_free                   = "1G"
-
-#task_timeout               = 300
+#mem_free                   = "1G"                                  # browser is a heavy thing, be careful with limits
+#page_size                  = "10M"
+#page_timeout               = 60
+#screenshot_timeout         = 30
+#script_timeout             = 30
+#task_timeout               = 600
 
 [server]
 
 #listen                     = "0.0.0.0:50051"
-#workers                    = 1
+#workers                    = 10                                    # set a lower value if you experiencing issues
+
 ```
 
 ### Screenshot example:
