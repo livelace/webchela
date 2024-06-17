@@ -37,7 +37,7 @@ FIREFOX_GECKODRIVER_WRAPPER = os.path.join(BASE_DIR, "script", "geckodriver.sh")
 
 # Server.
 DEFAULT_SERVER_LISTEN = "0.0.0.0:50051"
-DEFAULT_SERVER_WORKERS = 100  # how many tasks can receive grpc server.
+DEFAULT_SERVER_WORKERS = 10  # how many tasks can receive grpc server.
 
 # Client.
 DEFAULT_BROWSER_ARGUMENT = []
@@ -50,20 +50,25 @@ DEFAULT_BROWSER_RETRY_CODES = []  # list of status codes which will trigger page
 DEFAULT_BROWSER_RETRY_CODES_TRIES = 1  # how many tries we should perform if status code is in the list.
 DEFAULT_BROWSER_TYPE = "chrome"
 
+DEFAULT_DEBUG_PRE_CLOSE_DELAY = 0
+DEFAULT_DEBUG_PRE_OPEN_DELAY = 0
+DEFAULT_DEBUG_PRE_PROCESS_DELAY = 0
+DEFAULT_DEBUG_PRE_WAIT_DELAY = 0
+
 DEFAULT_CHUNK_SIZE = 3 * 1024 * 1024  # 3MB.
-DEFAULT_CPU_LOAD = 50  # percents.
+DEFAULT_CPU_LOAD = 30  # percents.
 DEFAULT_GEOMETRY_HEIGHT = 1080
 DEFAULT_GEOMETRY_WIDTH = 1920
 DEFAULT_MEM_FREE = 1 * 1024 * 1024 * 1024  # 1GB.
 DEFAULT_PAGE_SIZE = 10 * 1024 * 1024  # 10MB.
-DEFAULT_PAGE_TIMEOUT = 30  # seconds.
+DEFAULT_PAGE_TIMEOUT = 60  # seconds.
 DEFAULT_RETRY_CODES = []
 DEFAULT_RETRY_CODES_TRIES = 1
 DEFAULT_SCREENSHOT_TIMEOUT = 30  # seconds.
 DEFAULT_SCRIPT_TIMEOUT = 30  # seconds.
 DEFAULT_TAB_HOP_DELAY = 1  # delay between tab "hopping" (for page status checking).
 DEFAULT_TAB_OPEN_RANDOMIZE = "0:0"
-DEFAULT_TASK_TIMEOUT = 300  # 5 minutes.
+DEFAULT_TASK_TIMEOUT = 600  # 10 minutes.
 
 DEFAULT_UNIQUE_SEPARATOR = "= == === ==== ====="
 
@@ -88,6 +93,10 @@ DEFAULT_PARAMS = {
         "chrome_profiles_dir": CHROME_PROFILES_DIR,
         "chunk_size": DEFAULT_CHUNK_SIZE,
         "cpu_load": DEFAULT_CPU_LOAD,
+        "debug_pre_close_delay": DEFAULT_DEBUG_PRE_CLOSE_DELAY,
+        "debug_pre_open_delay": DEFAULT_DEBUG_PRE_OPEN_DELAY,
+        "debug_pre_process_delay": DEFAULT_DEBUG_PRE_PROCESS_DELAY,
+        "debug_pre_wait_delay": DEFAULT_DEBUG_PRE_WAIT_DELAY,
         "firefox_driver_path": FIREFOX_DRIVER_PATH,
         "firefox_extensions_dir": FIREFOX_EXTENSIONS_DIR,
         "firefox_path": FIREFOX_PATH,
@@ -149,20 +158,20 @@ CONFIG_SAMPLE = """
 #firefox_profiles_dir       = "/tmp/webchela/firefox"
 
 #chunk_size                 = "3M"
-#cpu_load                   = 50
+#cpu_load                   = 30                                    # browser is a heavy thing, be careful with limits
 #keep_temp                  = false
 #log_level                  = "DEBUG"
-#mem_free                   = "1G"
+#mem_free                   = "1G"                                  # browser is a heavy thing, be careful with limits
 #page_size                  = "10M"
-#page_timeout               = 30
+#page_timeout               = 60
 #screenshot_timeout         = 30
 #script_timeout             = 30
-#task_timeout               = 300
+#task_timeout               = 600
 
 [server]
 
 #listen                     = "0.0.0.0:50051"
-#workers                    = 100
+#workers                    = 10                                    # set a lower value if you experiencing issues
 """
 
 # ----------------------------------------------------------------------------------------------------------------------

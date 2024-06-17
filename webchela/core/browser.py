@@ -124,6 +124,10 @@ class GenericBrowser:
         # ------------------------------------------------------
         # Close unwanted tabs (might be opened by an extension).
 
+        logger.debug("[{}][{}] Debug pre close delay: {}s".format(
+            self.request.client_id, self.task_hash, self.request.debug.pre_close_delay))
+        time.sleep(self.request.debug.pre_close_delay)
+
         if len(self.browser.window_handles) > 1:
             for i in reversed(range(1, len(self.browser.window_handles))):
                 self.browser.switch_to.window(self.browser.window_handles[i])
@@ -134,6 +138,10 @@ class GenericBrowser:
         # ------------------------------------------------------
         # ------------------------------------------------------
         # Open URLs.
+
+        logger.debug("[{}][{}] Debug pre open delay: {}s".format(
+            self.request.client_id, self.task_hash, self.request.debug.pre_open_delay))
+        time.sleep(self.request.debug.pre_open_delay)
 
         for index in range(1, len(urls_origin)):
             url = urls_origin[index]
@@ -156,11 +164,18 @@ class GenericBrowser:
                     self.request.client_id, self.task_hash, url, e))
                 return {self.order: chunks}
 
-            time.sleep(random.randint(self.rand_min, self.rand_max))
+            rand_sec = random.randint(self.rand_min, self.rand_max)
+            logger.debug("[{}][{}] Tab open randomize: {}s".format(
+                self.request.client_id, self.task_hash, rand_sec))
+            time.sleep(rand_sec)
 
         # ------------------------------------------------------
         # ------------------------------------------------------
         # Wait for tabs loading.
+
+        logger.debug("[{}][{}] Debug pre wait delay: {}s".format(
+            self.request.client_id, self.task_hash, self.request.debug.pre_wait_delay))
+        time.sleep(self.request.debug.pre_wait_delay)
 
         while True:
             ready = True
@@ -281,6 +296,10 @@ class GenericBrowser:
         # ------------------------------------------------------
         # ------------------------------------------------------
         # Processing tabs.
+
+        logger.debug("[{}][{}] Debug pre process delay: {}s".format(
+            self.request.client_id, self.task_hash, self.request.debug.pre_process_delay))
+        time.sleep(self.request.debug.pre_process_delay)
 
         for index in range(1, len(self.browser.window_handles)):
             url = urls_origin[index]

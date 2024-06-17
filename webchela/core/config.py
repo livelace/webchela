@@ -29,6 +29,12 @@ from webchela.core.vars import (
     CHROME_PATH, CHROME_PROFILE,
     CHROME_PROFILES_DIR,
 
+    FIREFOX_DRIVER_PATH,
+    FIREFOX_EXTENSIONS_DIR,
+    FIREFOX_PATH,
+    FIREFOX_PROFILE,
+    FIREFOX_PROFILES_DIR,
+
     CONFIG_SAMPLE,
 
     DEFAULT_BROWSER_ARGUMENT,
@@ -40,6 +46,12 @@ from webchela.core.vars import (
     DEFAULT_BROWSER_RETRY_CODES,
     DEFAULT_BROWSER_RETRY_CODES_TRIES,
     DEFAULT_BROWSER_TYPE,
+
+    DEFAULT_DEBUG_PRE_CLOSE_DELAY,
+    DEFAULT_DEBUG_PRE_OPEN_DELAY,
+    DEFAULT_DEBUG_PRE_PROCESS_DELAY,
+    DEFAULT_DEBUG_PRE_WAIT_DELAY,
+
     DEFAULT_CHUNK_SIZE,
     DEFAULT_CPU_LOAD,
     DEFAULT_KEEP_TEMP,
@@ -53,17 +65,12 @@ from webchela.core.vars import (
     DEFAULT_RETRY_CODES_TRIES,
     DEFAULT_SCREENSHOT_TIMEOUT,
     DEFAULT_SCRIPT_TIMEOUT,
-    DEFAULT_SERVER_LISTEN,
-    DEFAULT_SERVER_WORKERS,
     DEFAULT_SHM_SIZE,
     DEFAULT_TAB_OPEN_RANDOMIZE,
     DEFAULT_TASK_TIMEOUT,
 
-    FIREFOX_DRIVER_PATH,
-    FIREFOX_EXTENSIONS_DIR,
-    FIREFOX_PATH,
-    FIREFOX_PROFILE,
-    FIREFOX_PROFILES_DIR,
+    DEFAULT_SERVER_LISTEN,
+    DEFAULT_SERVER_WORKERS,
 )
 
 logger = logging.getLogger("webchela.config")
@@ -227,6 +234,22 @@ class Config:
         self._params["default"]["cpu_load"] = is_int(
             "default.cpu_load", self._params["default"]["cpu_load"], DEFAULT_CPU_LOAD)
 
+        self._params["default"]["debug_pre_close_delay"] = is_int(
+            "default.debug_pre_close_delay", self._params["default"]["debug_pre_close_delay"],
+            DEFAULT_DEBUG_PRE_CLOSE_DELAY)
+
+        self._params["default"]["debug_pre_open_delay"] = is_int(
+            "default.debug_pre_open_delay", self._params["default"]["debug_pre_open_delay"],
+            DEFAULT_DEBUG_PRE_OPEN_DELAY)
+
+        self._params["default"]["debug_pre_process_delay"] = is_int(
+            "default.debug_pre_process_delay", self._params["default"]["debug_pre_process_delay"],
+            DEFAULT_DEBUG_PRE_PROCESS_DELAY)
+
+        self._params["default"]["debug_pre_wait_delay"] = is_int(
+            "default.debug_pre_wait_delay", self._params["default"]["debug_pre_wait_delay"],
+            DEFAULT_DEBUG_PRE_WAIT_DELAY)
+
         self._params["default"]["firefox_driver_path"] = is_file(
             "default.firefox_driver_path", self._params["default"]["firefox_driver_path"], FIREFOX_DRIVER_PATH)
 
@@ -281,5 +304,5 @@ class Config:
         self._params["server"]["listen"] = is_string(
             "server.listen", self._params["server"]["listen"], DEFAULT_SERVER_LISTEN)
 
-        self._params["server"]["workers"] = is_string(
+        self._params["server"]["workers"] = is_int(
             "server.workers", self._params["server"]["workers"], DEFAULT_SERVER_WORKERS)
