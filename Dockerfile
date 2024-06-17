@@ -5,7 +5,7 @@ FROM            registry.livelace.ru/dev/webchela:${IMAGE_TAG}
 ENV             PIP_CONFIG_FILE="pip.conf"
 ENV             WEBCHELA_DIR="/home/user/webchela"
 
-COPY            "supervisord.ini" "/etc/supervisord.conf"
+COPY            "work/assets/supervisord.ini" "/etc/supervisord.conf"
 
 USER            "user"
 
