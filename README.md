@@ -27,15 +27,24 @@ exposes 590x/VNC ports per browser instance for visual inspection.
 **Start daemon (software rendering)**
 ```shell script
 user@localhost / $ docker run -p 50051:50051 -ti --rm -v /dev/shm:/dev/shm ghcr.io/livelace/webchela:v1.8.0
-2021-02-09 18:11:54 webchela.config INFO Config sample was written successfully: /home/webchela/.webchela.toml
-2021-02-09 18:11:54 webchela.server INFO webchela v1.8.0
+2024-06-17 21:17:19,438 INFO supervisord started with pid 1
+2024-06-17 21:17:20,440 INFO spawned: 'xorg' with pid 2
+2024-06-17 21:17:20,442 INFO spawned: 'webchela' with pid 3
+2024-06-17 21:17:20,470 WARN exited: xorg (exit status 1; not expected)
+2024-06-17 21:17:20 webchela.config INFO Config sample was written successfully: /home/user/.webchela.toml
+2024-06-17 21:17:20 webchela.server INFO webchela v1.8.0
+
 ```
 
 **Start daemon (GPU rendering)**
 ```shell script
 user@localhost / $ docker run --privileged -p 50051:50051 -ti --rm -v /dev/shm:/dev/shm ghcr.io/livelace/webchela:v1.8.0
-2021-02-09 18:11:54 webchela.config INFO Config sample was written successfully: /home/webchela/.webchela.toml
-2021-02-09 18:11:54 webchela.server INFO webchela v1.8.0
+2024-06-17 21:19:55,179 INFO supervisord started with pid 1
+2024-06-17 21:19:56,180 INFO spawned: 'xorg' with pid 7
+2024-06-17 21:19:56,182 INFO spawned: 'webchela' with pid 8
+2024-06-17 21:19:56 webchela.server INFO webchela v1.8.0
+2024-06-17 21:19:57,782 INFO success: xorg entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2024-06-17 21:19:57,782 INFO success: webchela entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
 ```
 
 **Use gosquito [configuration example](https://github.com/livelace/gosquito/blob/master/docs/plugins/process/webchela.md)**
