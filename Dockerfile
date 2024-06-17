@@ -3,8 +3,9 @@ ARG             IMAGE_TAG
 FROM            registry.livelace.ru/dev/webchela:${IMAGE_TAG}
 
 ENV             PIP_CONFIG_FILE="pip.conf"
-
 ENV             WEBCHELA_DIR="/home/user/webchela"
+
+COPY            "supervisord.ini" "/etc/supervisord.conf"
 
 USER            "user"
 
@@ -20,4 +21,4 @@ ENV             PATH=$PATH:"/home/user/webchela/venv/bin"
 
 WORKDIR         "/home/user"
 
-CMD             ["tini", "--", "/home/user/webchela/venv/bin/webchela"]
+CMD             ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
