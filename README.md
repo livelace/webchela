@@ -69,7 +69,7 @@ user@localhost / $ docker run --privileged -p 50051:50051 -ti --rm -v /dev/shm:/
 #browser_proxy              = "http://1.2.3.4:3128"
 #browser_proxy              = "socks5://user:pass@1.2.3.4:1080"
 
-#browser_retry_codes        = [503]
+#browser_retry_codes        = []
 #browser_retry_codes_tries  = 1
 
 #chrome_driver_path         = "/usr/bin/chromedriver"
