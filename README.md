@@ -112,5 +112,4 @@ user@localhost / $ docker run --privileged -p 50051:50051 -ti --rm -v /dev/shm:/
 "Message: disconnected: Unable to receive message from renderer"**
 
 Chromedriver has hardcoded timeout value for making page screenshots - 10 seconds, 
-it could be not enough for really big screenshots.  
-Use Firefox or wait for [fix](https://bugs.chromium.org/p/chromedriver/issues/detail?id=3916&q=screenshot%20timeout&can=2).
+it could be not enough for really big screenshots. Use Firefox or wait for [fix](https://bugs.chromium.org/p/chromedriver/issues/detail?id=3916&q=screenshot%20timeout&can=2).
