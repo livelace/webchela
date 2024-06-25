@@ -156,10 +156,16 @@ class Server(webchela_pb2_grpc.ServerServicer):
 
         logger.debug("[{}][{}] debug.pre_close_delay: {}".format(
             request.client_id, task_hash, request.debug.pre_close_delay))
+        logger.debug("[{}][{}] debug.pre_cookie_delay: {}".format(
+            request.client_id, task_hash, request.debug.pre_cookie_delay))
         logger.debug("[{}][{}] debug.pre_open_delay: {}".format(
             request.client_id, task_hash, request.debug.pre_open_delay))
         logger.debug("[{}][{}] debug.pre_process_delay: {}".format(
             request.client_id, task_hash, request.debug.pre_process_delay))
+        logger.debug("[{}][{}] debug.pre_screenshot_delay: {}".format(
+            request.client_id, task_hash, request.debug.pre_screenshot_delay))
+        logger.debug("[{}][{}] debug.pre_script_delay: {}".format(
+            request.client_id, task_hash, request.debug.pre_script_delay))
         logger.debug("[{}][{}] debug.pre_wait_delay: {}".format(
             request.client_id, task_hash, request.debug.pre_wait_delay))
 

@@ -48,8 +48,11 @@ from webchela.core.vars import (
     DEFAULT_BROWSER_TYPE,
 
     DEFAULT_DEBUG_PRE_CLOSE_DELAY,
+    DEFAULT_DEBUG_PRE_COOKIE_DELAY,
     DEFAULT_DEBUG_PRE_OPEN_DELAY,
     DEFAULT_DEBUG_PRE_PROCESS_DELAY,
+    DEFAULT_DEBUG_PRE_SCREENSHOT_DELAY,
+    DEFAULT_DEBUG_PRE_SCRIPT_DELAY,
     DEFAULT_DEBUG_PRE_WAIT_DELAY,
 
     DEFAULT_CHUNK_SIZE,
@@ -238,6 +241,10 @@ class Config:
             "default.debug_pre_close_delay", self._params["default"]["debug_pre_close_delay"],
             DEFAULT_DEBUG_PRE_CLOSE_DELAY)
 
+        self._params["default"]["debug_pre_cookie_delay"] = is_int(
+            "default.debug_pre_cookie_delay", self._params["default"]["debug_pre_cookie_delay"],
+            DEFAULT_DEBUG_PRE_COOKIE_DELAY)
+
         self._params["default"]["debug_pre_open_delay"] = is_int(
             "default.debug_pre_open_delay", self._params["default"]["debug_pre_open_delay"],
             DEFAULT_DEBUG_PRE_OPEN_DELAY)
@@ -245,6 +252,14 @@ class Config:
         self._params["default"]["debug_pre_process_delay"] = is_int(
             "default.debug_pre_process_delay", self._params["default"]["debug_pre_process_delay"],
             DEFAULT_DEBUG_PRE_PROCESS_DELAY)
+
+        self._params["default"]["debug_pre_screenshot_delay"] = is_int(
+            "default.debug_pre_screenshot_delay", self._params["default"]["debug_pre_screenshot_delay"],
+            DEFAULT_DEBUG_PRE_SCREENSHOT_DELAY)
+
+        self._params["default"]["debug_pre_script_delay"] = is_int(
+            "default.debug_pre_script_delay", self._params["default"]["debug_pre_script_delay"],
+            DEFAULT_DEBUG_PRE_SCRIPT_DELAY)
 
         self._params["default"]["debug_pre_wait_delay"] = is_int(
             "default.debug_pre_wait_delay", self._params["default"]["debug_pre_wait_delay"],

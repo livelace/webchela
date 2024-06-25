@@ -342,6 +342,10 @@ class GenericBrowser:
                 # ------------------------------------------------------------
                 # Set cookies.
 
+                logger.debug("[{}][{}] Debug pre cookie delay: {}s".format(
+                    self.request.client_id, self.task_hash, self.request.debug.pre_cookie_delay))
+                time.sleep(self.request.debug.pre_cookie_delay)
+
                 for cookie_index, cookie_value in enumerate(
                         re.split(self.config.params.default.unique_separator, cookies[index])):
 
@@ -388,6 +392,10 @@ class GenericBrowser:
                 # ------------------------------------------------------------
                 # Execute javascript code.
 
+                logger.debug("[{}][{}] Debug pre script delay: {}s".format(
+                    self.request.client_id, self.task_hash, self.request.debug.pre_script_delay))
+                time.sleep(self.request.debug.pre_script_delay)
+
                 for script_index, script_value in enumerate(
                         re.split(self.config.params.default.unique_separator, scripts[index])):
 
@@ -417,6 +425,10 @@ class GenericBrowser:
 
                 # ------------------------------------------------------------
                 # Get screenshots.
+
+                logger.debug("[{}][{}] Debug pre screenshot delay: {}s".format(
+                    self.request.client_id, self.task_hash, self.request.debug.pre_screenshot_delay))
+                time.sleep(self.request.debug.pre_screenshot_delay)
 
                 if len(screenshots) > 1:
                     self.browser.implicitly_wait(self.request.screenshot_timeout)

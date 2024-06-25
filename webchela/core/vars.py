@@ -5,7 +5,7 @@ from os.path import dirname, join, isdir
 # ----------------------------------------------------------------------------------------------------------------------
 
 APP_NAME = "webchela"
-APP_VERSION = "v1.8.0"
+APP_VERSION = "v1.8.1"
 
 BASE_DIR = dirname(find_spec("webchela").loader.path)
 
@@ -51,8 +51,11 @@ DEFAULT_BROWSER_RETRY_CODES_TRIES = 1  # how many tries we should perform if sta
 DEFAULT_BROWSER_TYPE = "chrome"
 
 DEFAULT_DEBUG_PRE_CLOSE_DELAY = 0
+DEFAULT_DEBUG_PRE_COOKIE_DELAY = 0
 DEFAULT_DEBUG_PRE_OPEN_DELAY = 0
 DEFAULT_DEBUG_PRE_PROCESS_DELAY = 0
+DEFAULT_DEBUG_PRE_SCREENSHOT_DELAY = 0
+DEFAULT_DEBUG_PRE_SCRIPT_DELAY = 0
 DEFAULT_DEBUG_PRE_WAIT_DELAY = 0
 
 DEFAULT_CHUNK_SIZE = 3 * 1024 * 1024  # 3MB.
@@ -94,8 +97,11 @@ DEFAULT_PARAMS = {
         "chunk_size": DEFAULT_CHUNK_SIZE,
         "cpu_load": DEFAULT_CPU_LOAD,
         "debug_pre_close_delay": DEFAULT_DEBUG_PRE_CLOSE_DELAY,
+        "debug_pre_cookie_delay": DEFAULT_DEBUG_PRE_COOKIE_DELAY,
         "debug_pre_open_delay": DEFAULT_DEBUG_PRE_OPEN_DELAY,
         "debug_pre_process_delay": DEFAULT_DEBUG_PRE_PROCESS_DELAY,
+        "debug_pre_screenshot_delay": DEFAULT_DEBUG_PRE_SCREENSHOT_DELAY,
+        "debug_pre_script_delay": DEFAULT_DEBUG_PRE_SCRIPT_DELAY,
         "debug_pre_wait_delay": DEFAULT_DEBUG_PRE_WAIT_DELAY,
         "firefox_driver_path": FIREFOX_DRIVER_PATH,
         "firefox_extensions_dir": FIREFOX_EXTENSIONS_DIR,
