@@ -146,6 +146,9 @@ class GenericBrowser:
         for index in range(1, len(urls_origin)):
             url = urls_origin[index]
 
+            # ToDo: dirty hack: do this useless work for proper window handles ordering.
+            _ = self.browser.window_handles
+
             try:
                 self.browser.execute_script(
                     'window.open("{0}","_blank");'.format(url))
